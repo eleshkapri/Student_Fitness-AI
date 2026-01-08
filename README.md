@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![AI](https://img.shields.io/badge/AI-Llama%203%20(Groq)-orange?style=for-the-badge)
 
-**StudentFit AI** is a hyper-personalized fitness and nutrition planner designed specifically for university students. 
+**Student Fitness AI** is a hyper-personalized fitness and nutrition planner designed specifically for university students. 
 
 Unlike generic fitness apps, StudentFit understands the unique constraints of student life: **tight budgets, limited dorm room space, and specific cultural food preferences.** It uses the power of **Llama 3 (via Groq)** to generate full 7-day schedules instantly.
 
