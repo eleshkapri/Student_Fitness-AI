@@ -75,13 +75,9 @@ streamlit run app.py
 
 ## 📸 Screenshots
 
-### 1. User Inputs & Dashboard
+### Dashboard
 
-*(Note: You can upload your screenshots to a folder named 'screenshots' in your repo to display them here)*
-
-### 2. The 7-Day Plan
-
----
+![image alt](https://github.com/eleshkapri/Student_Fitness-AI/blob/b7f4a7375a62fe0550f718af5deffa4c7995ad2f/Screenshot%202026-01-08%20194552.png)
 
 ## 📂 Project Structure
 
