@@ -104,8 +104,4 @@ Student_Fitness-AI/
 
 ---
 
-### ⭐ Don't forget to star this repo if you found it useful!
-
-```
-
-```
+### ⭐ Don't forget to star this repo if you found it useful!git add .
