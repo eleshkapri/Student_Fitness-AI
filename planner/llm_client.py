@@ -41,6 +41,60 @@ def get_api_key(provided_key: str = None) -> str:
         
     return None
 
+def calculate_macros(age, gender, weight, weight_unit='kg', height=170, height_unit='cm', goal='Build Muscle'):
+    """Calculates student BMR, TDEE, target calories, and daily macronutrient split."""
+    try:
+        age = float(age)
+        w = float(weight)
+        h = float(height)
+        
+        # Convert to metric standard
+        kg = w * 0.453592 if weight_unit.lower() == 'lbs' else w
+        cm = h * 2.54 if height_unit.lower() == 'ft/in' else h
+        
+        # Mifflin-St Jeor BMR
+        if str(gender).lower() == 'female':
+            bmr = (10 * kg) + (6.25 * cm) - (5 * age) - 161
+        else:
+            bmr = (10 * kg) + (6.25 * cm) - (5 * age) + 5
+            
+        # Moderate student activity multiplier (classes, walking campus, workouts)
+        tdee = bmr * 1.4
+        
+        goal_lower = str(goal).lower()
+        if 'muscle' in goal_lower:
+            target_calories = round(tdee + 350)
+            protein_g = round(kg * 2.0)
+        elif 'lose' in goal_lower or 'shredded' in goal_lower:
+            target_calories = round(tdee - 400)
+            protein_g = round(kg * 2.2)
+        else:
+            target_calories = round(tdee)
+            protein_g = round(kg * 1.6)
+            
+        fats_g = round((target_calories * 0.25) / 9)
+        carbs_g = max(round((target_calories - (protein_g * 4 + fats_g * 9)) / 4), 50)
+        
+        return {
+            "bmr": round(bmr),
+            "tdee": round(tdee),
+            "target_calories": target_calories,
+            "protein_g": protein_g,
+            "carbs_g": carbs_g,
+            "fats_g": fats_g,
+            "water_liters": round(kg * 0.035, 1)
+        }
+    except Exception:
+        return {
+            "bmr": 1600,
+            "tdee": 2200,
+            "target_calories": 2400,
+            "protein_g": 130,
+            "carbs_g": 280,
+            "fats_g": 65,
+            "water_liters": 2.8
+        }
+
 def parse_ai_response(raw_text: str):
     """Parses delimiters into daily schedule cards and grocery summary."""
     if not raw_text:

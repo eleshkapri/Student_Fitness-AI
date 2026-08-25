@@ -1,10 +1,10 @@
 """
-StudentFit AI - Core Utility Facade
-Provides unified exports for calculations, LLM orchestrations, and PDF generation.
+Planner Package for StudentFit AI.
+Exports LLM clients, prompt builders, parsers, and PDF generator.
 """
 
-from planner.prompt_builder import build_prompt
-from planner.llm_client import (
+from .prompt_builder import build_prompt
+from .llm_client import (
     CANDIDATE_MODELS,
     get_api_key,
     calculate_macros,

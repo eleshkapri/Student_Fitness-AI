@@ -58,12 +58,13 @@ Meal:
 * **Proteins:** [Items with quantities and prices in {currency}]
 * **Grains & Carbs:** [Items with quantities and prices in {currency}]
 * **Produce & Veggies:** [Items with quantities and prices in {currency}]
-* **Healthy Fats & Extras:** [Items with quantities and prices in {currency}]
-#### 💡 Student Meal-Prep & Budget Tips
-* [Tip 1 on bulk batch cooking to save study hours]
-* [Tip 2 on smart hydration / protein optimization]
-#### 💰 Estimated Weekly Budget
-* **Estimated Cost:** [Total weekly cost in {currency}]
-* **Savings Tip:** [Tip on buying bulk or seasonal alternatives]
+* **Healthy Fats & Dairy:** [Items with quantities and prices in {currency}]
+* **Estimated Weekly Total:** [Realistic student spending total in {currency}]
+#### 💡 Student Meal Prep & Budget Hacks
+* [Batch cooking advice for dorm rooms / hostels]
+* [Bulk buying savings tip for college budget]
 ### GROCERY_END
 """
+
+# Alias for backwards compatibility
+build_prompt = build_student_prompt
