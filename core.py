@@ -39,18 +39,25 @@ def get_api_key(provided_key=None):
 
 def build_prompt(profile):
     """Constructs a strictly structured prompt for 7-day student fitness & nutrition."""
+    currency = profile.get('currency', 'INR (₹)')
+    weight = profile.get('weight', 70)
+    weight_unit = profile.get('weight_unit', 'kg')
+    height = profile.get('height', 170)
+    height_unit = profile.get('height_unit', 'cm')
+
     return f"""
 Act as an elite fitness trainer and budget nutrition expert for university students.
 Student Profile:
 - Age: {profile.get('age', 20)} years old, Gender: {profile.get('gender', 'Male')}
-- Weight: {profile.get('weight', 70)} kg, Height: {profile.get('height', 170)} cm
+- Weight: {weight} {weight_unit}, Height: {height} {height_unit}
 - Goal: {profile.get('goal', 'Build Muscle')}
 - Available Equipment: {profile.get('equipment', 'Full Gym')}
 - Cuisine: {profile.get('cuisine', 'Indian')}, Diet: {profile.get('diet_type', 'Standard')}
 - Weekly Budget Tier: {profile.get('budget', 'Moderate ($$)')}
+- Preferred Currency for Budget: {currency}
 - Cooking Skill / Setup: {profile.get('cooking_skill', 'Basic Stove')}
 
-TASK: Create a complete 7-Day Plan (Monday through Sunday) with aligned workouts and meals, followed by a smart grocery shopping list and budget breakdown.
+TASK: Create a complete 7-Day Plan (Monday through Sunday) with aligned workouts and meals, followed by a clean, essential weekly grocery shopping list and budget breakdown.
 
 STRICT DELIMITER FORMAT:
 Separate each day block with "|||".
@@ -75,18 +82,16 @@ Day: Tuesday
 |||
 GROCERY
 #### 🛒 Weekly Student Shopping List
-* 1 Dozen Eggs (or 500g Tofu)
-* 1 kg Rice / Whole Wheat Flour
-* 500g Rolled Oats
-* 500g Lentils / Chickpeas
-* 1 Jar Peanut Butter
-* Assorted Seasonal Vegetables
+* **Proteins:** 1 Dozen Eggs (or 500g Tofu), 500g Lentils / Chickpeas
+* **Carbs & Grains:** 1 kg Rice / Whole Wheat Flour, 500g Rolled Oats
+* **Healthy Fats:** 1 Jar Peanut Butter
+* **Fresh Produce:** Onions, Tomatoes, Spinach, Bananas
 #### 💡 Student Meal-Prep & Fitness Tips
 * Prepare grains and boiled lentils in batches on Sunday evening.
 * Stay hydrated with at least 2.5–3 liters of water daily.
-#### 💰 Estimated Weekly Budget
-* Cost: In regional currency corresponding to {profile.get('cuisine', 'selected')} cuisine (e.g. ₹800–₹1200 INR for Indian, $15–$25 USD for Global, €15–€25 EUR for Mediterranean).
-* USD Equivalent: Approx. $15 – $25 USD per week.
+#### 💰 Estimated Weekly Budget ({currency})
+* Total Estimated Weekly Cost: Provide realistic range strictly in {currency}.
+* Money-Saving Tip: Buying whole grains and legumes in bulk saves up to 25%.
 
 Begin output immediately with 'Day: Monday'.
 """

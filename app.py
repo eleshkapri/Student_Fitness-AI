@@ -57,8 +57,8 @@ st.markdown("""
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 20px;
+        padding: 22px;
+        margin-bottom: 22px;
         transition: transform 0.2s ease, border-color 0.2s ease;
     }
     .day-card:hover {
@@ -70,9 +70,10 @@ st.markdown("""
         background: rgba(0, 0, 0, 0.35);
         border: 1px solid #FFD700;
         border-radius: 16px;
-        padding: 22px;
+        padding: 24px 22px;
         height: 100%;
         text-align: left;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     /* Day Headers */
@@ -80,11 +81,11 @@ st.markdown("""
         color: #FFD700 !important;
         font-size: 1.4rem !important;
         margin-top: 0 !important;
-        margin-bottom: 14px !important;
+        margin-bottom: 16px !important;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-        padding-bottom: 6px;
+        padding-bottom: 8px;
     }
 
     /* Column Headers */
@@ -92,10 +93,17 @@ st.markdown("""
         color: #00e5ff;
         font-weight: 700;
         font-size: 1rem;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
         display: block;
-        letter-spacing: 0.3px;
+        letter-spacing: 0.5px;
+        border-bottom: 1px dashed rgba(0, 229, 255, 0.2);
+        padding-bottom: 6px;
     }
+
+    /* List Items Styling */
+    ul { list-style-type: none; padding-left: 0; }
+    li { margin-bottom: 10px; font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; }
+    strong { color: #fff; font-weight: 600; }
 
     /* Button Styling */
     .stButton>button {
@@ -138,10 +146,22 @@ with st.sidebar:
     col_s1, col_s2 = st.columns(2)
     with col_s1:
         gender = st.selectbox("Gender", ["Male", "Female", "Other"])
-        weight = st.number_input("Weight (kg)", 40, 150, 70)
     with col_s2:
         age = st.number_input("Age", 16, 40, 20)
-        height = st.number_input("Height (cm)", 140, 220, 170)
+
+    # Weight with Unit
+    col_w1, col_w2 = st.columns([2, 1.2])
+    with col_w1:
+        weight = st.number_input("Weight", 30, 300, 70)
+    with col_w2:
+        weight_unit = st.selectbox("Unit", ["kg", "lbs"], key="w_unit")
+
+    # Height with Unit
+    col_h1, col_h2 = st.columns([2, 1.2])
+    with col_h1:
+        height = st.number_input("Height", 100, 250, 170)
+    with col_h2:
+        height_unit = st.selectbox("Unit", ["cm", "ft/in"], key="h_unit")
 
     st.markdown("### 🎯 Goals & Gear")
     goal = st.selectbox("Fitness Goal", ["Build Muscle", "Lose Weight", "Get Shredded", "Exam Stress Relief"])
@@ -149,7 +169,13 @@ with st.sidebar:
     
     st.markdown("### 🥑 Kitchen & Budget")
     cuisine = st.selectbox("Cuisine", ["Indian", "Global", "Mediterranean", "Asian", "Vegan"])
-    budget = st.select_slider("Budget Tier", options=["Cheap ($)", "Moderate ($$)", "Premium ($$$)"], value="Moderate ($$)")
+    
+    col_b1, col_b2 = st.columns([1.5, 1.5])
+    with col_b1:
+        budget = st.selectbox("Budget Tier", ["Cheap ($)", "Moderate ($$)", "Premium ($$$)"], index=1)
+    with col_b2:
+        currency = st.selectbox("Currency", ["INR (₹)", "USD ($)", "EUR (€)", "GBP (£)", "CAD ($)", "AUD ($)", "AED (د.إ)"], index=0)
+        
     cooking_skill = st.select_slider("Cooking Skill", options=["Microwave Only", "Basic Stove", "Full Chef"], value="Basic Stove")
     
     st.markdown("<br>", unsafe_allow_html=True)
@@ -173,9 +199,11 @@ st.markdown("---")
 # --- GENERATION HANDLER ---
 if generate_btn:
     user_profile = {
-        "age": age, "weight": weight, "height": height, "gender": gender, 
+        "age": age, "weight": weight, "weight_unit": weight_unit,
+        "height": height, "height_unit": height_unit, "gender": gender, 
         "goal": goal, "equipment": equipment, "cuisine": cuisine, 
-        "diet_type": "Standard", "budget": budget, "cooking_skill": cooking_skill
+        "diet_type": "Standard", "budget": budget, "currency": currency,
+        "cooking_skill": cooking_skill
     }
     
     with st.spinner('🗓️ Synchronizing your 7-day schedule with AI...'):
@@ -225,15 +253,15 @@ if st.session_state.plan_result:
             st.markdown("---")
 
     with side_col:
-        # Formatted Grocery Card
+        # Formatted Grocery Card with spacious padding and line gaps
         formatted_grocery = re.sub(
             r'####\s*(.*)',
-            r'<h4 style="color: #FFD700; border-bottom: 1px solid #FFD700; padding-bottom: 5px; margin-top: 15px;">\1</h4>',
+            r'<h4 style="color: #FFD700; border-bottom: 1px solid rgba(255, 215, 0, 0.35); padding-bottom: 8px; margin-top: 22px; margin-bottom: 14px; font-size: 1.1rem; font-weight: 700;">\1</h4>',
             grocery_text
         )
         formatted_grocery = re.sub(r'\*\*(.*?)\*\*', r'<strong style="color: white;">\1</strong>', formatted_grocery)
-        formatted_grocery = re.sub(r'\n\*\s*(.*)', r'<div style="margin-bottom: 5px; color: #e0e0e0;">• \1</div>', formatted_grocery)
-        formatted_grocery = re.sub(r'^\*\s*(.*)', r'<div style="margin-bottom: 5px; color: #e0e0e0;">• \1</div>', formatted_grocery)
+        formatted_grocery = re.sub(r'\n\*\s*(.*)', r'<div style="margin-bottom: 12px; line-height: 1.65; color: #e2e8f0; font-size: 0.93rem;">• \1</div>', formatted_grocery)
+        formatted_grocery = re.sub(r'^\*\s*(.*)', r'<div style="margin-bottom: 12px; line-height: 1.65; color: #e2e8f0; font-size: 0.93rem;">• \1</div>', formatted_grocery)
         formatted_grocery = formatted_grocery.replace("\n", "")
 
         st.markdown(f"""

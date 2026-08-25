@@ -65,21 +65,25 @@ HTML_TEMPLATE = """
         .badge-status { background: rgba(0, 229, 255, 0.15); border: 1px solid #00e5ff; color: #00e5ff; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
 
         /* RESULTS LAYOUT */
-        .results-grid { display: grid; grid-template-columns: 2.4fr 1.2fr; gap: 25px; }
-        .day-card { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 20px; margin-bottom: 20px; transition: all 0.2s ease; }
+        .results-grid { display: grid; grid-template-columns: 2.4fr 1.2fr; gap: 28px; }
+        .day-card { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 22px; margin-bottom: 22px; transition: all 0.2s ease; }
         .day-card:hover { border-color: rgba(0, 229, 255, 0.5); transform: translateY(-2px); }
-        .day-title { color: #FFD700; font-size: 1.25rem; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 8px; margin-bottom: 14px; }
-        .day-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-        .col-box { background: rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 14px; }
-        .col-header { color: #00e5ff; font-weight: 700; font-size: 0.92rem; margin-bottom: 8px; display: block; }
+        .day-title { color: #FFD700; font-size: 1.25rem; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 8px; margin-bottom: 16px; }
+        .day-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .col-box { background: rgba(0, 0, 0, 0.25); border-radius: 12px; padding: 16px 18px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .col-header { color: #00e5ff; font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; display: block; letter-spacing: 0.5px; border-bottom: 1px dashed rgba(0, 229, 255, 0.2); padding-bottom: 6px; }
         .markdown-content ul { list-style: none; padding-left: 0; }
-        .markdown-content li { margin-bottom: 6px; font-size: 0.9rem; color: #e0e0e0; line-height: 1.4; }
+        .markdown-content li { margin-bottom: 10px; font-size: 0.92rem; color: #e2e8f0; line-height: 1.6; }
         .markdown-content strong { color: #fff; }
 
-        /* GROCERY CARD */
-        .grocery-card { background: rgba(0, 0, 0, 0.35); border: 1px solid #FFD700; border-radius: 16px; padding: 22px; height: fit-content; position: sticky; top: 20px; }
-        .grocery-card h4 { color: #FFD700; border-bottom: 1px solid #FFD700; padding-bottom: 6px; margin-top: 16px; margin-bottom: 10px; font-size: 1.05rem; }
+        /* GROCERY CARD WITH SPACIOUS READABILITY */
+        .grocery-card { background: rgba(0, 0, 0, 0.35); border: 1px solid #FFD700; border-radius: 16px; padding: 24px 22px; height: fit-content; position: sticky; top: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); }
+        .grocery-card h4 { color: #FFD700; border-bottom: 1px solid rgba(255, 215, 0, 0.35); padding-bottom: 8px; margin-top: 22px; margin-bottom: 14px; font-size: 1.1rem; font-weight: 700; }
         .grocery-card h4:first-child { margin-top: 0; }
+        .grocery-card ul { list-style: none; padding-left: 0; margin-bottom: 14px; }
+        .grocery-card li { margin-bottom: 12px; font-size: 0.93rem; color: #e2e8f0; line-height: 1.65; display: flex; align-items: flex-start; gap: 8px; }
+        .grocery-card li::before { content: "•"; color: #00e5ff; font-weight: bold; font-size: 1.2rem; line-height: 1.2; }
+        .grocery-card p { margin-bottom: 12px; line-height: 1.6; color: #cbd5e1; font-size: 0.93rem; }
         
         /* SPINNER & PLACEHOLDER */
         .spinner-container { display: none; text-align: center; padding: 60px; }
@@ -118,13 +122,30 @@ HTML_TEMPLATE = """
             </div>
 
             <div class="form-row">
-                <div class="form-group">
-                    <label>Weight (kg)</label>
-                    <input type="number" id="weight" value="70" min="40" max="150">
+                <div class="form-group" style="flex: 2;">
+                    <label>Weight</label>
+                    <input type="number" id="weight" value="70" min="30" max="300">
                 </div>
-                <div class="form-group">
-                    <label>Height (cm)</label>
-                    <input type="number" id="height" value="170" min="140" max="220">
+                <div class="form-group" style="flex: 1.2;">
+                    <label>Unit</label>
+                    <select id="weightUnit">
+                        <option value="kg" selected>kg</option>
+                        <option value="lbs">lbs</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group" style="flex: 2;">
+                    <label>Height</label>
+                    <input type="number" id="height" value="170" min="100" max="250">
+                </div>
+                <div class="form-group" style="flex: 1.2;">
+                    <label>Unit</label>
+                    <select id="heightUnit">
+                        <option value="cm" selected>cm</option>
+                        <option value="ft/in">ft/in</option>
+                    </select>
                 </div>
             </div>
 
@@ -160,13 +181,27 @@ HTML_TEMPLATE = """
                 </select>
             </div>
 
-            <div class="form-group">
-                <label>Budget Tier</label>
-                <select id="budget">
-                    <option value="Cheap ($)">Cheap ($)</option>
-                    <option value="Moderate ($$)" selected>Moderate ($$)</option>
-                    <option value="Premium ($$$)">Premium ($$$)</option>
-                </select>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1.5;">
+                    <label>Budget Tier</label>
+                    <select id="budget">
+                        <option value="Cheap ($)">Cheap ($)</option>
+                        <option value="Moderate ($$)" selected>Moderate ($$)</option>
+                        <option value="Premium ($$$)">Premium ($$$)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1.5;">
+                    <label>Currency</label>
+                    <select id="currency">
+                        <option value="INR (₹)" selected>INR (₹)</option>
+                        <option value="USD ($)">USD ($)</option>
+                        <option value="EUR (€)">EUR (€)</option>
+                        <option value="GBP (£)">GBP (£)</option>
+                        <option value="CAD ($)">CAD ($)</option>
+                        <option value="AUD ($)">AUD ($)</option>
+                        <option value="AED (د.إ)">AED (د.إ)</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
@@ -235,11 +270,14 @@ HTML_TEMPLATE = """
                 gender: document.getElementById('gender').value,
                 age: document.getElementById('age').value,
                 weight: document.getElementById('weight').value,
+                weight_unit: document.getElementById('weightUnit').value,
                 height: document.getElementById('height').value,
+                height_unit: document.getElementById('heightUnit').value,
                 goal: document.getElementById('goal').value,
                 equipment: document.getElementById('equipment').value,
                 cuisine: document.getElementById('cuisine').value,
                 budget: document.getElementById('budget').value,
+                currency: document.getElementById('currency').value,
                 cookingSkill: document.getElementById('cookingSkill').value
             };
 
