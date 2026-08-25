@@ -580,6 +580,97 @@ HTML_TEMPLATE = r"""
         .spinner { width: 50px; height: 50px; border: 4px solid rgba(246, 241, 227, 0.15); border-top-color: var(--coral); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* IN-APP VALIDATION TOAST CARD */
+        .validation-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-25px);
+            z-index: 100000;
+            width: 92%;
+            max-width: 520px;
+            background: rgba(28, 26, 66, 0.98);
+            border: 2px solid var(--coral);
+            border-radius: 18px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 25px rgba(255, 107, 84, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 18px 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .validation-toast.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+        .validation-toast-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .validation-toast-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .validation-toast-close {
+            margin-left: auto;
+            background: rgba(246, 241, 227, 0.08);
+            border: 1px solid var(--line);
+            color: var(--text-soft);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .validation-toast-close:hover {
+            background: var(--coral);
+            color: #fff;
+            border-color: var(--coral);
+        }
+        .validation-missing-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            padding-left: 36px;
+        }
+        .missing-pill {
+            background: rgba(255, 107, 84, 0.16);
+            border: 1px solid var(--coral);
+            color: #FFFFFF;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: 'Space Mono', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .missing-pill:hover {
+            background: var(--coral);
+            color: #fff;
+        }
+
+        /* INPUT ERROR HIGHLIGHT */
+        .input-error {
+            border-color: var(--coral) !important;
+            box-shadow: 0 0 0 3px rgba(255, 107, 84, 0.35) !important;
+            animation: shakeInput 0.4s ease-in-out;
+        }
+        @keyframes shakeInput {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
+        }
+
         /* =========================================================================
            COMPREHENSIVE RESPONSIVE DESIGN (MOBILE PHONE, TABLET, LAPTOP, DESKTOP)
            ========================================================================= */
@@ -793,6 +884,21 @@ HTML_TEMPLATE = r"""
             </ul>
         </div>
     </nav>
+
+    <!-- IN-APP VALIDATION NOTIFICATION CARD -->
+    <div id="validation-toast" class="validation-toast" style="display: none;">
+        <div class="validation-toast-content">
+            <div class="validation-toast-header">
+                <span class="validation-toast-icon">⚠️</span>
+                <div>
+                    <strong style="color: var(--coral); font-size: 1.05rem; display: block; margin-bottom: 2px;">Required Information Missing</strong>
+                    <span style="font-size: 0.86rem; color: var(--text-soft); line-height: 1.4; display: block;">Please complete the highlighted field(s) below to personalize your weekly fitness plan:</span>
+                </div>
+                <button class="validation-toast-close" onclick="hideValidationToast()" title="Close Notification">✕</button>
+            </div>
+            <div id="validation-missing-list" class="validation-missing-list"></div>
+        </div>
+    </div>
 
     <!-- =========================================================================
          PAGE 1: HOME
@@ -1654,6 +1760,53 @@ HTML_TEMPLATE = r"""
             }
         }
 
+        let toastTimeout = null;
+
+        function showValidationCard(missingFields) {
+            const toast = document.getElementById('validation-toast');
+            const list = document.getElementById('validation-missing-list');
+            if (!toast || !list) return;
+
+            list.innerHTML = '';
+            missingFields.forEach(item => {
+                const pill = document.createElement('span');
+                pill.className = 'missing-pill';
+                pill.innerText = '⚠️ ' + item.label;
+                pill.title = 'Click to jump to ' + item.label;
+                pill.onclick = () => {
+                    if (item.elem) {
+                        item.elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        item.elem.focus();
+                    }
+                    hideValidationToast();
+                };
+                list.appendChild(pill);
+            });
+
+            toast.style.display = 'block';
+            setTimeout(() => toast.classList.add('show'), 10);
+
+            if (missingFields.length > 0 && missingFields[0].elem) {
+                missingFields[0].elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                missingFields[0].elem.focus();
+            }
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                hideValidationToast();
+            }, 7000);
+        }
+
+        function hideValidationToast() {
+            const toast = document.getElementById('validation-toast');
+            if (toast) {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (!toast.classList.contains('show')) toast.style.display = 'none';
+                }, 350);
+            }
+        }
+
         function handleHubGoalChange(val) {
             const customInput = document.getElementById('hub_custom_goal');
             if (val === 'Custom') {
@@ -1678,14 +1831,50 @@ HTML_TEMPLATE = r"""
             const heightVal = document.getElementById('hub_height').value.trim();
             const heightUnit = document.getElementById('hub_heightUnit').value || 'cm';
             const goalChoice = document.getElementById('hub_goal').value;
-            const customGoalVal = document.getElementById('hub_custom_goal').value.trim();
+            const customGoalVal = (document.getElementById('hub_custom_goal') ? document.getElementById('hub_custom_goal').value : '').trim();
 
             const effectiveGoal = goalChoice === 'Custom' ? customGoalVal : goalChoice;
 
-            if (!gender || !ageVal || !weightVal || !heightVal || !effectiveGoal) {
-                if (isManualClick) {
-                    alert('⚠️ Please fill in all metric fields (Gender, Age, Weight, Height, and Target Goal) to calculate your personalized macros!');
+            if (isManualClick) {
+                document.querySelectorAll('#page-macro .input-error').forEach(el => el.classList.remove('input-error'));
+                const missing = [];
+                if (!gender) {
+                    genderElem.classList.add('input-error');
+                    missing.push({ label: 'Gender', elem: genderElem });
                 }
+                if (!ageVal) {
+                    const el = document.getElementById('hub_age');
+                    el.classList.add('input-error');
+                    missing.push({ label: 'Age', elem: el });
+                }
+                if (!weightVal) {
+                    const el = document.getElementById('hub_weight');
+                    el.classList.add('input-error');
+                    missing.push({ label: 'Weight', elem: el });
+                }
+                if (!heightVal) {
+                    const el = document.getElementById('hub_height');
+                    el.classList.add('input-error');
+                    missing.push({ label: 'Height', elem: el });
+                }
+                if (!goalChoice) {
+                    const el = document.getElementById('hub_goal');
+                    el.classList.add('input-error');
+                    missing.push({ label: 'Target Goal', elem: el });
+                } else if (goalChoice === 'Custom' && !customGoalVal) {
+                    const el = document.getElementById('hub_custom_goal');
+                    el.classList.add('input-error');
+                    missing.push({ label: 'Custom Target Goal', elem: el });
+                }
+
+                if (missing.length > 0) {
+                    showValidationCard(missing);
+                    return;
+                }
+                hideValidationToast();
+            }
+
+            if (!gender || !ageVal || !weightVal || !heightVal || !effectiveGoal) {
                 return;
             }
 
@@ -1771,6 +1960,7 @@ HTML_TEMPLATE = r"""
         }
 
         function applyMacrosToStudio() {
+            document.querySelectorAll('#page-macro .input-error').forEach(el => el.classList.remove('input-error'));
             const gender = document.getElementById('hub_gender').value;
             const age = document.getElementById('hub_age').value.trim();
             const weight = document.getElementById('hub_weight').value.trim();
@@ -1778,13 +1968,23 @@ HTML_TEMPLATE = r"""
             const height = document.getElementById('hub_height').value.trim();
             const heightUnit = document.getElementById('hub_heightUnit').value;
             const goalChoice = document.getElementById('hub_goal').value;
-            const customGoalVal = document.getElementById('hub_custom_goal').value.trim();
+            const customGoalVal = (document.getElementById('hub_custom_goal') ? document.getElementById('hub_custom_goal').value : '').trim();
 
-            if (!gender || !age || !weight || !height || !goalChoice) {
-                alert('⚠️ Please fill in all metrics and calculate your macros first!');
+            const missing = [];
+            if (!gender) missing.push({ label: 'Gender', elem: document.getElementById('hub_gender') });
+            if (!age) missing.push({ label: 'Age', elem: document.getElementById('hub_age') });
+            if (!weight) missing.push({ label: 'Weight', elem: document.getElementById('hub_weight') });
+            if (!height) missing.push({ label: 'Height', elem: document.getElementById('hub_height') });
+            if (!goalChoice) missing.push({ label: 'Target Goal', elem: document.getElementById('hub_goal') });
+            else if (goalChoice === 'Custom' && !customGoalVal) missing.push({ label: 'Custom Target Goal', elem: document.getElementById('hub_custom_goal') });
+
+            if (missing.length > 0) {
+                missing.forEach(m => { if (m.elem) m.elem.classList.add('input-error'); });
+                showValidationCard(missing);
                 return;
             }
 
+            hideValidationToast();
             const effectiveGoal = goalChoice === 'Custom' ? 'Custom' : goalChoice;
 
             // Sync to Profile Wizard
@@ -1846,6 +2046,48 @@ HTML_TEMPLATE = r"""
         }
 
         function submitEntryAndGenerate() {
+            document.querySelectorAll('#studio-entry-view .input-error').forEach(el => el.classList.remove('input-error'));
+
+            const fieldsToCheck = [
+                { id: 'entry_gender', label: 'Gender' },
+                { id: 'entry_age', label: 'Age' },
+                { id: 'entry_weight', label: 'Weight' },
+                { id: 'entry_height', label: 'Height' },
+                { id: 'entry_goal', label: 'Primary Fitness Target' },
+                { id: 'entry_equipment', label: 'Available Equipment' },
+                { id: 'entry_cuisine', label: 'Cuisine Preference' },
+                { id: 'entry_budget', label: 'Budget Tier' },
+                { id: 'entry_currency', label: 'Preferred Currency' },
+                { id: 'entry_cookingSkill', label: 'Cooking Setup / Facility' }
+            ];
+
+            const missing = [];
+            fieldsToCheck.forEach(f => {
+                const elem = document.getElementById(f.id);
+                const val = elem ? (elem.value || '').trim() : '';
+                if (!val) {
+                    if (elem) elem.classList.add('input-error');
+                    missing.push({ label: f.label, elem: elem });
+                }
+            });
+
+            const goalElem = document.getElementById('entry_goal');
+            if (goalElem && goalElem.value === 'Custom') {
+                const customElem = document.getElementById('entry_custom_goal');
+                const customVal = customElem ? (customElem.value || '').trim() : '';
+                if (!customVal) {
+                    if (customElem) customElem.classList.add('input-error');
+                    missing.push({ label: 'Custom Fitness Target', elem: customElem });
+                }
+            }
+
+            if (missing.length > 0) {
+                showValidationCard(missing);
+                return;
+            }
+
+            hideValidationToast();
+
             const gender = document.getElementById('entry_gender').value;
             const age = document.getElementById('entry_age').value;
             const weight = document.getElementById('entry_weight').value;
@@ -1861,18 +2103,8 @@ HTML_TEMPLATE = r"""
 
             if (goal === 'Custom') {
                 const customGoalVal = (document.getElementById('entry_custom_goal').value || '').trim();
-                if (!customGoalVal) {
-                    alert('⚠️ Please type your custom fitness target in the box!');
-                    document.getElementById('entry_custom_goal').focus();
-                    return;
-                }
                 goal = customGoalVal;
                 syncToSidebar('custom_goal', customGoalVal);
-            }
-
-            if (!gender || !age || !weight || !height || !goal || !equipment || !cuisine || !budget || !currency || !cookingSkill) {
-                alert('⚠️ Please fill in all information fields (Age, Weight, Height, Goal, Equipment, Cuisine, etc.) to generate your personalized plan!');
-                return;
             }
 
             syncToSidebar('gender', gender);
@@ -1881,6 +2113,7 @@ HTML_TEMPLATE = r"""
             syncToSidebar('weightUnit', weightUnit);
             syncToSidebar('height', height);
             syncToSidebar('heightUnit', heightUnit);
+            syncToSidebar('goal', document.getElementById('entry_goal').value);
             syncToSidebar('equipment', equipment);
             syncToSidebar('cuisine', cuisine);
             syncToSidebar('budget', budget);
@@ -1894,6 +2127,7 @@ HTML_TEMPLATE = r"""
         }
 
         function switchPage(pageId) {
+            hideValidationToast();
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active-page'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 
@@ -1910,6 +2144,48 @@ HTML_TEMPLATE = r"""
         }
 
         async function generatePlan() {
+            document.querySelectorAll('#studioSidebar .input-error').forEach(el => el.classList.remove('input-error'));
+
+            const fieldsToCheck = [
+                { id: 'gender', label: 'Gender' },
+                { id: 'age', label: 'Age' },
+                { id: 'weight', label: 'Weight' },
+                { id: 'height', label: 'Height' },
+                { id: 'goal', label: 'Fitness Target' },
+                { id: 'equipment', label: 'Available Equipment' },
+                { id: 'cuisine', label: 'Cuisine Preference' },
+                { id: 'budget', label: 'Budget Tier' },
+                { id: 'currency', label: 'Preferred Currency' },
+                { id: 'cookingSkill', label: 'Cooking Setup / Facility' }
+            ];
+
+            const missing = [];
+            fieldsToCheck.forEach(f => {
+                const elem = document.getElementById(f.id);
+                const val = elem ? (elem.value || '').trim() : '';
+                if (!val) {
+                    if (elem) elem.classList.add('input-error');
+                    missing.push({ label: f.label, elem: elem });
+                }
+            });
+
+            const goalElem = document.getElementById('goal');
+            if (goalElem && goalElem.value === 'Custom') {
+                const customElem = document.getElementById('custom_goal');
+                const customVal = customElem ? (customElem.value || '').trim() : '';
+                if (!customVal) {
+                    if (customElem) customElem.classList.add('input-error');
+                    missing.push({ label: 'Custom Fitness Target', elem: customElem });
+                }
+            }
+
+            if (missing.length > 0) {
+                showValidationCard(missing);
+                return;
+            }
+
+            hideValidationToast();
+
             const gender = document.getElementById('gender').value;
             const age = document.getElementById('age').value;
             const weight = document.getElementById('weight').value;
@@ -1925,17 +2201,7 @@ HTML_TEMPLATE = r"""
 
             if (goal === 'Custom') {
                 const customGoalVal = (document.getElementById('custom_goal').value || '').trim();
-                if (!customGoalVal) {
-                    alert('⚠️ Please type your custom fitness target!');
-                    document.getElementById('custom_goal').focus();
-                    return;
-                }
                 goal = customGoalVal;
-            }
-
-            if (!gender || !age || !weight || !height || !goal || !equipment || !cuisine || !budget || !currency || !cookingSkill) {
-                alert('⚠️ Please provide all information in the sidebar controls to generate your plan.');
-                return;
             }
 
             const btn = document.getElementById('generateBtn');
@@ -2163,6 +2429,18 @@ HTML_TEMPLATE = r"""
             }
             render3D();
         })();
+
+        // Auto-clear validation errors when user types or selects
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input, select').forEach(el => {
+                el.addEventListener('input', () => {
+                    el.classList.remove('input-error');
+                });
+                el.addEventListener('change', () => {
+                    el.classList.remove('input-error');
+                });
+            });
+        });
     </script>
 </body>
 </html>
