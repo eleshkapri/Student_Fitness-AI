@@ -1150,26 +1150,27 @@ HTML_TEMPLATE = """
                     <div class="form-row">
                         <div class="form-group" style="flex: 1;">
                             <label>Gender</label>
-                            <select id="hub_gender" autocomplete="off" onchange="calculateMacroHub()">
-                                <option value="Male" selected>Male</option>
+                            <select id="hub_gender" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onchange="calculateMacroHub()">
+                                <option value="" disabled selected hidden>Select Gender</option>
+                                <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Other">Other</option>
                             </select>
                         </div>
                         <div class="form-group" style="flex: 1;">
                             <label>Age</label>
-                            <input type="number" id="hub_age" value="20" min="14" max="90" autocomplete="off" oninput="calculateMacroHub()">
+                            <input type="number" id="hub_age" placeholder="Age (e.g. 20)" min="14" max="90" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="calculateMacroHub()">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group" style="flex: 2;">
                             <label>Weight</label>
-                            <input type="number" id="hub_weight" value="70" min="30" max="300" autocomplete="off" oninput="calculateMacroHub()">
+                            <input type="number" id="hub_weight" placeholder="Weight (e.g. 70)" min="30" max="300" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="calculateMacroHub()">
                         </div>
                         <div class="form-group" style="flex: 1.2;">
                             <label>Unit</label>
-                            <select id="hub_weightUnit" autocomplete="off" onchange="calculateMacroHub()">
+                            <select id="hub_weightUnit" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onchange="calculateMacroHub()">
                                 <option value="kg" selected>kg</option>
                                 <option value="lbs">lbs</option>
                             </select>
@@ -1179,11 +1180,11 @@ HTML_TEMPLATE = """
                     <div class="form-row">
                         <div class="form-group" style="flex: 2;">
                             <label>Height</label>
-                            <input type="number" id="hub_height" value="170" min="100" max="250" autocomplete="off" oninput="calculateMacroHub()">
+                            <input type="number" id="hub_height" placeholder="Height (e.g. 170)" min="100" max="250" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="calculateMacroHub()">
                         </div>
                         <div class="form-group" style="flex: 1.2;">
                             <label>Unit</label>
-                            <select id="hub_heightUnit" autocomplete="off" onchange="calculateMacroHub()">
+                            <select id="hub_heightUnit" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onchange="calculateMacroHub()">
                                 <option value="cm" selected>cm</option>
                                 <option value="ft/in">ft/in</option>
                             </select>
@@ -1192,38 +1193,41 @@ HTML_TEMPLATE = """
 
                     <div class="form-group" style="margin-bottom: 24px;">
                         <label>Target Goal</label>
-                        <select id="hub_goal" autocomplete="off" onchange="calculateMacroHub()">
-                            <option value="Build Muscle" selected>💪 Build Muscle (Surplus +350 kcal)</option>
+                        <select id="hub_goal" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onchange="handleHubGoalChange(this.value)">
+                            <option value="" disabled selected hidden>Select Target Goal</option>
+                            <option value="Build Muscle">💪 Build Muscle (Surplus +350 kcal)</option>
                             <option value="Lose Weight">🔥 Lose Weight / Cut (Deficit -400 kcal)</option>
                             <option value="Maintenance">⚡ Maintenance / Study Focus (TDEE)</option>
                             <option value="Athletic">🏃 Athletic Conditioning (Surplus +150 kcal)</option>
+                            <option value="Custom">✍️ Custom / Type Your Own Goal...</option>
                         </select>
+                        <input type="text" id="hub_custom_goal" placeholder="Type your custom target (e.g. Marathon Prep, Vertical Jump, Posture...)" style="display: none; margin-top: 10px; border-color: var(--coral);" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="calculateMacroHub()">
                     </div>
 
-                    <button class="btn-primary-lg" style="width: 100%;" onclick="calculateMacroHub()">⚡ Calculate Macros</button>
+                    <button class="btn-primary-lg" style="width: 100%;" onclick="calculateMacroHub(true)">⚡ Calculate Macros</button>
                 </div>
 
                 <!-- RIGHT PANEL: DYNAMIC MACRO DASHBOARD -->
                 <div class="panel-card" style="padding: 30px; border: 1px solid var(--coral); background: var(--ink2); box-shadow: 0 16px 40px rgba(0,0,0,0.5);">
                     <div style="font-size: 0.85rem; font-family: 'Space Mono', monospace; color: var(--text-soft); text-transform: uppercase;">Daily Target</div>
                     <div style="font-size: 3.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: #00E5FF; margin: 4px 0 6px 0; line-height: 1;">
-                        <span id="hub_cals">2,400</span> <span style="font-size: 1.25rem; color: var(--highlighter); font-weight: 600;">kcal/day</span>
+                        <span id="hub_cals">--</span> <span style="font-size: 1.25rem; color: var(--highlighter); font-weight: 600;">kcal/day</span>
                     </div>
                     <div style="color: var(--text-soft); font-size: 0.95rem; margin-bottom: 24px; font-family: 'Space Mono', monospace;">
-                        BMR: <strong id="hub_bmr" style="color: #fff;">1,650 kcal</strong> | TDEE: <strong id="hub_tdee" style="color: #fff;">2,050 kcal</strong>
+                        BMR: <strong id="hub_bmr" style="color: #fff;">-- kcal</strong> | TDEE: <strong id="hub_tdee" style="color: #fff;">-- kcal</strong>
                     </div>
 
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px;">
                         <div style="background: rgba(255, 107, 84, 0.12); border: 1px solid var(--coral); border-radius: 14px; padding: 16px 12px; text-align: center;">
-                            <div id="hub_protein" style="font-size: 1.8rem; font-weight: 800; color: var(--coral); font-family: 'Space Grotesk', sans-serif;">140g</div>
+                            <div id="hub_protein" style="font-size: 1.8rem; font-weight: 800; color: var(--coral); font-family: 'Space Grotesk', sans-serif;">--g</div>
                             <div style="font-size: 0.78rem; font-weight: 700; font-family: 'Space Mono', monospace; color: #fff; letter-spacing: 0.5px;">PROTEIN</div>
                         </div>
                         <div style="background: rgba(228, 255, 91, 0.12); border: 1px solid var(--highlighter); border-radius: 14px; padding: 16px 12px; text-align: center;">
-                            <div id="hub_carbs" style="font-size: 1.8rem; font-weight: 800; color: var(--highlighter); font-family: 'Space Grotesk', sans-serif;">290g</div>
+                            <div id="hub_carbs" style="font-size: 1.8rem; font-weight: 800; color: var(--highlighter); font-family: 'Space Grotesk', sans-serif;">--g</div>
                             <div style="font-size: 0.78rem; font-weight: 700; font-family: 'Space Mono', monospace; color: #fff; letter-spacing: 0.5px;">CARBS</div>
                         </div>
                         <div style="background: rgba(0, 229, 255, 0.12); border: 1px solid #00E5FF; border-radius: 14px; padding: 16px 12px; text-align: center;">
-                            <div id="hub_fats" style="font-size: 1.8rem; font-weight: 800; color: #00E5FF; font-family: 'Space Grotesk', sans-serif;">65g</div>
+                            <div id="hub_fats" style="font-size: 1.8rem; font-weight: 800; color: #00E5FF; font-family: 'Space Grotesk', sans-serif;">--g</div>
                             <div style="font-size: 0.78rem; font-weight: 700; font-family: 'Space Mono', monospace; color: #fff; letter-spacing: 0.5px;">FATS</div>
                         </div>
                     </div>
@@ -1231,17 +1235,17 @@ HTML_TEMPLATE = """
                     <div style="margin-bottom: 18px;">
                         <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-family: 'Space Mono', monospace; margin-bottom: 8px; color: var(--text-soft);">
                             <span>Macro Ratio</span>
-                            <span id="hub_ratio_text">23% P / 49% C / 28% F</span>
+                            <span id="hub_ratio_text">Fill in metrics to calculate</span>
                         </div>
                         <div style="height: 12px; border-radius: 10px; overflow: hidden; display: flex; background: rgba(246, 241, 227, 0.1);">
-                            <div id="hub_bar_p" style="width: 23%; background: var(--coral);" title="Protein"></div>
-                            <div id="hub_bar_c" style="width: 49%; background: var(--highlighter);" title="Carbs"></div>
-                            <div id="hub_bar_f" style="width: 28%; background: #00E5FF;" title="Fats"></div>
+                            <div id="hub_bar_p" style="width: 33%; background: var(--coral);" title="Protein"></div>
+                            <div id="hub_bar_c" style="width: 34%; background: var(--highlighter);" title="Carbs"></div>
+                            <div id="hub_bar_f" style="width: 33%; background: #00E5FF;" title="Fats"></div>
                         </div>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 229, 255, 0.08); padding: 10px 16px; border-radius: 10px; margin-bottom: 20px;">
-                        <span style="font-size: 0.92rem; color: #00E5FF; font-weight: 600;">💧 Water Target: <strong id="hub_water">2.8</strong> Liters/day</span>
+                        <span style="font-size: 0.92rem; color: #00E5FF; font-weight: 600;">💧 Water Target: <strong id="hub_water">--</strong> Liters/day</span>
                     </div>
 
                     <button class="btn-secondary-lg" style="width: 100%; border-color: var(--highlighter); color: var(--highlighter);" onclick="applyMacrosToStudio()">⚡ Transfer Metrics to AI Planner Studio ▸</button>
@@ -1623,17 +1627,44 @@ HTML_TEMPLATE = """
             }
         }
 
-        function calculateMacroHub() {
+        function handleHubGoalChange(val) {
+            const customInput = document.getElementById('hub_custom_goal');
+            if (val === 'Custom') {
+                if (customInput) {
+                    customInput.style.display = 'block';
+                    customInput.focus();
+                }
+            } else {
+                if (customInput) customInput.style.display = 'none';
+            }
+            calculateMacroHub(false);
+        }
+
+        function calculateMacroHub(isManualClick = false) {
             const genderElem = document.getElementById('hub_gender');
             if (!genderElem) return;
 
-            const gender = genderElem.value || 'Male';
-            const age = parseFloat(document.getElementById('hub_age').value) || 20;
-            const weight = parseFloat(document.getElementById('hub_weight').value) || 70;
+            const gender = genderElem.value;
+            const ageVal = document.getElementById('hub_age').value.trim();
+            const weightVal = document.getElementById('hub_weight').value.trim();
             const weightUnit = document.getElementById('hub_weightUnit').value || 'kg';
-            const height = parseFloat(document.getElementById('hub_height').value) || 170;
+            const heightVal = document.getElementById('hub_height').value.trim();
             const heightUnit = document.getElementById('hub_heightUnit').value || 'cm';
-            const goal = document.getElementById('hub_goal').value || 'Build Muscle';
+            const goalChoice = document.getElementById('hub_goal').value;
+            const customGoalVal = document.getElementById('hub_custom_goal').value.trim();
+
+            const effectiveGoal = goalChoice === 'Custom' ? customGoalVal : goalChoice;
+
+            if (!gender || !ageVal || !weightVal || !heightVal || !effectiveGoal) {
+                if (isManualClick) {
+                    alert('⚠️ Please fill in all metric fields (Gender, Age, Weight, Height, and Target Goal) to calculate your personalized macros!');
+                }
+                return;
+            }
+
+            const age = parseFloat(ageVal);
+            const weight = parseFloat(weightVal);
+            const height = parseFloat(heightVal);
 
             const kg = weightUnit === 'lbs' ? weight * 0.453592 : weight;
             const cm = heightUnit === 'ft/in' ? height * 2.54 : height;
@@ -1650,14 +1681,14 @@ HTML_TEMPLATE = """
             let targetCals = tdee;
             let proteinG = kg * 1.6;
 
-            const goalLower = goal.toLowerCase();
-            if (goalLower.includes('muscle') || goalLower.includes('surplus')) {
+            const goalLower = effectiveGoal.toLowerCase();
+            if (goalLower.includes('muscle') || goalLower.includes('surplus') || goalLower.includes('bulk') || goalLower.includes('hypertrophy')) {
                 targetCals = tdee + 350;
                 proteinG = kg * 2.0;
-            } else if (goalLower.includes('lose') || goalLower.includes('cut') || goalLower.includes('deficit')) {
+            } else if (goalLower.includes('lose') || goalLower.includes('cut') || goalLower.includes('deficit') || goalLower.includes('fat')) {
                 targetCals = tdee - 400;
                 proteinG = kg * 2.2;
-            } else if (goalLower.includes('athletic')) {
+            } else if (goalLower.includes('athletic') || goalLower.includes('tone') || goalLower.includes('sport') || goalLower.includes('marathon')) {
                 targetCals = tdee + 150;
                 proteinG = kg * 1.8;
             }
@@ -1714,12 +1745,20 @@ HTML_TEMPLATE = """
 
         function applyMacrosToStudio() {
             const gender = document.getElementById('hub_gender').value;
-            const age = document.getElementById('hub_age').value;
-            const weight = document.getElementById('hub_weight').value;
+            const age = document.getElementById('hub_age').value.trim();
+            const weight = document.getElementById('hub_weight').value.trim();
             const weightUnit = document.getElementById('hub_weightUnit').value;
-            const height = document.getElementById('hub_height').value;
+            const height = document.getElementById('hub_height').value.trim();
             const heightUnit = document.getElementById('hub_heightUnit').value;
-            const goal = document.getElementById('hub_goal').value;
+            const goalChoice = document.getElementById('hub_goal').value;
+            const customGoalVal = document.getElementById('hub_custom_goal').value.trim();
+
+            if (!gender || !age || !weight || !height || !goalChoice) {
+                alert('⚠️ Please fill in all metrics and calculate your macros first!');
+                return;
+            }
+
+            const effectiveGoal = goalChoice === 'Custom' ? 'Custom' : goalChoice;
 
             // Sync to Profile Wizard
             const eGen = document.getElementById('entry_gender');
@@ -1735,7 +1774,17 @@ HTML_TEMPLATE = """
             const eHUnit = document.getElementById('entry_heightUnit');
             if (eHUnit) eHUnit.value = heightUnit;
             const eGoal = document.getElementById('entry_goal');
-            if (eGoal) eGoal.value = goal;
+            if (eGoal) eGoal.value = effectiveGoal;
+
+            const eCustom = document.getElementById('entry_custom_goal');
+            if (goalChoice === 'Custom') {
+                if (eCustom) {
+                    eCustom.style.display = 'block';
+                    eCustom.value = customGoalVal;
+                }
+            } else {
+                if (eCustom) eCustom.style.display = 'none';
+            }
 
             // Sync to sidebar
             syncToSidebar('gender', gender);
@@ -1744,14 +1793,19 @@ HTML_TEMPLATE = """
             syncToSidebar('weightUnit', weightUnit);
             syncToSidebar('height', height);
             syncToSidebar('heightUnit', heightUnit);
-            syncToSidebar('goal', goal);
+            syncToSidebar('goal', effectiveGoal);
+            const sideCustom = document.getElementById('custom_goal');
+            if (goalChoice === 'Custom') {
+                if (sideCustom) {
+                    sideCustom.style.display = 'block';
+                    sideCustom.value = customGoalVal;
+                }
+            } else {
+                if (sideCustom) sideCustom.style.display = 'none';
+            }
 
             switchPage('generator');
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            calculateMacroHub();
-        });
 
         function syncToSidebar(id, val) {
             const sidebarElem = document.getElementById(id);

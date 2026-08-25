@@ -29,81 +29,110 @@ def render():
 
         col_g, col_a = st.columns(2)
         with col_g:
-            gender = st.selectbox("Gender", ["Male", "Female", "Other"], index=0, key="macro_gender")
+            gender = st.selectbox("Gender", ["Male", "Female", "Other"], index=None, placeholder="Select Gender", key="macro_gender")
         with col_a:
-            age = st.number_input("Age", min_value=14, max_value=80, value=20, step=1, key="macro_age")
+            age = st.number_input("Age", min_value=14, max_value=80, value=None, placeholder="e.g. 20", step=1, key="macro_age")
 
         col_w, col_wu = st.columns([2, 1])
         with col_w:
-            weight = st.number_input("Weight", min_value=30.0, max_value=300.0, value=70.0, step=0.5, key="macro_weight")
+            weight = st.number_input("Weight", min_value=30.0, max_value=300.0, value=None, placeholder="e.g. 70", step=0.5, key="macro_weight")
         with col_wu:
             weight_unit = st.selectbox("Unit", ["kg", "lbs"], index=0, key="macro_wunit")
 
         col_h, col_hu = st.columns([2, 1])
         with col_h:
-            height = st.number_input("Height", min_value=100.0, max_value=250.0, value=170.0, step=1.0, key="macro_height")
+            height = st.number_input("Height", min_value=100.0, max_value=250.0, value=None, placeholder="e.g. 170", step=1.0, key="macro_height")
         with col_hu:
             height_unit = st.selectbox("Unit", ["cm", "ft/in"], index=0, key="macro_hunit")
 
         goal_choice = st.selectbox(
             "Target Goal",
             [
-                "Build Muscle (Surplus +350 kcal)",
-                "Lose Weight / Cut (Deficit -400 kcal)",
-                "Maintenance / Study Focus (TDEE)",
-                "Athletic Conditioning (Surplus +150 kcal)"
+                "💪 Build Muscle (Surplus +350 kcal)",
+                "🔥 Lose Weight / Cut (Deficit -400 kcal)",
+                "⚡ Maintenance / Study Focus (TDEE)",
+                "🏃 Athletic Conditioning (Surplus +150 kcal)",
+                "✍️ Custom / Type your own..."
             ],
-            index=0,
+            index=None,
+            placeholder="Select Target Goal",
             key="macro_goal"
         )
 
+        custom_goal_text = ""
+        if goal_choice == "✍️ Custom / Type your own...":
+            custom_goal_text = st.text_input("Custom Target Goal", placeholder="e.g. Marathon Prep, Posture Correction...", key="macro_custom_goal")
+
+        calculate_btn = st.button("⚡ Calculate Macros", use_container_width=True)
+
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # Compute using OOP domain model and calculator
-    profile = StudentProfile(
-        gender=gender,
-        age=age,
-        weight=weight,
-        weight_unit=weight_unit,
-        height=height,
-        height_unit=height_unit,
-        goal=goal_choice
-    )
-    macros = MacroCalculator.calculate(profile)
+    effective_goal = custom_goal_text.strip() if goal_choice == "✍️ Custom / Type your own..." else goal_choice
+    has_inputs = gender and age and weight and height and effective_goal
 
-    # Compute percentage breakdown for segmented ratio bar
-    total_cals = macros.target_calories
-    protein_cals = macros.protein_g * 4
-    carbs_cals = macros.carbs_g * 4
-    fats_cals = macros.fats_g * 9
-    total_macro_cals = max(protein_cals + carbs_cals + fats_cals, 1)
+    if has_inputs:
+        profile = StudentProfile(
+            gender=gender,
+            age=age,
+            weight=weight,
+            weight_unit=weight_unit,
+            height=height,
+            height_unit=height_unit,
+            goal=effective_goal
+        )
+        macros = MacroCalculator.calculate(profile)
 
-    p_pct = round((protein_cals / total_macro_cals) * 100)
-    c_pct = round((carbs_cals / total_macro_cals) * 100)
-    f_pct = 100 - (p_pct + c_pct)
+        total_cals = macros.target_calories
+        protein_cals = macros.protein_g * 4
+        carbs_cals = macros.carbs_g * 4
+        fats_cals = macros.fats_g * 9
+        total_macro_cals = max(protein_cals + carbs_cals + fats_cals, 1)
+
+        p_pct = round((protein_cals / total_macro_cals) * 100)
+        c_pct = round((carbs_cals / total_macro_cals) * 100)
+        f_pct = 100 - (p_pct + c_pct)
+
+        target_display = f"{macros.target_calories:,}"
+        bmr_display = f"{macros.bmr:,} kcal"
+        tdee_display = f"{macros.tdee:,} kcal"
+        p_display = f"{macros.protein_g}g"
+        c_display = f"{macros.carbs_g}g"
+        f_display = f"{macros.fats_g}g"
+        water_display = f"{macros.water_liters} Liters/day"
+        ratio_display = f"{p_pct}% P / {c_pct}% C / {f_pct}% F"
+    else:
+        target_display = "--"
+        bmr_display = "-- kcal"
+        tdee_display = "-- kcal"
+        p_display = "--g"
+        c_display = "--g"
+        f_display = "--g"
+        water_display = "-- Liters/day"
+        ratio_display = "Fill in metrics to calculate"
+        p_pct, c_pct, f_pct = 33, 34, 33
 
     with col_results:
         st.markdown(f"""
         <div class="panel-card" style="padding: 26px; border: 1px solid var(--coral); background: var(--ink2); box-shadow: 0 16px 40px rgba(0,0,0,0.5);">
             <div style="font-size: 0.85rem; font-family: 'Space Mono', monospace; color: var(--text-soft); text-transform: uppercase;">Daily Target</div>
             <div style="font-size: 3.2rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: #00E5FF; margin: 4px 0 6px 0; line-height: 1;">
-                {macros.target_calories:,} <span style="font-size: 1.2rem; color: var(--highlighter); font-weight: 600;">kcal/day</span>
+                {target_display} <span style="font-size: 1.2rem; color: var(--highlighter); font-weight: 600;">kcal/day</span>
             </div>
             <div style="color: var(--text-soft); font-size: 0.95rem; margin-bottom: 20px; font-family: 'Space Mono', monospace;">
-                BMR: <strong style="color: #fff;">{macros.bmr:,} kcal</strong> | TDEE: <strong style="color: #fff;">{macros.tdee:,} kcal</strong>
+                BMR: <strong style="color: #fff;">{bmr_display}</strong> | TDEE: <strong style="color: #fff;">{tdee_display}</strong>
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
                 <div style="background: rgba(255, 107, 84, 0.12); border: 1px solid var(--coral); border-radius: 12px; padding: 14px 10px; text-align: center;">
-                    <div style="font-size: 1.6rem; font-weight: 800; color: var(--coral); font-family: 'Space Grotesk', sans-serif;">{macros.protein_g}g</div>
+                    <div style="font-size: 1.6rem; font-weight: 800; color: var(--coral); font-family: 'Space Grotesk', sans-serif;">{p_display}</div>
                     <div style="font-size: 0.75rem; font-weight: 700; font-family: 'Space Mono', monospace; color: #fff; letter-spacing: 0.5px;">PROTEIN</div>
                 </div>
                 <div style="background: rgba(228, 255, 91, 0.12); border: 1px solid var(--highlighter); border-radius: 12px; padding: 14px 10px; text-align: center;">
-                    <div style="font-size: 1.6rem; font-weight: 800; color: var(--highlighter); font-family: 'Space Grotesk', sans-serif;">{macros.carbs_g}g</div>
+                    <div style="font-size: 1.6rem; font-weight: 800; color: var(--highlighter); font-family: 'Space Grotesk', sans-serif;">{c_display}</div>
                     <div style="font-size: 0.75rem; font-weight: 700; font-family: 'Space Mono', monospace; color: #fff; letter-spacing: 0.5px;">CARBS</div>
                 </div>
                 <div style="background: rgba(0, 229, 255, 0.12); border: 1px solid #00E5FF; border-radius: 12px; padding: 14px 10px; text-align: center;">
-                    <div style="font-size: 1.6rem; font-weight: 800; color: #00E5FF; font-family: 'Space Grotesk', sans-serif;">{macros.fats_g}g</div>
+                    <div style="font-size: 1.6rem; font-weight: 800; color: #00E5FF; font-family: 'Space Grotesk', sans-serif;">{f_display}</div>
                     <div style="font-size: 0.75rem; font-weight: 700; font-family: 'Space Mono', monospace; color: #fff; letter-spacing: 0.5px;">FATS</div>
                 </div>
             </div>
@@ -111,7 +140,7 @@ def render():
             <div style="margin-bottom: 12px;">
                 <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-family: 'Space Mono', monospace; margin-bottom: 6px; color: var(--text-soft);">
                     <span>Macro Ratio Split</span>
-                    <span>{p_pct}% P / {c_pct}% C / {f_pct}% F</span>
+                    <span>{ratio_display}</span>
                 </div>
                 <div style="height: 10px; border-radius: 10px; overflow: hidden; display: flex; background: rgba(246, 241, 227, 0.1);">
                     <div style="width: {p_pct}%; background: var(--coral);" title="Protein"></div>
@@ -121,7 +150,7 @@ def render():
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #00E5FF; font-weight: 600; margin-top: 16px; background: rgba(0, 229, 255, 0.08); padding: 8px 14px; border-radius: 8px;">
-                <span>💧</span> Daily Water Target: <strong>{macros.water_liters} Liters/day</strong>
+                <span>💧</span> Daily Water Target: <strong>{water_display}</strong>
             </div>
         </div>
         """, unsafe_allow_html=True)
