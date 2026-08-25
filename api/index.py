@@ -540,9 +540,9 @@ HTML_TEMPLATE = """
         }
 
         /* FLIP CARDS */
-        .flip-card-container { perspective: 1000px; height: 220px; margin-bottom: 20px; }
+        .flip-card-container { perspective: 1000px; height: 220px; margin-bottom: 20px; cursor: pointer; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; border-radius: var(--radius); }
-        .flip-card-container:hover .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-container:hover .flip-card-inner, .flip-card-container.flipped .flip-card-inner { transform: rotateY(180deg); }
         .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid var(--line); }
         .flip-card-front { background: var(--ink2); color: #ffffff; }
         .flip-card-back { background: var(--ink3); color: var(--highlighter); transform: rotateY(180deg); border-color: var(--highlighter); }
@@ -569,9 +569,10 @@ HTML_TEMPLATE = """
         .spinner { width: 50px; height: 50px; border: 4px solid rgba(246, 241, 227, 0.15); border-top-color: var(--coral); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* =========================================================================
-           COMPREHENSIVE RESPONSIVE DESIGN (MOBILE, TABLET, LAPTOP, DESKTOP)
-           ========================================================================= */
+        .navbar-top-row {
+            display: contents;
+        }
+
         @media (max-width: 1080px) {
             .navbar { padding: 14px 20px; }
             .nav-links { gap: 8px; }
@@ -581,23 +582,55 @@ HTML_TEMPLATE = """
 
         @media (max-width: 860px) {
             .navbar {
-                flex-wrap: wrap;
-                gap: 12px;
-                padding: 12px 16px;
+                display: flex;
+                flex-direction: column;
+                padding: 10px 14px 8px 14px;
+                gap: 8px;
+                background: rgba(20, 19, 43, 0.96) !important;
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--line);
+                position: sticky;
+                top: 0;
+                z-index: 10000;
             }
-            .brand-logo { font-size: 1.25rem; }
-            .nav-cta { padding: 8px 14px; font-size: 0.82rem; }
+            .navbar-top-row {
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .brand-logo { font-size: 1.2rem; }
+            .nav-cta { padding: 7px 14px; font-size: 0.8rem; border-radius: 10px; }
             .nav-links {
                 width: 100%;
-                order: 3;
                 overflow-x: auto;
                 white-space: nowrap;
-                padding-bottom: 4px;
+                padding: 2px 2px 6px 2px;
                 justify-content: flex-start;
-                gap: 6px;
+                gap: 8px;
                 -webkit-overflow-scrolling: touch;
+                scrollbar-width: none !important;
+                -ms-overflow-style: none !important;
             }
-            .nav-link { font-size: 0.8rem; padding: 6px 12px; flex-shrink: 0; }
+            .nav-links::-webkit-scrollbar {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+            }
+            .nav-link {
+                font-size: 0.82rem;
+                padding: 6px 12px;
+                flex-shrink: 0;
+                border-radius: 20px;
+                background: rgba(246, 241, 227, 0.06);
+                border: 1px solid rgba(246, 241, 227, 0.08);
+            }
+            .nav-link.active {
+                background: rgba(228, 255, 91, 0.18);
+                border-color: var(--highlighter);
+                color: var(--highlighter);
+            }
 
             /* HERO SECTION */
             .hero-grid {
@@ -639,7 +672,7 @@ HTML_TEMPLATE = """
             h1 { font-size: 2.2rem !important; }
             h2 { font-size: 1.7rem !important; }
             .hero-deck {
-                transform: scale(0.54);
+                transform: scale(0.56);
                 height: 150px;
             }
             section { padding: 40px 16px !important; }
@@ -657,7 +690,7 @@ HTML_TEMPLATE = """
         @media (max-width: 380px) {
             h1 { font-size: 1.85rem !important; }
             .hero-deck {
-                transform: scale(0.44);
+                transform: scale(0.46);
                 height: 125px;
             }
         }
@@ -672,14 +705,17 @@ HTML_TEMPLATE = """
 
     <!-- TOP NAVIGATION BAR -->
     <nav class="navbar">
-        <a class="brand-logo" onclick="switchPage('home')">
-            <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </span>
-            StudentFit <span>AI</span>
-        </a>
+        <div class="navbar-top-row">
+            <a class="brand-logo" onclick="switchPage('home')">
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+                StudentFit <span>AI</span>
+            </a>
+            <button class="nav-cta" onclick="switchPage('generator')">⚡ Generate</button>
+        </div>
         <ul class="nav-links">
             <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
             <li><a class="nav-link" id="nav-how" onclick="switchPage('how')">📖 How it Works</a></li>
@@ -860,12 +896,12 @@ HTML_TEMPLATE = """
             </p>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-                <div class="flip-card-container">
+                <div class="flip-card-container" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
                             <div style="font-size: 2.4rem; margin-bottom: 10px;">🏃‍♂️</div>
                             <h3>Bio-Data Personalization</h3>
-                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Tap or hover to flip</p>
                         </div>
                         <div class="flip-card-back">
                             <h4>Adaptive Calorie Math</h4>
@@ -873,12 +909,12 @@ HTML_TEMPLATE = """
                         </div>
                     </div>
                 </div>
-                <div class="flip-card-container">
+                <div class="flip-card-container" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
                             <div style="font-size: 2.4rem; margin-bottom: 10px;">🎯</div>
                             <h3>Goal-Driven Programming</h3>
-                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Tap or hover to flip</p>
                         </div>
                         <div class="flip-card-back">
                             <h4>Targeted Splits</h4>
@@ -886,12 +922,12 @@ HTML_TEMPLATE = """
                         </div>
                     </div>
                 </div>
-                <div class="flip-card-container">
+                <div class="flip-card-container" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
                             <div style="font-size: 2.4rem; margin-bottom: 10px;">🏋️</div>
                             <h3>Gear-Adaptive Workouts</h3>
-                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Tap or hover to flip</p>
                         </div>
                         <div class="flip-card-back">
                             <h4>Space & Equipment Fit</h4>
@@ -899,12 +935,12 @@ HTML_TEMPLATE = """
                         </div>
                     </div>
                 </div>
-                <div class="flip-card-container">
+                <div class="flip-card-container" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
                             <div style="font-size: 2.4rem; margin-bottom: 10px;">🥗</div>
                             <h3>Cuisine-Flexible Meals</h3>
-                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Tap or hover to flip</p>
                         </div>
                         <div class="flip-card-back">
                             <h4>Cultural Respect</h4>
@@ -912,12 +948,12 @@ HTML_TEMPLATE = """
                         </div>
                     </div>
                 </div>
-                <div class="flip-card-container">
+                <div class="flip-card-container" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
                             <div style="font-size: 2.4rem; margin-bottom: 10px;">🛒</div>
                             <h3>Budget-Tiered Groceries</h3>
-                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Tap or hover to flip</p>
                         </div>
                         <div class="flip-card-back">
                             <h4>1-Person Shopping List</h4>
@@ -925,12 +961,12 @@ HTML_TEMPLATE = """
                         </div>
                     </div>
                 </div>
-                <div class="flip-card-container">
+                <div class="flip-card-container" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
                             <div style="font-size: 2.4rem; margin-bottom: 10px;">🍳</div>
                             <h3>Cooking-Skill Recipes</h3>
-                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Tap or hover to flip</p>
                         </div>
                         <div class="flip-card-back">
                             <h4>Appliance Matching</h4>
@@ -1450,7 +1486,10 @@ HTML_TEMPLATE = """
             const targetNav = document.getElementById('nav-' + pageId);
 
             if (targetPage) targetPage.classList.add('active-page');
-            if (targetNav) targetNav.classList.add('active');
+            if (targetNav) {
+                targetNav.classList.add('active');
+                targetNav.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1609,6 +1648,7 @@ HTML_TEMPLATE = """
             let mouseY = height / 2;
             let targetMouseX = mouseX;
             let targetMouseY = mouseY;
+            let time = 0;
 
             const particles = [];
             const numParticles = Math.min(70, Math.floor(width / 20));
@@ -1637,11 +1677,22 @@ HTML_TEMPLATE = """
                 targetMouseY = e.clientY;
             });
 
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches && e.touches.length > 0) {
+                    targetMouseX = e.touches[0].clientX;
+                    targetMouseY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
             function render3D() {
+                time += 0.012;
+                const autoDriftX = Math.sin(time * 0.7) * 45;
+                const autoDriftY = Math.cos(time * 0.5) * 30;
+
                 mouseX += (targetMouseX - mouseX) * 0.05;
                 mouseY += (targetMouseY - mouseY) * 0.05;
-                const offsetX = (mouseX - width / 2) * 0.06;
-                const offsetY = (mouseY - height / 2) * 0.06;
+                const offsetX = (mouseX + autoDriftX - width / 2) * 0.06;
+                const offsetY = (mouseY + autoDriftY - height / 2) * 0.06;
 
                 ctx.clearRect(0, 0, width, height);
 

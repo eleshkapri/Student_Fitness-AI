@@ -307,6 +307,7 @@ def apply_theme():
             perspective: 1000px;
             height: 220px;
             margin-bottom: 20px;
+            cursor: pointer;
         }
         .flip-card-inner {
             position: relative;
@@ -317,7 +318,7 @@ def apply_theme():
             transform-style: preserve-3d;
             border-radius: var(--radius);
         }
-        .flip-card-container:hover .flip-card-inner {
+        .flip-card-container:hover .flip-card-inner, .flip-card-container.flipped .flip-card-inner {
             transform: rotateY(180deg);
         }
         .flip-card-front, .flip-card-back {
