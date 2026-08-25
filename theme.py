@@ -1,17 +1,17 @@
 """
 Theme Module for StudentFit AI.
-Defines design tokens, typography, custom CSS, ambient animations, top navigation bar, and shared JS.
+Defines design tokens, typography, custom CSS, ambient animations, unique top navigation bar, and shared JS.
 """
 
 import streamlit as st
 import streamlit.components.v1 as components
 
 def apply_theme(active_page: str = "Home"):
-    """Injects design system styles and renders the top navigation bar."""
+    """Injects unique design system styles and renders the top navigation bar."""
     css = """
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -34,7 +34,7 @@ def apply_theme(active_page: str = "Home"):
         }
         
         .stMainBlockContainer {
-            padding-top: 12px !important;
+            padding-top: 14px !important;
             padding-bottom: 60px !important;
             max-width: 1240px !important;
         }
@@ -49,26 +49,26 @@ def apply_theme(active_page: str = "Home"):
         /* AMBIENT GLOW BLOBS */
         .ambient-blob-1 {
             position: fixed;
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(156, 140, 255, 0.16) 0%, rgba(20, 19, 43, 0) 70%);
-            top: -80px;
-            left: -80px;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(156, 140, 255, 0.18) 0%, rgba(20, 19, 43, 0) 70%);
+            top: -90px;
+            left: -90px;
             z-index: 0;
             pointer-events: none;
-            filter: blur(50px);
+            filter: blur(55px);
             animation: drift 18s ease-in-out infinite alternate;
         }
         .ambient-blob-2 {
             position: fixed;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 107, 84, 0.12) 0%, rgba(20, 19, 43, 0) 70%);
-            bottom: -100px;
-            right: -80px;
+            width: 520px;
+            height: 520px;
+            background: radial-gradient(circle, rgba(255, 107, 84, 0.14) 0%, rgba(20, 19, 43, 0) 70%);
+            bottom: -110px;
+            right: -90px;
             z-index: 0;
             pointer-events: none;
-            filter: blur(60px);
+            filter: blur(65px);
             animation: drift 22s ease-in-out infinite alternate-reverse;
         }
 
@@ -108,66 +108,76 @@ def apply_theme(active_page: str = "Home"):
         ::-webkit-scrollbar-thumb { background: rgba(246, 241, 227, 0.18); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--highlighter); }
 
-        /* SLEEK TOP NAVBAR STYLING */
+        /* UNIQUE FLOATING NAVBAR DOCK */
         div[data-testid="stHorizontalBlock"]:has(.navbar-anchor) {
-            background: rgba(28, 26, 66, 0.9) !important;
-            backdrop-filter: blur(20px) !important;
-            border: 1px solid rgba(246, 241, 227, 0.16) !important;
-            border-radius: 20px !important;
-            padding: 10px 18px !important;
-            margin-bottom: 28px !important;
+            background: rgba(18, 16, 40, 0.92) !important;
+            backdrop-filter: blur(24px) !important;
+            border: 1px solid rgba(228, 255, 91, 0.25) !important;
+            border-radius: 24px !important;
+            padding: 8px 18px !important;
+            margin-bottom: 30px !important;
             align-items: center !important;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45) !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 25px rgba(156, 140, 255, 0.12) !important;
         }
 
-        /* TOP NAVBAR BUTTONS */
+        /* NAVBAR TABS */
         .nav-link-btn button {
             background: transparent !important;
             color: var(--text-soft) !important;
             border: 1px solid transparent !important;
             box-shadow: none !important;
-            padding: 8px 14px !important;
+            padding: 7px 12px !important;
+            font-family: 'Space Grotesk', sans-serif !important;
             font-size: 0.88rem !important;
             font-weight: 600 !important;
-            border-radius: 12px !important;
-            transition: all 0.2s ease !important;
-            height: 40px !important;
+            letter-spacing: 0.3px !important;
+            border-radius: 14px !important;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+            height: 38px !important;
             white-space: nowrap !important;
         }
         .nav-link-btn button:hover {
             background: rgba(246, 241, 227, 0.08) !important;
             color: #ffffff !important;
-            border-color: rgba(246, 241, 227, 0.15) !important;
+            border-color: rgba(246, 241, 227, 0.18) !important;
+            transform: translateY(-1px) !important;
         }
+        
+        /* ACTIVE HIGH-CONTRAST NEON PILL TAB */
         .nav-link-active button {
-            background: rgba(228, 255, 91, 0.16) !important;
-            color: var(--highlighter) !important;
+            background: var(--highlighter) !important;
+            color: #14132B !important;
             border: 1px solid var(--highlighter) !important;
-            box-shadow: 0 0 16px rgba(228, 255, 91, 0.3) !important;
-            padding: 8px 14px !important;
+            box-shadow: 0 0 20px rgba(228, 255, 91, 0.45) !important;
+            padding: 7px 14px !important;
+            font-family: 'Space Grotesk', sans-serif !important;
             font-size: 0.88rem !important;
-            font-weight: 700 !important;
-            border-radius: 12px !important;
-            height: 40px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.3px !important;
+            border-radius: 14px !important;
+            height: 38px !important;
             white-space: nowrap !important;
+            transform: translateY(-1px) !important;
         }
 
-        /* CTA BUTTON IN NAVBAR */
+        /* GLOWING ACCENT CTA BUTTON IN NAVBAR */
         .nav-cta-btn button {
-            background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%) !important;
+            background: linear-gradient(135deg, var(--coral) 0%, #ff416c 100%) !important;
             color: #ffffff !important;
             border: none !important;
-            padding: 8px 16px !important;
-            font-size: 0.9rem !important;
-            font-weight: 700 !important;
-            border-radius: 12px !important;
-            height: 40px !important;
-            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4) !important;
+            padding: 7px 16px !important;
+            font-family: 'Space Grotesk', sans-serif !important;
+            font-size: 0.88rem !important;
+            font-weight: 800 !important;
+            border-radius: 14px !important;
+            height: 38px !important;
+            box-shadow: 0 4px 18px rgba(255, 107, 84, 0.45) !important;
             white-space: nowrap !important;
+            transition: all 0.25s ease !important;
         }
         .nav-cta-btn button:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 6px 20px rgba(255, 75, 43, 0.65) !important;
+            transform: translateY(-2px) scale(1.02) !important;
+            box-shadow: 0 8px 24px rgba(255, 107, 84, 0.7) !important;
         }
 
         /* CARDS & PANELS */
@@ -352,13 +362,18 @@ def apply_theme(active_page: str = "Home"):
     # --- RENDER TOP NAVBAR ---
     with st.container():
         col_logo, col_h, col_hw, col_f, col_p, col_s, col_g, col_cta = st.columns(
-            [2.2, 1, 1.3, 1.1, 1, 1, 1.3, 1.4], gap="small"
+            [2.3, 0.9, 1.3, 1.0, 0.9, 0.9, 1.2, 1.3], gap="small"
         )
         
         with col_logo:
             st.markdown("""
-            <div class="navbar-anchor" style="font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.3rem; color: #fff; padding-top: 7px; display: flex; align-items: center; gap: 6px;">
-                <span style="background: linear-gradient(90deg, #ffffff, #E4FF5B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">StudentFit AI</span>
+            <div class="navbar-anchor" style="display: flex; align-items: center; gap: 8px; padding-top: 6px;">
+                <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.22rem; letter-spacing: -0.5px; color: #fff;">
+                    StudentFit<span style="color: var(--highlighter);">.AI</span>
+                </span>
+                <span style="background: rgba(228, 255, 91, 0.12); border: 1px solid rgba(228, 255, 91, 0.4); color: var(--highlighter); font-family: 'Space Mono', monospace; font-size: 0.65rem; padding: 2px 6px; border-radius: 6px; font-weight: bold; letter-spacing: 0.5px;">
+                    v2.0
+                </span>
             </div>
             """, unsafe_allow_html=True)
 
@@ -400,7 +415,7 @@ def apply_theme(active_page: str = "Home"):
 
         with col_cta:
             st.markdown('<div class="nav-cta-btn">', unsafe_allow_html=True)
-            if st.button("Plan Week", key="nav_btn_cta", use_container_width=True):
+            if st.button("⚡ Plan Week", key="nav_btn_cta", use_container_width=True):
                 st.switch_page("pages/generator.py")
             st.markdown('</div>', unsafe_allow_html=True)
 
