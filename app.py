@@ -122,24 +122,11 @@ if "raw_response" not in st.session_state:
 
 # --- SIDEBAR CONFIGURATION ---
 with st.sidebar:
-    st.markdown("## ⚙️ StudentFit Setup")
+    st.markdown("## ⚡ StudentFit Setup")
     
-    saved_key = get_api_key()
-    if saved_key:
-        api_key = saved_key
-        st.success("✅ AI Connected")
-        use_simulation = st.checkbox("Demo Mode (Offline)", value=False)
-    else:
-        api_key = st.text_input("Groq API Key", type="password")
-        use_simulation = st.checkbox("Demo Mode (Offline)", value=True if not api_key else False)
-
-    model_option = st.selectbox(
-        "🤖 AI Model",
-        CANDIDATE_MODELS,
-        index=0
-    )
-
-    st.markdown("---")
+    api_key = get_api_key()
+    model_option = "openai/gpt-oss-20b"
+    use_simulation = False if api_key else True
     
     st.markdown("### 🏃‍♂️ Bio-Data")
     col_s1, col_s2 = st.columns(2)

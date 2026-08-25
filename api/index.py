@@ -93,28 +93,6 @@ HTML_TEMPLATE = """
         <!-- SIDEBAR -->
         <div class="sidebar">
             <h2>⚡ StudentFit Setup</h2>
-            
-            <div class="form-group">
-                <label>Groq API Key (Optional)</label>
-                <input type="password" id="apiKey" placeholder="gsk_...">
-            </div>
-
-            <div class="form-group">
-                <label>🤖 AI Model</label>
-                <select id="modelOption">
-                    <option value="openai/gpt-oss-20b" selected>openai/gpt-oss-20b (Fast & Free)</option>
-                    <option value="openai/gpt-oss-120b">openai/gpt-oss-120b</option>
-                    <option value="groq/compound-mini">groq/compound-mini</option>
-                    <option value="groq/compound">groq/compound</option>
-                    <option value="qwen/qwen3.6-27b">qwen/qwen3.6-27b</option>
-                    <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
-                    <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label><input type="checkbox" id="demoMode" style="width: auto; margin-right: 5px;"> Demo Mode (Offline Simulation)</label>
-            </div>
 
             <h3>🏃‍♂️ Bio-Data</h3>
             <div class="form-row">
@@ -247,9 +225,6 @@ HTML_TEMPLATE = """
             statusBadge.innerText = 'Generating...';
 
             const payload = {
-                apiKey: document.getElementById('apiKey').value,
-                model: document.getElementById('modelOption').value,
-                demoMode: document.getElementById('demoMode').checked,
                 gender: document.getElementById('gender').value,
                 age: document.getElementById('age').value,
                 weight: document.getElementById('weight').value,
