@@ -25,6 +25,8 @@ HTML_TEMPLATE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudentFit AI ⚡ | Fitness that Syncs to Your Syllabus</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23FF6B54'/><stop offset='100%25' stop-color='%23E4FF5B'/></linearGradient></defs><circle cx='50' cy='50' r='46' fill='%2314132B' stroke='url(%23grad)' stroke-width='6'/><path d='M54 18 L32 52 L48 52 L44 82 L72 44 L54 44 Z' fill='url(%23grad)'/></svg>">
+    <link rel="alternate icon" type="image/png" href="https://img.icons8.com/fluency/48/lightning-bolt.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -671,7 +673,12 @@ HTML_TEMPLATE = """
     <!-- TOP NAVIGATION BAR -->
     <nav class="navbar">
         <a class="brand-logo" onclick="switchPage('home')">
-            ⚡ StudentFit <span>AI</span>
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            StudentFit <span>AI</span>
         </a>
         <ul class="nav-links">
             <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
