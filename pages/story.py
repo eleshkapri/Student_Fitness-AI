@@ -1,52 +1,79 @@
 """
-StudentFit AI — Story Page
+Story Page for StudentFit AI.
+Narrative on why StudentFit AI was created and who it is built for.
 """
 
 import streamlit as st
 from theme import apply_theme
 
-def show_story_page():
+def render():
     apply_theme()
 
-    st.markdown('<div class="eyebrow">the student perspective</div>', unsafe_allow_html=True)
+    st.markdown('<div class="eyebrow-caveat">our mission & philosophy ~</div>', unsafe_allow_html=True)
+    st.markdown('<h1 style="font-size: 2.8rem; margin-bottom: 12px;">Built for Students, Not Gym Culture</h1>', unsafe_allow_html=True)
+
     st.markdown("""
-    <h1 style="font-size: 2.8rem; margin-bottom: 14px;">Why We Built StudentFit AI</h1>
-    <p style="font-size: 1.15rem; color: var(--text-soft); max-width: 760px; margin-bottom: 35px; line-height: 1.6;">
-        Mainstream fitness media is built for people with cars, gourmet kitchens, $150 gym memberships, and hours of daily free time. We built StudentFit AI for reality.
-    </p>
+    <div class="panel-card" style="margin: 25px 0 35px 0; border-left: 4px solid var(--highlighter);">
+        <p style="font-size: 1.15rem; line-height: 1.7; color: #fff; margin-bottom: 16px;">
+            The fitness industry is designed for working adults with fully equipped kitchens, cars for weekly supermarket runs, disposable income for specialty supplements, and predictable 9-to-5 schedules.
+        </p>
+        <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text-soft); margin-bottom: 0;">
+            When students try to follow these plans, they hit walls immediately: dorm floors with zero equipment, tight budgets that can't afford fresh salmon and avocados, single-induction or microwave cooking limits, and exam weeks where high-intensity training leads straight to burnout.
+        </p>
+    </div>
     """, unsafe_allow_html=True)
 
-    c_left, c_right = st.columns([1.5, 1])
+    st.markdown("### Who StudentFit AI Is Built For")
 
-    with c_left:
+    c1, c2 = st.columns(2, gap="medium")
+
+    with c1:
         st.markdown("""
-        <div class="card-dark" style="margin-bottom: 24px;">
-            <h3 style="color: var(--highlighter); font-size: 1.35rem; margin-bottom: 8px;">Built for Campus Life, Not Gym Culture</h3>
-            <p style="color: var(--paper); font-size: 0.95rem; line-height: 1.6;">
-                When you're balancing semester exams, 8:00 AM lectures, and part-time jobs, spending 2 hours in a commercial gym or cooking elaborate 4-course macros is impossible.
-            </p>
-            <p style="color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; margin-top: 10px;">
-                StudentFit AI treats your tight budget, small dorm floor, single microwave, and exam weeks as primary constraints, generating high-yield 7-day routines that actually fit your student schedule.
+        <div class="panel-card tilt" style="margin-bottom: 20px;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">🏠</div>
+            <h3 style="font-size: 1.3rem; margin-bottom: 6px;">1. Dorm & Hostel Dwellers</h3>
+            <p style="color: var(--text-soft); font-size: 0.92rem; line-height: 1.6;">
+                Students living in residence halls with limited floor area. Workouts adapt to bodyweight, bands, or university gyms without requiring commute time.
             </p>
         </div>
         """, unsafe_allow_html=True)
 
-    with c_right:
         st.markdown("""
-        <div class="card-paper" style="margin-bottom: 24px;">
-            <div class="mono-stat" style="color: var(--coral);">WHO IT'S FOR</div>
-            <ul style="list-style: none; padding-left: 0; margin-top: 12px; font-size: 0.92rem; line-height: 1.8; color: #334155;">
-                <li>🏠 <strong>Dorm & Hostel Dwellers:</strong> Exercising with limited space.</li>
-                <li>💰 <strong>Budget-Conscious Students:</strong> Realistic weekly grocery spending.</li>
-                <li>🧠 <strong>Exam-Week Survivors:</strong> Active recovery & mental stamina.</li>
-                <li>🍳 <strong>First-Time Cooks:</strong> Simple stove & microwave formulas.</li>
-            </ul>
+        <div class="panel-card tilt">
+            <div style="font-size: 2rem; margin-bottom: 8px;">💵</div>
+            <h3 style="font-size: 1.3rem; margin-bottom: 6px;">2. Budget-Conscious Students</h3>
+            <p style="color: var(--text-soft); font-size: 0.92rem; line-height: 1.6;">
+                Anyone working with strict weekly grocery spending. Every recipe prioritizes high-protein staple foods like eggs, lentils, oats, tofu, and peanut butter.
+            </p>
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("⚡ Build Your Student Plan", key="story_cta_btn"):
-        st.switch_page("pages/generator.py")
+    with c2:
+        st.markdown("""
+        <div class="panel-card tilt" style="margin-bottom: 20px;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">🧠</div>
+            <h3 style="font-size: 1.3rem; margin-bottom: 6px;">3. Exam-Week Survivors</h3>
+            <p style="color: var(--text-soft); font-size: 0.92rem; line-height: 1.6;">
+                During midterms and finals, the priority is cognitive focus and stress relief. Training volume dials down to active recovery and brain-supporting nutrition.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="panel-card tilt">
+            <div style="font-size: 2rem; margin-bottom: 8px;">🍳</div>
+            <h3 style="font-size: 1.3rem; margin-bottom: 6px;">4. First-Time Cooks</h3>
+            <p style="color: var(--text-soft); font-size: 0.92rem; line-height: 1.6;">
+                Students cooking for themselves for the first time with basic appliances. Simple batch prep instructions that take under 20 minutes.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    col_b1, col_b2, col_b3 = st.columns([1, 1.4, 1])
+    with col_b2:
+        if st.button("⚡ Build Your Student Plan Now", use_container_width=True):
+            st.switch_page("pages/generator.py")
 
 if __name__ == "__main__":
-    show_story_page()
+    render()

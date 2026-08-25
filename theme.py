@@ -1,435 +1,335 @@
 """
-StudentFit AI — Shared Design System & Theme
-Injects CSS custom properties, Google Fonts, base typography, and vanilla JS on every page.
+Theme Module for StudentFit AI.
+Defines design tokens, typography, custom CSS, ambient animations, and shared JS.
 """
 
 import streamlit as st
 import streamlit.components.v1 as components
 
-SHARED_CSS = """
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+def apply_theme():
+    """Injects the cohesive design system and styles into the Streamlit page."""
+    css = """
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<style>
-    :root {
-        --ink: #09071c;
-        --ink2: #0d0a20;
-        --ink3: #17133d;
-        --paper: #ffffff;
-        --highlighter: #00e5ff;
-        --neon-cyan: #00e5ff;
-        --neon-gold: #FFD700;
-        --neon-pink: #ff416c;
-        --coral: #ff416c;
-        --coral-gradient: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
-        --lilac: #9C8CFF;
-        --text-soft: #cbd5e1;
-        --text-faint: #94a3b8;
-        --line: rgba(255, 255, 255, 0.1);
-        --radius: 18px;
-    }
-
-    /* GLOBAL STREAMLIT OVERRIDES */
-    .stApp {
-        background: linear-gradient(135deg, #09071c 0%, #17133d 50%, #15112e 100%) !important;
-        color: #ffffff !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        overflow-x: hidden;
-    }
-
-    header[data-testid="stHeader"] {
-        background: transparent !important;
-    }
-
-    [data-testid="stSidebar"] {
-        background-color: var(--ink2) !important;
-        border-right: 1px solid var(--line) !important;
-    }
-
-    /* TOP PLANNER TAB NAVIGATION */
-    [data-testid="stSidebarNav"] {
-        padding-top: 10px;
-    }
-    
-    [data-testid="stSidebarNav"] ul {
-        gap: 6px;
-    }
-
-    [data-testid="stSidebarNav"] a {
-        border-radius: 12px !important;
-        padding: 8px 14px !important;
-        font-family: 'Space Mono', monospace !important;
-        font-size: 0.88rem !important;
-        color: var(--text-soft) !important;
-        border: 1px solid transparent !important;
-        transition: all 0.2s ease !important;
-    }
-
-    [data-testid="stSidebarNav"] a:hover {
-        background: rgba(255, 255, 255, 0.08) !important;
-        color: #ffffff !important;
-    }
-
-    [data-testid="stSidebarNav"] a[aria-current="page"] {
-        background: rgba(0, 229, 255, 0.15) !important;
-        color: var(--neon-cyan) !important;
-        border-color: rgba(0, 229, 255, 0.4) !important;
-        font-weight: 700 !important;
-    }
-
-    /* ULTRA-THIN TRANSPARENT SCROLLBAR */
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
-
-    /* TYPOGRAPHY SYSTEM */
-    h1, h2, h3, h4, h5, h6, .display-head {
-        font-family: 'Space Grotesk', sans-serif !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.5px !important;
-        color: #ffffff !important;
-    }
-
-    .eyebrow {
-        font-family: 'Caveat', cursive !important;
-        font-size: 1.55rem !important;
-        color: var(--neon-gold) !important;
-        letter-spacing: 0.5px !important;
-        display: inline-block;
-        transform: rotate(-2deg);
-        margin-bottom: 8px;
-    }
-
-    .mono-stat {
-        font-family: 'Space Mono', monospace !important;
-        font-size: 0.85rem !important;
-        color: var(--neon-cyan) !important;
-        letter-spacing: 0.5px !important;
-        text-transform: uppercase;
-    }
-
-    /* AMBIENT BACKGROUND BLOBS */
-    .ambient-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        pointer-events: none;
-        z-index: 0;
-        overflow: hidden;
-    }
-
-    .blob-1 {
-        position: absolute;
-        width: 550px;
-        height: 550px;
-        top: -150px;
-        right: -100px;
-        background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, transparent 70%);
-        filter: blur(90px);
-        animation: floatBlob 18s ease-in-out infinite alternate;
-    }
-
-    .blob-2 {
-        position: absolute;
-        width: 500px;
-        height: 500px;
-        bottom: 10%;
-        left: -150px;
-        background: radial-gradient(circle, rgba(255, 65, 108, 0.14) 0%, transparent 70%);
-        filter: blur(90px);
-        animation: floatBlob 14s ease-in-out infinite alternate-reverse;
-    }
-
-    @keyframes floatBlob {
-        0% { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(40px, 60px) scale(1.1); }
-    }
-
-    /* CARD STYLES */
-    .card-dark {
-        background: rgba(255, 255, 255, 0.04);
-        backdrop-filter: blur(14px);
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        padding: 26px;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        position: relative;
-    }
-
-    .card-dark:hover {
-        border-color: rgba(0, 229, 255, 0.5);
-        transform: translateY(-4px);
-        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 229, 255, 0.2);
-    }
-
-    .day-card {
-        background: rgba(255, 255, 255, 0.04);
-        backdrop-filter: blur(12px);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 22px;
-        margin-bottom: 22px;
-        transition: all 0.2s ease;
-    }
-    .day-card:hover {
-        border-color: rgba(0, 229, 255, 0.6);
-        transform: translateY(-2px);
-    }
-
-    .col-box {
-        background: rgba(0, 0, 0, 0.25);
-        border-radius: 12px;
-        padding: 16px 18px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .grocery-card {
-        background: rgba(0, 0, 0, 0.38);
-        border: 1px solid var(--neon-gold);
-        border-radius: 16px;
-        padding: 24px 22px;
-        height: 100%;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    }
-
-    .card-paper {
-        background: var(--paper) !important;
-        color: #14132B !important;
-        border-radius: var(--radius);
-        padding: 24px;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-        transition: all 0.3s ease;
-    }
-
-    .card-paper h3, .card-paper h4, .card-paper strong {
-        color: #14132B !important;
-    }
-
-    .card-paper:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-    }
-
-    /* HERO FANNED DECK OF 7 CARDS */
-    .hero-deck-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 280px;
-        position: relative;
-        perspective: 1000px;
-        margin: 25px 0 45px 0;
-    }
-
-    .deck-card {
-        position: absolute;
-        width: 140px;
-        height: 190px;
-        background: var(--paper);
-        color: var(--ink);
-        border-radius: 16px;
-        padding: 16px 12px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s;
-        cursor: pointer;
-    }
-
-    .deck-card:hover {
-        transform: translateY(-24px) scale(1.08) !important;
-        box-shadow: 0 20px 45px rgba(228, 255, 91, 0.35);
-        z-index: 100 !important;
-        border-color: var(--coral);
-    }
-
-    .deck-day { font-family: 'Space Mono', monospace; font-size: 0.75rem; font-weight: 700; color: var(--coral); text-transform: uppercase; }
-    .deck-emoji { font-size: 2.2rem; text-align: center; }
-    .deck-tag { font-size: 0.78rem; font-weight: 700; color: var(--ink); text-align: center; line-height: 1.2; }
-
-    /* TICKER MARQUEE */
-    .marquee-container {
-        overflow: hidden;
-        white-space: nowrap;
-        background: var(--ink3);
-        border-top: 1px solid var(--line);
-        border-bottom: 1px solid var(--line);
-        padding: 12px 0;
-        margin: 40px 0;
-    }
-
-    .marquee-track {
-        display: inline-block;
-        animation: marqueeScroll 28s linear infinite;
-    }
-
-    .marquee-item {
-        display: inline-block;
-        font-family: 'Space Mono', monospace;
-        font-size: 0.88rem;
-        font-weight: 700;
-        color: var(--paper);
-        margin: 0 24px;
-    }
-
-    .marquee-item span {
-        color: var(--highlighter);
-        margin-right: 8px;
-    }
-
-    @keyframes marqueeScroll {
-        from { transform: translateX(0); }
-        to { transform: translateX(-50%); }
-    }
-
-    /* 3D FLIP CARDS */
-    .flip-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 24px;
-        margin: 30px 0;
-    }
-
-    .flip-card {
-        background-color: transparent;
-        height: 220px;
-        perspective: 1000px;
-    }
-
-    .flip-card-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-        transform-style: preserve-3d;
-        border-radius: var(--radius);
-    }
-
-    .flip-card:hover .flip-card-inner {
-        transform: rotateY(180deg);
-    }
-
-    .flip-card-front, .flip-card-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-        border-radius: var(--radius);
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .flip-card-front {
-        background: var(--ink2);
-        border: 1px solid var(--line);
-        color: var(--paper);
-    }
-
-    .flip-card-back {
-        background: var(--paper);
-        color: var(--ink);
-        transform: rotateY(180deg);
-        border: 1px solid var(--highlighter);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    }
-
-    .flip-card-back p {
-        color: #14132B !important;
-        font-size: 0.95rem;
-        font-weight: 600;
-        line-height: 1.5;
-    }
-
-    /* BUTTONS */
-    .stButton>button {
-        background: var(--coral) !important;
-        color: #ffffff !important;
-        font-family: 'Space Grotesk', sans-serif !important;
-        font-weight: 700 !important;
-        font-size: 1rem !important;
-        border: none !important;
-        border-radius: 14px !important;
-        padding: 12px 24px !important;
-        transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-        box-shadow: 0 4px 18px rgba(255, 107, 84, 0.35) !important;
-    }
-
-    .stButton>button:hover {
-        background: #ff5238 !important;
-        transform: translateY(-2px) scale(1.01) !important;
-        box-shadow: 0 8px 24px rgba(255, 107, 84, 0.6) !important;
-    }
-
-    /* FORM INPUTS */
-    input, select, textarea, [data-baseweb="select"] {
-        border-radius: 10px !important;
-    }
-
-    /* ACCESSIBILITY & PREFERS REDUCED MOTION */
-    @media (prefers-reduced-motion: reduce) {
-        *, .deck-card, .flip-card-inner, .marquee-track, .blob-1, .blob-2 {
-            animation: none !important;
-            transition: none !important;
-            transform: none !important;
+    <style>
+        :root {
+            --ink: #14132B;
+            --ink2: #1C1A42;
+            --ink3: #242155;
+            --paper: #F6F1E3;
+            --highlighter: #E4FF5B;
+            --coral: #FF6B54;
+            --lilac: #9C8CFF;
+            --text-soft: #B7B3DA;
+            --text-faint: #8582AC;
+            --line: rgba(246,241,227,0.14);
+            --radius: 22px;
         }
-    }
 
-    :focus-visible {
-        outline: 2px solid var(--highlighter) !important;
-        outline-offset: 2px !important;
-    }
-</style>
+        /* BASE STREAMLIT APP OVERRIDES */
+        .stApp {
+            background-color: var(--ink) !important;
+            color: #ffffff !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
 
-<div class="ambient-bg">
-    <div class="blob-1"></div>
-    <div class="blob-2"></div>
-</div>
-"""
+        /* AMBIENT GLOW BLOBS */
+        .ambient-blob-1 {
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(156, 140, 255, 0.16) 0%, rgba(20, 19, 43, 0) 70%);
+            top: -80px;
+            left: -80px;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(50px);
+            animation: drift 18s ease-in-out infinite alternate;
+        }
+        .ambient-blob-2 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 107, 84, 0.12) 0%, rgba(20, 19, 43, 0) 70%);
+            bottom: -100px;
+            right: -80px;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(60px);
+            animation: drift 22s ease-in-out infinite alternate-reverse;
+        }
 
-SHARED_JS = """
-<script>
-    (function() {
-        const doc = window.parent ? window.parent.document : document;
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 40px) scale(1.08); }
+        }
+
+        /* HEADINGS & TYPOGRAPHY */
+        h1, h2, h3, .heading-display {
+            font-family: 'Space Grotesk', sans-serif !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.5px !important;
+            color: #ffffff !important;
+        }
         
-        // 3D Mouse Tilt on elements with class 'tilt'
-        doc.addEventListener('mousemove', function(e) {
-            const tiltElements = doc.querySelectorAll('.tilt');
-            tiltElements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-                    const xPct = (x / rect.width - 0.5) * 16;
-                    const yPct = (y / rect.height - 0.5) * -16;
-                    el.style.transform = `perspective(900px) rotateX(${yPct}deg) rotateY(${xPct}deg) translateY(-4px)`;
-                }
-            });
-        });
+        .eyebrow-caveat {
+            font-family: 'Caveat', cursive !important;
+            font-size: 1.5rem !important;
+            color: var(--highlighter) !important;
+            display: inline-block;
+            transform: rotate(-2deg);
+            margin-bottom: 6px;
+        }
 
-        doc.addEventListener('mouseleave', function() {
-            const tiltElements = doc.querySelectorAll('.tilt');
-            tiltElements.forEach(el => {
-                el.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
+        .mono-label {
+            font-family: 'Space Mono', monospace !important;
+            font-size: 0.85rem !important;
+            color: var(--text-soft) !important;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(246, 241, 227, 0.18); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--highlighter); }
+
+        /* CARDS & PANELS */
+        .panel-card {
+            background: var(--ink2);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 28px;
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .panel-card:hover {
+            border-color: var(--highlighter);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+        }
+
+        .paper-card {
+            background: var(--paper);
+            color: #14132B !important;
+            border-radius: var(--radius);
+            padding: 26px;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .paper-card h3, .paper-card h4, .paper-card strong {
+            color: #14132B !important;
+        }
+        .paper-card p, .paper-card li {
+            color: #2D2A4A !important;
+            line-height: 1.6;
+        }
+
+        /* PILL BADGE */
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(228, 255, 91, 0.12);
+            border: 1px solid var(--highlighter);
+            color: var(--highlighter);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        /* STREAMLIT BUTTON OVERRIDES */
+        .stButton>button {
+            background: var(--coral) !important;
+            color: #ffffff !important;
+            border: none !important;
+            padding: 12px 24px !important;
+            border-radius: 14px !important;
+            font-family: 'Space Grotesk', sans-serif !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 6px 20px rgba(255, 107, 84, 0.35) !important;
+        }
+        .stButton>button:hover {
+            transform: translateY(-2px) scale(1.02) !important;
+            box-shadow: 0 10px 28px rgba(255, 107, 84, 0.6) !important;
+        }
+        .stButton>button:focus {
+            outline: 2px solid var(--highlighter) !important;
+        }
+
+        /* STREAMLIT SIDEBAR */
+        [data-testid="stSidebar"] {
+            background-color: var(--ink2) !important;
+            border-right: 1px solid var(--line) !important;
+        }
+
+        /* STREAMLIT NAVIGATION PILL BAR */
+        [data-testid="stSidebarNav"] {
+            background: transparent !important;
+            padding-top: 10px !important;
+        }
+        [data-testid="stSidebarNav"] a {
+            border-radius: 12px !important;
+            color: var(--text-soft) !important;
+            font-weight: 600 !important;
+            margin-bottom: 4px !important;
+            transition: all 0.2s ease !important;
+        }
+        [data-testid="stSidebarNav"] a:hover {
+            background: rgba(246, 241, 227, 0.08) !important;
+            color: #ffffff !important;
+        }
+        [data-testid="stSidebarNav"] a[aria-current="page"] {
+            background: rgba(228, 255, 91, 0.15) !important;
+            color: var(--highlighter) !important;
+            border-left: 3px solid var(--highlighter) !important;
+        }
+
+        /* MARQUEE STRIP */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            background: var(--ink3);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 14px 0;
+            position: relative;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--highlighter);
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* FANNED 7-CARD HERO DECK */
+        .hero-deck {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 260px;
+            position: relative;
+            margin: 30px auto;
+            max-width: 750px;
+        }
+        .deck-card {
+            width: 140px;
+            height: 190px;
+            background: var(--paper);
+            color: #14132B;
+            border-radius: 16px;
+            padding: 16px 12px;
+            position: absolute;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .deck-card:hover {
+            transform: translateY(-24px) scale(1.1) !important;
+            z-index: 50 !important;
+            box-shadow: 0 20px 45px rgba(228, 255, 91, 0.4);
+            border-color: var(--coral);
+        }
+        .deck-card-1 { transform: translateX(-210px) rotate(-18deg); z-index: 1; }
+        .deck-card-2 { transform: translateX(-140px) rotate(-12deg); z-index: 2; }
+        .deck-card-3 { transform: translateX(-70px) rotate(-6deg); z-index: 3; }
+        .deck-card-4 { transform: translateX(0px) rotate(0deg); z-index: 4; }
+        .deck-card-5 { transform: translateX(70px) rotate(6deg); z-index: 5; }
+        .deck-card-6 { transform: translateX(140px) rotate(12deg); z-index: 6; }
+        .deck-card-7 { transform: translateX(210px) rotate(18deg); z-index: 7; }
+
+        /* FLIP CARDS FOR FEATURES */
+        .flip-card-container {
+            perspective: 1000px;
+            height: 220px;
+            margin-bottom: 20px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            border-radius: var(--radius);
+        }
+        .flip-card-container:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: var(--radius);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--line);
+        }
+        .flip-card-front {
+            background: var(--ink2);
+            color: #ffffff;
+        }
+        .flip-card-back {
+            background: var(--ink3);
+            color: var(--highlighter);
+            transform: rotateY(180deg);
+            border-color: var(--highlighter);
+        }
+
+        /* REDUCED MOTION */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+
+    <!-- AMBIENT BLOBS -->
+    <div class="ambient-blob-1"></div>
+    <div class="ambient-blob-2"></div>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+    
+    # Injected helper for 3D tilt
+    js_code = """
+    <script>
+    (function() {
+        const doc = window.parent.document;
+        doc.querySelectorAll('.tilt').forEach(el => {
+            el.addEventListener('mousemove', e => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                el.style.transform = `perspective(900px) rotateX(${-y / 15}deg) rotateY(${x / 15}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
             });
         });
     })();
-</script>
-"""
-
-def apply_theme():
-    """Injects the shared StudentFit design system on any Streamlit page."""
-    st.markdown(SHARED_CSS, unsafe_allow_html=True)
-    # Inject interactive JS via invisible component
-    components.html(SHARED_JS, height=0, width=0)
+    </script>
+    """
+    components.html(js_code, height=0, width=0)

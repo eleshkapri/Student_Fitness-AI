@@ -1,37 +1,28 @@
 """
-StudentFit AI — Main Entrypoint
-Multi-page Streamlit Website using st.navigation() and st.Page() API.
+StudentFit AI — Main Entry Point
+Configures st.navigation() across all 6 cohesive pages using Streamlit's modern multi-page API.
 """
 
 import streamlit as st
 
-# --- PAGE CONFIGURATION ---
+# --- GLOBAL CONFIGURATION ---
 st.set_page_config(
-    page_title="StudentFit AI — Fitness that syncs to your syllabus",
+    page_title="StudentFit AI — Fitness that Syncs to Your Syllabus",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # --- DEFINE MULTI-PAGE NAVIGATION ---
-home_page = st.Page("pages/home.py", title="Home", icon="🏠", default=True)
-how_it_works_page = st.Page("pages/how_it_works.py", title="How it Works", icon="📖")
-features_page = st.Page("pages/features.py", title="Features", icon="⚡")
-plans_page = st.Page("pages/plans.py", title="Plans", icon="💳")
-story_page = st.Page("pages/story.py", title="Story", icon="🎓")
-generator_page = st.Page("pages/generator.py", title="Plan Generator", icon="🚀")
+pages = [
+    st.Page("pages/home.py", title="Home", icon="🏠", default=True),
+    st.Page("pages/how_it_works.py", title="How it Works", icon="📖"),
+    st.Page("pages/features.py", title="Features", icon="✨"),
+    st.Page("pages/plans.py", title="Plans & Tiers", icon="🏷️"),
+    st.Page("pages/story.py", title="Our Story", icon="💡"),
+    st.Page("pages/generator.py", title="AI Generator", icon="⚡"),
+]
 
-# --- INITIALIZE NAVIGATION ---
-nav = st.navigation({
-    "StudentFit AI": [
-        home_page,
-        how_it_works_page,
-        features_page,
-        plans_page,
-        story_page,
-        generator_page
-    ]
-})
-
-# Run the active page
-nav.run()
+# Run router
+pg = st.navigation(pages)
+pg.run()

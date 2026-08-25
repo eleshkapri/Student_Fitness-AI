@@ -1,140 +1,160 @@
 """
-StudentFit AI — Features Page
+Features Page for StudentFit AI.
+Features 6 3D interactive flip cards for each configuration axis and a full literal options marquee strip.
 """
 
 import streamlit as st
 from theme import apply_theme
 
-def show_features_page():
+def render():
     apply_theme()
 
-    st.markdown('<div class="eyebrow">interactive 3d feature matrix</div>', unsafe_allow_html=True)
+    st.markdown('<div class="eyebrow-caveat">complete feature breakdown ~</div>', unsafe_allow_html=True)
+    st.markdown('<h1 style="font-size: 2.8rem; margin-bottom: 12px;">Six Core Pillars of StudentFit AI</h1>', unsafe_allow_html=True)
     st.markdown("""
-    <h1 style="font-size: 2.8rem; margin-bottom: 14px;">Six Adaptive Dimensions</h1>
-    <p style="font-size: 1.1rem; color: var(--text-soft); max-width: 720px; margin-bottom: 30px; line-height: 1.6;">
-        Hover or tap any card to reveal how StudentFit AI customizes your weekly schedule across all 6 core axes.
+    <p style="color: var(--text-soft); font-size: 1.1rem; max-width: 800px; line-height: 1.6; margin-bottom: 35px;">
+        Hover or tap each card to flip and discover how every dimension adapts simultaneously to campus life.
     </p>
     """, unsafe_allow_html=True)
 
-    # --- SIX 3D FLIP CARDS ---
+    # --- 6 FLIP CARDS (2 ROWS OF 3) ---
+    c1, c2, c3 = st.columns(3, gap="medium")
+
+    with c1:
+        st.markdown("""
+        <div class="flip-card-container">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">🏃‍♂️</div>
+                    <h3 style="font-size: 1.25rem;">Bio-Data Personalization</h3>
+                    <p style="color: var(--text-soft); font-size: 0.85rem; margin-top: 6px;">Hover to reveal details</p>
+                </div>
+                <div class="flip-card-back">
+                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">Adaptive Calorie Math</h4>
+                    <p style="font-size: 0.9rem; line-height: 1.5; color: #fff;">
+                        Calculates baseline metabolic rates according to student age, gender, and metrics in kg/lbs and cm/ft.
+                    </p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c2:
+        st.markdown("""
+        <div class="flip-card-container">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">🎯</div>
+                    <h3 style="font-size: 1.25rem;">Goal-Driven Programming</h3>
+                    <p style="color: var(--text-soft); font-size: 0.85rem; margin-top: 6px;">Hover to reveal details</p>
+                </div>
+                <div class="flip-card-back">
+                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">Targeted Splits</h4>
+                    <p style="font-size: 0.9rem; line-height: 1.5; color: #fff;">
+                        Switches workout intensity and macro surpluses/deficits between muscle bulking, shredding, and exam stress relief.
+                    </p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c3:
+        st.markdown("""
+        <div class="flip-card-container">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">🏋️</div>
+                    <h3 style="font-size: 1.25rem;">Gear-Adaptive Workouts</h3>
+                    <p style="color: var(--text-soft); font-size: 0.85rem; margin-top: 6px;">Hover to reveal details</p>
+                </div>
+                <div class="flip-card-back">
+                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">Space & Equipment Fit</h4>
+                    <p style="font-size: 0.9rem; line-height: 1.5; color: #fff;">
+                        Substitutes exercises seamlessly whether you have access to a university gym, light dumbbells, or just dorm floor space.
+                    </p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    c4, c5, c6 = st.columns(3, gap="medium")
+
+    with c4:
+        st.markdown("""
+        <div class="flip-card-container">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">🥗</div>
+                    <h3 style="font-size: 1.25rem;">Cuisine-Flexible Meals</h3>
+                    <p style="color: var(--text-soft); font-size: 0.85rem; margin-top: 6px;">Hover to reveal details</p>
+                </div>
+                <div class="flip-card-back">
+                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">Cultural Respect</h4>
+                    <p style="font-size: 0.9rem; line-height: 1.5; color: #fff;">
+                        Builds recipes around Indian, Mediterranean, Asian, Vegan, and Global staples without forcing unfamiliar western diets.
+                    </p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c5:
+        st.markdown("""
+        <div class="flip-card-container">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">🛒</div>
+                    <h3 style="font-size: 1.25rem;">Budget-Tiered Groceries</h3>
+                    <p style="color: var(--text-soft); font-size: 0.85rem; margin-top: 6px;">Hover to reveal details</p>
+                </div>
+                <div class="flip-card-back">
+                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">1-Person Precise List</h4>
+                    <p style="font-size: 0.9rem; line-height: 1.5; color: #fff;">
+                        Generates a weekly shopping list with exact quantities and realistic price totals in INR, USD, EUR, GBP, CAD, AUD, AED.
+                    </p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c6:
+        st.markdown("""
+        <div class="flip-card-container">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">🍳</div>
+                    <h3 style="font-size: 1.25rem;">Cooking-Skill Recipes</h3>
+                    <p style="color: var(--text-soft); font-size: 0.85rem; margin-top: 6px;">Hover to reveal details</p>
+                </div>
+                <div class="flip-card-back">
+                    <h4 style="font-size: 1.1rem; margin-bottom: 8px;">Appliance Matching</h4>
+                    <p style="font-size: 0.9rem; line-height: 1.5; color: #fff;">
+                        Ensures all suggested meal prep can be accomplished with your exact setup, from Microwave Only to Basic Stove or Full Chef.
+                    </p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --- COMPLETE LITERAL MARQUEE STRIP ---
     st.markdown("""
-    <div class="flip-grid">
-        <!-- 1. Bio-Data Personalization -->
-        <div class="flip-card">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <div style="font-size: 2.4rem; margin-bottom: 12px;">🏃‍♂️</div>
-                    <h3>Bio-Data Personalization</h3>
-                    <div class="mono-stat" style="margin-top: 8px; color: var(--coral);">AXIS 01</div>
-                </div>
-                <div class="flip-card-back">
-                    <h4 style="color: var(--coral); margin-bottom: 6px;">Metabolic Precision</h4>
-                    <p>Calculates exact BMR, campus activity multipliers, and personalized hydration targets in kg/lbs and cm/ft.</p>
-                </div>
+    <div style="margin: 30px 0;">
+        <span class="mono-label" style="display: block; margin-bottom: 8px;">EVERY LITERAL CONFIGURATION AXIS:</span>
+        <div class="marquee-container">
+            <div class="marquee-content">
+                MALE • FEMALE • OTHER • BUILD MUSCLE • LOSE WEIGHT • GET SHREDDED • EXAM STRESS RELIEF • FULL GYM • DUMBBELLS ONLY • NO EQUIPMENT (DORM) • INDIAN • GLOBAL • MEDITERRANEAN • ASIAN • VEGAN • CHEAP ($) • MODERATE ($$) • PREMIUM ($$$) • MICROWAVE ONLY • BASIC STOVE • FULL CHEF • INR (₹) • USD ($) • EUR (€) • GBP (£) • CAD ($) • AUD ($) • AED (د.إ)
             </div>
-        </div>
-
-        <!-- 2. Goal-Driven Programming -->
-        <div class="flip-card">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <div style="font-size: 2.4rem; margin-bottom: 12px;">🎯</div>
-                    <h3>Goal-Driven Programming</h3>
-                    <div class="mono-stat" style="margin-top: 8px; color: var(--coral);">AXIS 02</div>
-                </div>
-                <div class="flip-card-back">
-                    <h4 style="color: var(--coral); margin-bottom: 6px;">Targeted Splits</h4>
-                    <p>Build Muscle, Lose Fat, Athletic Shred, or Exam Stress Relief with progressive overload and active recovery.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. Gear-Adaptive Workouts -->
-        <div class="flip-card">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <div style="font-size: 2.4rem; margin-bottom: 12px;">🏋️</div>
-                    <h3>Gear-Adaptive Workouts</h3>
-                    <div class="mono-stat" style="margin-top: 8px; color: var(--coral);">AXIS 03</div>
-                </div>
-                <div class="flip-card-back">
-                    <h4 style="color: var(--coral); margin-bottom: 6px;">Zero Equipment to Gym</h4>
-                    <p>Seamlessly scales movements from dorm room floors and light dumbbells to full campus fitness centers.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. Cuisine-Flexible Meals -->
-        <div class="flip-card">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <div style="font-size: 2.4rem; margin-bottom: 12px;">🥑</div>
-                    <h3>Cuisine-Flexible Meals</h3>
-                    <div class="mono-stat" style="margin-top: 8px; color: var(--coral);">AXIS 04</div>
-                </div>
-                <div class="flip-card-back">
-                    <h4 style="color: var(--coral); margin-bottom: 6px;">Authentic Flavors</h4>
-                    <p>Indian, Global, Mediterranean, Asian, and Vegan meal formulas respecting your culinary culture.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. Budget-Tiered Groceries -->
-        <div class="flip-card">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <div style="font-size: 2.4rem; margin-bottom: 12px;">🛒</div>
-                    <h3>Budget-Tiered Groceries</h3>
-                    <div class="mono-stat" style="margin-top: 8px; color: var(--coral);">AXIS 05</div>
-                </div>
-                <div class="flip-card-back">
-                    <h4 style="color: var(--coral); margin-bottom: 6px;">Localized Currency</h4>
-                    <p>Generates 1-person weekly grocery shopping lists with exact cost estimates in INR, USD, EUR, GBP, CAD, AUD, AED.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6. Cooking-Skill Matched -->
-        <div class="flip-card">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <div style="font-size: 2.4rem; margin-bottom: 12px;">🍳</div>
-                    <h3>Cooking-Skill Matched</h3>
-                    <div class="mono-stat" style="margin-top: 8px; color: var(--coral);">AXIS 06</div>
-                </div>
-                <div class="flip-card-back">
-                    <h4 style="color: var(--coral); margin-bottom: 6px;">Dorm Facility Aware</h4>
-                    <p>Recipes adapted for Microwave Only, Basic Single Stove, or Full Chef kitchen facilities without wasted study time.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # --- MARQUEE STRIP LISTING EVERY LITERAL OPTION ---
-    st.markdown("""
-    <div class="marquee-container" style="margin-top: 40px;">
-        <div class="marquee-track">
-            <div class="marquee-item"><span>OPTION:</span> Male · Female · Other</div>
-            <div class="marquee-item"><span>OPTION:</span> Build Muscle · Lose Weight · Get Shredded · Exam Stress Relief</div>
-            <div class="marquee-item"><span>OPTION:</span> Full Gym · Dumbbells Only · No Equipment (Dorm)</div>
-            <div class="marquee-item"><span>OPTION:</span> Indian · Global · Mediterranean · Asian · Vegan</div>
-            <div class="marquee-item"><span>OPTION:</span> Cheap ($) · Moderate ($$) · Premium ($$$)</div>
-            <div class="marquee-item"><span>OPTION:</span> Microwave Only · Basic Stove · Full Chef</div>
-            <!-- Loop -->
-            <div class="marquee-item"><span>OPTION:</span> Male · Female · Other</div>
-            <div class="marquee-item"><span>OPTION:</span> Build Muscle · Lose Weight · Get Shredded · Exam Stress Relief</div>
-            <div class="marquee-item"><span>OPTION:</span> Full Gym · Dumbbells Only · No Equipment (Dorm)</div>
-            <div class="marquee-item"><span>OPTION:</span> Indian · Global · Mediterranean · Asian · Vegan</div>
-            <div class="marquee-item"><span>OPTION:</span> Cheap ($) · Moderate ($$) · Premium ($$$)</div>
-            <div class="marquee-item"><span>OPTION:</span> Microwave Only · Basic Stove · Full Chef</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("🚀 Test Out the 6-Axis Generator", key="feat_cta_btn"):
-        st.switch_page("pages/generator.py")
+    col_b1, col_b2, col_b3 = st.columns([1, 1.4, 1])
+    with col_b2:
+        if st.button("⚡ Test All Features in Generator", use_container_width=True):
+            st.switch_page("pages/generator.py")
 
 if __name__ == "__main__":
-    show_features_page()
+    render()

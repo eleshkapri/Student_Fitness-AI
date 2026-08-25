@@ -1,66 +1,69 @@
 """
-StudentFit AI — Prompt Builder
-Constructs structured LLM prompts driving workout, nutrition, and budget grocery plans.
+Prompt Builder for StudentFit AI Weekly Planner.
+Constructs strictly structured prompts honoring student constraints.
 """
 
 def build_student_prompt(profile: dict) -> str:
-    """Constructs a strictly structured prompt for 7-day student fitness & nutrition."""
+    """Constructs the prompt for 7-day student fitness & nutrition plan."""
     currency = profile.get('currency', 'INR (₹)')
     weight = profile.get('weight', 70)
     weight_unit = profile.get('weight_unit', 'kg')
     height = profile.get('height', 170)
     height_unit = profile.get('height_unit', 'cm')
-    age = profile.get('age', 20)
     gender = profile.get('gender', 'Male')
+    age = profile.get('age', 20)
     goal = profile.get('goal', 'Build Muscle')
     equipment = profile.get('equipment', 'Full Gym')
     cuisine = profile.get('cuisine', 'Indian')
+    diet_type = profile.get('diet_type', 'Standard')
     budget = profile.get('budget', 'Moderate ($$)')
     cooking_skill = profile.get('cooking_skill', 'Basic Stove')
 
     return f"""
-Act as an elite fitness trainer and budget nutrition expert for university students.
+Act as an elite fitness coach and student budget nutrition specialist.
 Student Profile:
-- Age: {age} years old, Gender: {gender}
-- Weight: {weight} {weight_unit}, Height: {height} {height_unit}
-- Primary Fitness Target: {goal}
+- Age: {age} years old | Gender: {gender}
+- Weight: {weight} {weight_unit} | Height: {height} {height_unit}
+- Goal: {goal}
 - Available Equipment: {equipment}
-- Cuisine Preference: {cuisine}, Diet: Standard
-- Weekly Budget Tier: {budget}
-- Preferred Currency for Budget Estimation: {currency}
-- Cooking Skill / Setup: {cooking_skill}
+- Cuisine Preference: {cuisine} | Diet: {diet_type}
+- Weekly Budget Tier: {budget} (Preferred Currency: {currency})
+- Cooking Facility / Setup: {cooking_skill}
 
-TASK: Create a complete 7-Day Plan (Monday through Sunday) with aligned workouts and meals, followed by a clean, essential weekly grocery shopping list and budget breakdown.
+REQUIREMENTS:
+1. Provide a comprehensive 7-DAY SCHEDULE (Monday through Sunday).
+2. For EVERY day, output BOTH a tailored Workout Routine and Synchronized Meals matching the student's equipment and cooking skill.
+3. At the end, output a complete Weekly Grocery Shopping List (1 Person) with realistic estimated costs in {currency} and practical student meal-prep tips.
+4. Follow this EXACT plain-text delimiter format:
 
-CRITICAL FORMATTING RULES:
-1. You MUST output all 7 days from Day: Monday to Day: Sunday.
-2. For each day, use EXACTLY this format:
-Day: [Day of Week, e.g. Monday]
+### DAY_START
+Day: Monday
 Workout:
-* [Target Muscle/Focus, e.g., Target: Chest & Triceps or Dorm Full Body]
-* [Exercise 1 with sets and reps, e.g., Exercise 1: Push-ups - 4 sets x 12-15 reps]
-* [Exercise 2 with sets and reps]
-* [Exercise 3 with sets and reps]
-* [Exercise 4 with sets and reps]
-* [Exercise 5 with sets and reps]
-* [Cardio/Core recommendation]
+* Target: [Muscle group or Focus]
+* Exercise 1: [Name] - [Sets x Reps]
+* Exercise 2: [Name] - [Sets x Reps]
+* Exercise 3: [Name] - [Sets x Reps]
+* Cardio/Core: [Details]
 Meal:
-* [Breakfast details with student ingredients]
-* [Lunch details with student ingredients]
-* [Snack details with student ingredients]
-* [Dinner details with student ingredients]
+* Breakfast: [Meal description with estimated protein/calories]
+* Lunch: [Meal description with estimated protein/calories]
+* Snack: [Budget student snack]
+* Dinner: [Meal description with estimated protein/calories]
+### DAY_END
 
-3. At the end of Sunday, provide the weekly grocery and budget section using EXACTLY this header:
-### WEEKLY GROCERY & BUDGET
+(Repeat ### DAY_START to ### DAY_END for Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
+
+### GROCERY_START
 #### 🛒 Weekly Student Grocery List (1 Person)
-* **Proteins:** [List essential items with quantities]
-* **Grains & Carbs:** [List essential items with quantities]
-* **Vegetables & Produce:** [List essential items with quantities]
-* **Pantry & Healthy Fats:** [List essential items with quantities]
+* **Proteins:** [Items with quantities and prices in {currency}]
+* **Grains & Carbs:** [Items with quantities and prices in {currency}]
+* **Produce & Veggies:** [Items with quantities and prices in {currency}]
+* **Healthy Fats & Extras:** [Items with quantities and prices in {currency}]
 #### 💡 Student Meal-Prep & Budget Tips
-* [Tip 1 on bulk cooking or batch prep for dorm students]
-* [Tip 2 on smart hydration and study energy]
+* [Tip 1 on bulk batch cooking to save study hours]
+* [Tip 2 on smart hydration / protein optimization]
 #### 💰 Estimated Weekly Budget
-* **Estimated Total:** [Realistic cost estimate in {currency}]
-* **Savings Tip:** [Practical tip to save money in college]
+* **Estimated Cost:** [Total weekly cost in {currency}]
+* **Savings Tip:** [Tip on buying bulk or seasonal alternatives]
+### GROCERY_END
 """
