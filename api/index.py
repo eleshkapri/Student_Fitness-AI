@@ -183,7 +183,7 @@ HTML_TEMPLATE = r"""
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--line);
-            padding: 8px 24px;
+            padding: 8px 20px;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -197,15 +197,16 @@ HTML_TEMPLATE = r"""
             justify-content: space-between;
             align-items: center;
             width: 100%;
+            gap: 12px;
         }
 
         .brand-logo {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.18rem;
+            font-size: 1.25rem;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             text-decoration: none;
             color: #fff;
             cursor: pointer;
@@ -216,7 +217,7 @@ HTML_TEMPLATE = r"""
 
         .nav-links {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             align-items: center;
             list-style: none;
             margin: 0;
@@ -227,7 +228,7 @@ HTML_TEMPLATE = r"""
             color: var(--text-soft);
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.84rem;
+            font-size: 0.82rem;
             transition: all 0.2s ease;
             cursor: pointer;
             padding: 6px 11px;
@@ -245,6 +246,44 @@ HTML_TEMPLATE = r"""
             background: rgba(228, 255, 91, 0.12);
             border: 1px solid var(--highlighter);
         }
+
+        /* REGION / CURRENCY SELECTOR IN NAVBAR */
+        .nav-region-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .nav-region-select {
+            background: rgba(28, 26, 66, 0.85);
+            color: #ffffff;
+            border: 1px solid rgba(228, 255, 91, 0.35);
+            border-radius: 10px;
+            padding: 5px 9px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.80rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        .nav-region-select:hover, .nav-region-select:focus {
+            border-color: var(--highlighter);
+            background: rgba(36, 33, 85, 0.95);
+            box-shadow: 0 0 10px rgba(228, 255, 91, 0.3);
+        }
+
+        .nav-region-select option {
+            background: #1C1A42;
+            color: #ffffff;
+            padding: 6px;
+        }
+
+        .desktop-only-region { display: flex; }
+        .mobile-only-region { display: none; }
 
         .nav-cta {
             background: var(--coral);
@@ -693,14 +732,14 @@ HTML_TEMPLATE = r"""
         @media (max-width: 1080px) {
             .navbar { padding: 8px 16px; }
             .nav-links { gap: 4px; }
-            .nav-link { padding: 5px 9px; font-size: 0.81rem; }
+            .nav-link { padding: 5px 9px; font-size: 0.80rem; }
             .studio-main { padding: 24px 18px; }
         }
 
         @media (max-width: 860px) {
             .navbar {
-                padding: 6px 14px 5px 14px;
-                background: rgba(20, 19, 43, 0.96) !important;
+                padding: 6px 12px 6px 12px;
+                background: rgba(20, 19, 43, 0.98) !important;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 border-bottom: 1px solid var(--line);
@@ -711,24 +750,25 @@ HTML_TEMPLATE = r"""
             .navbar-inner {
                 display: flex;
                 flex-direction: column;
-                gap: 4px;
+                gap: 5px;
                 width: 100%;
             }
             .navbar-top-row {
                 display: flex;
                 width: 100%;
-                justify-content: flex-start;
+                justify-content: space-between;
                 align-items: center;
             }
-            .brand-logo { font-size: 1.10rem; }
-            .nav-cta { padding: 6px 12px; font-size: 0.78rem; border-radius: 9px; }
+            .brand-logo { font-size: 1.15rem; }
+            .desktop-only-region { display: none !important; }
+            .mobile-only-region { display: flex !important; }
             .nav-links {
                 width: 100%;
                 overflow-x: auto;
                 white-space: nowrap;
-                padding: 2px 0 3px 0;
+                padding: 2px 2px 4px 2px;
                 justify-content: flex-start;
-                gap: 5px;
+                gap: 6px;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none !important;
                 -ms-overflow-style: none !important;
@@ -740,7 +780,7 @@ HTML_TEMPLATE = r"""
             }
             .nav-link {
                 font-size: 0.78rem;
-                padding: 4px 9px;
+                padding: 5px 10px;
                 flex-shrink: 0;
                 border-radius: 14px;
                 background: rgba(246, 241, 227, 0.06);
@@ -807,9 +847,9 @@ HTML_TEMPLATE = r"""
             p { font-size: 0.94rem !important; line-height: 1.55 !important; }
             section { padding: 30px 12px !important; }
             
-            .navbar { padding: 5px 8px 4px 8px !important; }
-            .brand-logo { font-size: 1.02rem !important; }
-            .nav-link { font-size: 0.73rem !important; padding: 3px 7px !important; border-radius: 12px !important; }
+            .navbar { padding: 8px 10px 6px 10px !important; }
+            .brand-logo { font-size: 1.12rem !important; }
+            .nav-link { font-size: 0.78rem !important; padding: 5px 10px !important; }
 
             .hero-deck {
                 transform: scale(0.52);
@@ -864,9 +904,9 @@ HTML_TEMPLATE = r"""
                 transform: scale(0.40);
                 height: 115px;
             }
-            .navbar { padding: 4px 6px 3px 6px !important; }
-            .brand-logo { font-size: 0.94rem !important; }
-            .nav-link { font-size: 0.68rem !important; padding: 3px 6px !important; }
+            .navbar { padding: 6px 6px 4px 6px !important; }
+            .brand-logo { font-size: 1.02rem !important; }
+            .nav-link { font-size: 0.72rem !important; padding: 4px 7px !important; }
             .panel-card, .paper-card { padding: 14px 10px !important; }
         }
     </style>
@@ -883,13 +923,24 @@ HTML_TEMPLATE = r"""
         <div class="navbar-inner">
             <div class="navbar-top-row">
                 <a class="brand-logo" onclick="switchPage('home')">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 8px; box-shadow: 0 3px 10px rgba(255, 107, 84, 0.4); margin-right: 3px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 107, 84, 0.4); margin-right: 2px;">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </span>
                     StudentFit <span>AI</span>
                 </a>
+                <div class="nav-region-wrapper mobile-only-region">
+                    <select id="nav_region_select_mobile" class="nav-region-select" onchange="onGlobalRegionChange(this.value)" title="Choose Country / Currency">
+                        <option value="INR">🇮🇳 INR (₹)</option>
+                        <option value="USD" selected>🇺🇸 USD ($)</option>
+                        <option value="EUR">🇪🇺 EUR (€)</option>
+                        <option value="GBP">🇬🇧 GBP (£)</option>
+                        <option value="CAD">🇨🇦 CAD ($)</option>
+                        <option value="AUD">🇦🇺 AUD ($)</option>
+                        <option value="JPY">🇯🇵 JPY (¥)</option>
+                    </select>
+                </div>
             </div>
             <ul class="nav-links">
                 <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
@@ -900,6 +951,17 @@ HTML_TEMPLATE = r"""
                 <li><a class="nav-link" id="nav-story" onclick="switchPage('story')">💡 Story</a></li>
                 <li><a class="nav-link" id="nav-generator" onclick="switchPage('generator')">⚡ Generator</a></li>
             </ul>
+            <div class="nav-region-wrapper desktop-only-region">
+                <select id="nav_region_select_desktop" class="nav-region-select" onchange="onGlobalRegionChange(this.value)" title="Choose Country / Region & Local Currency">
+                    <option value="INR">🇮🇳 India (₹)</option>
+                    <option value="USD" selected>🇺🇸 USA ($)</option>
+                    <option value="EUR">🇪🇺 Europe (€)</option>
+                    <option value="GBP">🇬🇧 UK (£)</option>
+                    <option value="CAD">🇨🇦 Canada ($)</option>
+                    <option value="AUD">🇦🇺 Australia ($)</option>
+                    <option value="JPY">🇯🇵 Japan (¥)</option>
+                </select>
+            </div>
         </div>
     </nav>
 
@@ -1184,7 +1246,7 @@ HTML_TEMPLATE = r"""
                 <div class="panel-card">
                     <span class="mono-label">TIER 1</span>
                     <h3 style="font-size: 1.5rem; margin: 8px 0;">Cheap Tier</h3>
-                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span></div>
+                    <div id="plan-price-cheap" style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span></div>
                     <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Essential 7-day synchronization for students on tight hostel budgets.</p>
                     <ul style="list-style: none; padding-left: 0; color: var(--text-soft); font-size: 0.9rem; line-height: 1.8;">
                         <li>✅ 7-Day Mon–Sun Plan Generation</li>
@@ -1197,7 +1259,7 @@ HTML_TEMPLATE = r"""
                 <div class="panel-card" style="border: 2px solid var(--highlighter); background: var(--ink3);">
                     <span class="mono-label" style="color: var(--highlighter);">TIER 2 • MOST POPULAR</span>
                     <h3 style="font-size: 1.5rem; margin: 8px 0; color: var(--highlighter);">Moderate Tier</h3>
-                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$3 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span></div>
+                    <div id="plan-price-mod" style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$3 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span></div>
                     <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Advanced exam block optimization with multiple cuisine swaps.</p>
                     <ul style="list-style: none; padding-left: 0; color: #fff; font-size: 0.9rem; line-height: 1.8;">
                         <li>✅ Everything in Cheap Tier</li>
@@ -1209,7 +1271,7 @@ HTML_TEMPLATE = r"""
                 <div class="panel-card">
                     <span class="mono-label" style="color: var(--coral);">TIER 3</span>
                     <h3 style="font-size: 1.5rem; margin: 8px 0;">Premium Tier</h3>
-                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$8 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span></div>
+                    <div id="plan-price-prem" style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$8 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span></div>
                     <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Designed for dorm flatmates pooling shared groceries and recipes.</p>
                     <ul style="list-style: none; padding-left: 0; color: var(--text-soft); font-size: 0.9rem; line-height: 1.8;">
                         <li>✅ Everything in Moderate Tier</li>
@@ -1710,6 +1772,147 @@ HTML_TEMPLATE = r"""
     <!-- JAVASCRIPT -->
     <script>
         let currentRawPlan = "";
+
+        const REGION_CONFIGS = {
+            INR: {
+                name: 'India',
+                currency: 'INR (₹) - Rupee',
+                symbol: '₹',
+                cuisine: 'Indian',
+                weightUnit: 'kg',
+                heightUnit: 'cm',
+                cheapPrice: '₹0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span>',
+                modPrice: '₹250 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span>',
+                premPrice: '₹650 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span>'
+            },
+            USD: {
+                name: 'United States',
+                currency: 'USD ($) - Dollar',
+                symbol: '$',
+                cuisine: 'Western / American',
+                weightUnit: 'lbs',
+                heightUnit: 'ft/in',
+                cheapPrice: '$0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span>',
+                modPrice: '$3 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span>',
+                premPrice: '$8 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span>'
+            },
+            EUR: {
+                name: 'Europe',
+                currency: 'EUR (€) - Euro',
+                symbol: '€',
+                cuisine: 'Mediterranean',
+                weightUnit: 'kg',
+                heightUnit: 'cm',
+                cheapPrice: '€0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span>',
+                modPrice: '€3 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span>',
+                premPrice: '€8 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span>'
+            },
+            GBP: {
+                name: 'United Kingdom',
+                currency: 'GBP (£) - Pound',
+                symbol: '£',
+                cuisine: 'Western / American',
+                weightUnit: 'kg',
+                heightUnit: 'cm',
+                cheapPrice: '£0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span>',
+                modPrice: '£2.50 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span>',
+                premPrice: '£6.50 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span>'
+            },
+            CAD: {
+                name: 'Canada',
+                currency: 'CAD ($) - Dollar',
+                symbol: 'CA$',
+                cuisine: 'Western / American',
+                weightUnit: 'kg',
+                heightUnit: 'cm',
+                cheapPrice: 'CA$0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span>',
+                modPrice: 'CA$4 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span>',
+                premPrice: 'CA$10 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span>'
+            },
+            AUD: {
+                name: 'Australia',
+                currency: 'AUD ($) - Dollar',
+                symbol: 'AU$',
+                cuisine: 'Western / American',
+                weightUnit: 'kg',
+                heightUnit: 'cm',
+                cheapPrice: 'AU$0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span>',
+                modPrice: 'AU$4.50 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span>',
+                premPrice: 'AU$11 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span>'
+            },
+            JPY: {
+                name: 'Japan',
+                currency: 'JPY (¥) - Yen',
+                symbol: '¥',
+                cuisine: 'Asian / Stir-fry',
+                weightUnit: 'kg',
+                heightUnit: 'cm',
+                cheapPrice: '¥0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span>',
+                modPrice: '¥450 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span>',
+                premPrice: '¥1,200 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span>'
+            }
+        };
+
+        function onGlobalRegionChange(regionCode) {
+            const config = REGION_CONFIGS[regionCode] || REGION_CONFIGS.USD;
+
+            // Sync both desktop and mobile navbar dropdowns
+            const dSelect = document.getElementById('nav_region_select_desktop');
+            const mSelect = document.getElementById('nav_region_select_mobile');
+            if (dSelect) dSelect.value = regionCode;
+            if (mSelect) mSelect.value = regionCode;
+
+            // Update Currency in Profile Setup & Sidebar
+            const entryCurr = document.getElementById('entry_currency');
+            if (entryCurr) {
+                for (let i = 0; i < entryCurr.options.length; i++) {
+                    if (entryCurr.options[i].value.includes(regionCode)) {
+                        entryCurr.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            const sideCurr = document.getElementById('currency');
+            if (sideCurr) {
+                for (let i = 0; i < sideCurr.options.length; i++) {
+                    if (sideCurr.options[i].value.includes(regionCode)) {
+                        sideCurr.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // Update Cuisine default if appropriate
+            const entryCuisine = document.getElementById('entry_cuisine');
+            if (entryCuisine && (!entryCuisine.value || entryCuisine.value === 'Indian' || entryCuisine.value === 'Western / American' || entryCuisine.value === 'Mediterranean' || entryCuisine.value === 'Asian / Stir-fry')) {
+                entryCuisine.value = config.cuisine;
+                syncToSidebar('cuisine', config.cuisine);
+            }
+
+            // Update Units
+            const entryWUnit = document.getElementById('entry_weightUnit');
+            if (entryWUnit) { entryWUnit.value = config.weightUnit; syncToSidebar('weightUnit', config.weightUnit); }
+            const entryHUnit = document.getElementById('entry_heightUnit');
+            if (entryHUnit) { entryHUnit.value = config.heightUnit; syncToSidebar('heightUnit', config.heightUnit); }
+
+            const hubWUnit = document.getElementById('hub_weightUnit');
+            if (hubWUnit) hubWUnit.value = config.weightUnit;
+            const hubHUnit = document.getElementById('hub_heightUnit');
+            if (hubHUnit) hubHUnit.value = config.heightUnit;
+
+            // Update Plans Page pricing dynamically
+            const pCheap = document.getElementById('plan-price-cheap');
+            if (pCheap) pCheap.innerHTML = config.cheapPrice;
+            const pMod = document.getElementById('plan-price-mod');
+            if (pMod) pMod.innerHTML = config.modPrice;
+            const pPrem = document.getElementById('plan-price-prem');
+            if (pPrem) pPrem.innerHTML = config.premPrice;
+
+            // Recalculate macro hub if active
+            if (typeof calculateMacroHub === 'function') {
+                calculateMacroHub(false);
+            }
+        }
 
         function renderMarkdownSafe(mdText) {
             if (!mdText) return "";
