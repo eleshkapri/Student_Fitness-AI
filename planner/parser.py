@@ -1,6 +1,7 @@
 """
 Response Parsing Services for StudentFit AI.
 Encapsulates delimiter extraction and Markdown structure compilation into typed domain models.
+Optimized with pre-compiled regular expressions and cached parser instances.
 """
 
 from abc import ABC, abstractmethod
@@ -20,12 +21,15 @@ class BasePlanParser(ABC):
 
 class MarkdownPlanParser(BasePlanParser):
     """
-    Concrete parser converting delimiter-formatted plain text and markdown
+    High-performance parser converting delimiter-formatted plain text and markdown
     into strongly typed DailyPlan items and grocery lists.
     """
 
     DAY_DELIMITER_REGEX = re.compile(r'### DAY_START(.*?)### DAY_END', re.DOTALL)
     GROCERY_DELIMITER_REGEX = re.compile(r'### GROCERY_START(.*?)### GROCERY_END', re.DOTALL)
+    DAY_NAME_REGEX = re.compile(r'Day:\s*(.*)')
+    WORKOUT_REGEX = re.compile(r'Workout:\s*(.*?)(?=Meal:|$)', re.DOTALL)
+    MEAL_REGEX = re.compile(r'Meal:\s*(.*)', re.DOTALL)
 
     def parse(self, raw_text: str) -> WeeklyFitnessPlan:
         if not raw_text:
@@ -35,13 +39,13 @@ class MarkdownPlanParser(BasePlanParser):
         day_blocks = self.DAY_DELIMITER_REGEX.findall(raw_text)
 
         for block in day_blocks:
-            day_match = re.search(r'Day:\s*(.*)', block)
+            day_match = self.DAY_NAME_REGEX.search(block)
             day_name = day_match.group(1).strip() if day_match else "Schedule"
 
-            workout_match = re.search(r'Workout:\s*(.*?)(?=Meal:|$)', block, re.DOTALL)
+            workout_match = self.WORKOUT_REGEX.search(block)
             workout_text = workout_match.group(1).strip() if workout_match else "Rest & Active Recovery"
 
-            meal_match = re.search(r'Meal:\s*(.*)', block, re.DOTALL)
+            meal_match = self.MEAL_REGEX.search(block)
             meal_text = meal_match.group(1).strip() if meal_match else "Balanced Student Nutrition"
 
             days.append(DailyPlan(
@@ -54,7 +58,8 @@ class MarkdownPlanParser(BasePlanParser):
         grocery_text = grocery_match.group(1).strip() if grocery_match else ""
 
         if not grocery_text and "#### 🛒" in raw_text:
-            grocery_text = raw_text[raw_text.find("#### 🛒"):]
+            idx = raw_text.find("#### 🛒")
+            grocery_text = raw_text[idx:]
 
         return WeeklyFitnessPlan(
             days=days,
@@ -63,9 +68,11 @@ class MarkdownPlanParser(BasePlanParser):
         )
 
 
-# Backward-compatible function
+# Global singleton parser instance for high performance
+_DEFAULT_PARSER = MarkdownPlanParser()
+
+
 def parse_ai_response(raw_text: str) -> Tuple[List[dict], str]:
     """Functional facade returning (days_list_of_dicts, grocery_string)."""
-    parser = MarkdownPlanParser()
-    plan = parser.parse(raw_text)
+    plan = _DEFAULT_PARSER.parse(raw_text)
     return [d.to_dict() for d in plan.days], plan.grocery

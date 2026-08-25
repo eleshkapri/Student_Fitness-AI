@@ -6,11 +6,12 @@
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
 [![Flask](https://img.shields.io/badge/Flask-2.0%2B-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
-[![Groq AI](https://img.shields.io/badge/Groq%20Cloud-Llama%203%20%7C%20Compound%20%7C%20Qwen-E4FF5B?style=for-the-badge&logoColor=black)](https://groq.com)
+[![Groq AI](https://img.shields.io/badge/Groq%20Cloud-Llama%203.3%20%7C%20GPT--OSS%20%7C%20Qwen-E4FF5B?style=for-the-badge&logoColor=black)](https://groq.com)
+[![Architecture](https://img.shields.io/badge/Architecture-Secure%20OOP-9C8CFF?style=for-the-badge)](https://github.com/eleshkapri/Student_Fitness-AI)
 
 **Hyper-personalized weekly fitness, nutrition & budget grocery planning designed specifically for university students.**
 
-[🌐 Explore Live Website](https://student-fitness-ai.vercel.app/) • [🚀 Get Started](#-installation--local-setup) • [📖 Architecture](#-project-architecture)
+[🌐 Explore Live Website](https://student-fitness-ai.vercel.app/) • [🚀 Get Started](#-installation--local-setup) • [🏛️ OOP Architecture](#-object-oriented-architecture-oop) • [📂 Project Structure](#-project-structure)
 
 </div>
 
@@ -38,14 +39,57 @@ Most commercial fitness apps assume you have a fully equipped kitchen, a car for
 | **🏃‍♂️ Campus Bio-Data** | Calculates BMR, TDEE, target calories, and macro splits (Protein, Carbs, Fats, Water) in metric and imperial. |
 | **🥗 Synchronized Meal Plans** | High-protein recipes respecting cultural palettes (Indian, Global, Mediterranean, Asian, Vegan) with realistic batch prep. |
 | **🛒 1-Person Grocery List** | Itemized shopping checklist with realistic estimated costs in your local currency. |
-| **📄 Formatted PDF Export** | Client-side, print-ready A4 PDF download of your complete 7-day schedule and grocery checklist. |
+| **📄 Formatted PDF Export** | Client-side and server-side, print-ready A4 PDF download of your complete 7-day schedule and grocery checklist. |
 | **🔘 Collapsible Studio Sidebar** | Toggle between clean full-screen schedule reading (`✕ Close`) and live parameter tuning (`⚡ Show Controls ▸`). |
-| **🌌 3D Interactive Atmosphere** | 3D particle constellation starfield with touch/mouse parallax, perspective Cybergrid horizon, and volumetric drifting gradient blobs. |
-| **📱 Mobile-First Responsive** | 2-tier sticky mobile header with horizontal auto-centering pill scroll and tap-to-flip cards. |
+| **🌌 3D Interactive Atmosphere** | 3D particle constellation starfield with touch/mouse parallax & auto-orbit drift, perspective Cybergrid horizon, and volumetric atmosphere blobs. |
+| **📱 Mobile-First Responsive** | 2-tier sticky mobile header with horizontal auto-centering pill scroll and touch tap-to-flip cards. |
 
 ---
 
-## 📂 Project Architecture
+## 🏛️ Object-Oriented Architecture (OOP)
+
+The backend is built upon a secure, modular **Object-Oriented Programming (OOP)** foundation:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    FitnessPlannerService                    │
+│                      (Composite Facade)                     │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+       ┌───────────────────────┼────────────────────────┐
+       ▼                       ▼                        ▼
+┌──────────────┐      ┌─────────────────┐      ┌────────────────┐
+│StudentProfile│      │BasePlanGenerator│      │ BasePlanParser │
+│(Encapsulation│      │ (Polymorphism)  │      │ (Abstraction)  │
+│& Validation) │      └────────┬────────┘      └───────┬────────┘
+└──────────────┘               │                       │
+                     ┌─────────┴─────────┐             ▼
+                     ▼                   ▼     ┌────────────────┐
+             ┌───────────────┐   ┌───────────┐ │MarkdownPlan    │
+             │MockPlan       │   │GroqPlan   │ │Parser          │
+             │Generator      │   │Generator  │ └────────────────┘
+             └───────────────┘   └───────────┘
+```
+
+### 1. Encapsulation & Defensive Validation (`planner/models.py`)
+- **`StudentProfile`**: Encapsulates student bio-data with strict property getters/setters.
+- **Defensive Boundary Clamping**: Automatically protects against out-of-bounds payloads ($14 \le \text{age} \le 90$, $25.0 \le \text{weight} \le 350.0\text{ kg}$, $50.0 \le \text{height} \le 260.0\text{ cm}$).
+- **Injection Sanitization**: Strips control characters and escapes HTML inputs to prevent prompt injection and XSS.
+- **`MacroResult`**, **`DailyPlan`**, **`WeeklyFitnessPlan`**: Encapsulates typed data transfer objects.
+
+### 2. Abstraction & Single Responsibility (`planner/calculator.py` & `planner/prompt_builder.py`)
+- **`MacroCalculator`**: Encapsulates Mifflin-St Jeor metabolic math and student activity multipliers.
+- **`StudentPromptBuilder`**: Separates prompt structuring and formatting delimiters from execution logic.
+- **`SecretsManager`**: Encapsulates multi-source API key resolution (`env`, `.streamlit/secrets.toml`, parameter).
+
+### 3. Inheritance & Polymorphism (`planner/generators.py` & `planner/parser.py`)
+- **`BasePlanGenerator` (ABC)** $\to$ **`MockPlanGenerator`** & **`GroqPlanGenerator`** (with automated candidate model failover cascade).
+- **`BasePlanParser` (ABC)** $\to$ **`MarkdownPlanParser`** (pre-compiled regexes with singleton performance caching).
+- **`PDFReportGenerator` (`planner/pdf_service.py`)**: Encapsulates character transliteration, typography, and A4 page breaks.
+
+---
+
+## 📂 Project Structure
 
 ```
 Student_Fitness-AI/
@@ -60,11 +104,16 @@ Student_Fitness-AI/
 │   ├── story.py             # Positioning narrative for student housing & exam weeks
 │   └── generator.py         # AI Planner Studio with sidebar wizard, dark cards & PDF export
 ├── planner/
-│   ├── __init__.py          # Planner package initialization & facade exports
-│   ├── prompt_builder.py    # Strict LLM prompt generator honoring student constraints
-│   └── llm_client.py        # Groq client with model fallback cascade & PDF compilation
+│   ├── __init__.py          # Planner package exports (Models, Services, Facades)
+│   ├── models.py            # StudentProfile, MacroResult, DailyPlan, WeeklyFitnessPlan
+│   ├── calculator.py        # MacroCalculator (Mifflin-St Jeor metabolic engine)
+│   ├── prompt_builder.py    # StudentPromptBuilder (LLM prompt engineering)
+│   ├── parser.py            # BasePlanParser & MarkdownPlanParser (Pre-compiled regexes)
+│   ├── pdf_service.py       # PDFReportGenerator (A4 PDF compilation engine)
+│   ├── generators.py        # MockPlanGenerator, GroqPlanGenerator, FitnessPlannerService
+│   └── llm_client.py        # Unified client exports & backward-compatible facades
 ├── api/
-│   └── index.py             # Serverless Flask web app for Vercel deployment
+│   └── index.py             # Serverless Flask web app for Vercel deployment (with security headers)
 ├── core.py                  # Lightweight compatibility facade (zero code duplication)
 ├── requirements.txt         # Optimized Python dependencies
 ├── vercel.json              # Vercel v2 serverless deployment configuration
