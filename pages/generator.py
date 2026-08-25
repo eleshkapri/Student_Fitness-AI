@@ -37,36 +37,36 @@ def render():
         st.markdown('<span class="mono-label">🏃‍♂️ CAMPUS BIO-DATA</span>', unsafe_allow_html=True)
         col_s1, col_s2 = st.columns(2)
         with col_s1:
-            gender = st.selectbox("Gender", ["Male", "Female", "Other"])
+            gender = st.selectbox("Gender", ["Male", "Female", "Other"], index=None, placeholder="Select Gender")
         with col_s2:
-            age = st.number_input("Age", 16, 40, 20)
+            age = st.number_input("Age", min_value=16, max_value=40, value=None, placeholder="e.g. 20")
 
         col_w1, col_w2 = st.columns([2, 1.2])
         with col_w1:
-            weight = st.number_input("Weight", 30, 300, 70)
+            weight = st.number_input("Weight", min_value=30, max_value=300, value=None, placeholder="e.g. 70")
         with col_w2:
-            weight_unit = st.selectbox("Unit", ["kg", "lbs"], key="w_unit")
+            weight_unit = st.selectbox("Unit", ["kg", "lbs"], index=0, key="w_unit")
 
         col_h1, col_h2 = st.columns([2, 1.2])
         with col_h1:
-            height = st.number_input("Height", 100, 250, 170)
+            height = st.number_input("Height", min_value=100, max_value=250, value=None, placeholder="e.g. 170")
         with col_h2:
-            height_unit = st.selectbox("Unit", ["cm", "ft/in"], key="h_unit")
+            height_unit = st.selectbox("Unit", ["cm", "ft/in"], index=0, key="h_unit")
 
         st.markdown('<br><span class="mono-label">🎯 GOALS & GEAR</span>', unsafe_allow_html=True)
-        goal = st.selectbox("Fitness Goal", ["Build Muscle", "Lose Weight", "Get Shredded", "Exam Stress Relief"])
-        equipment = st.selectbox("Available Gear", ["Full Gym", "Dumbbells Only", "No Equipment (Dorm)"])
+        goal = st.selectbox("Fitness Goal", ["Build Muscle", "Lose Weight", "Get Shredded", "Exam Stress Relief"], index=None, placeholder="Select Fitness Goal")
+        equipment = st.selectbox("Available Gear", ["Full Gym", "Dumbbells Only", "No Equipment (Dorm)"], index=None, placeholder="Select Available Gear")
 
         st.markdown('<br><span class="mono-label">🥑 KITCHEN & BUDGET</span>', unsafe_allow_html=True)
-        cuisine = st.selectbox("Cuisine", ["Indian", "Global", "Mediterranean", "Asian", "Vegan"])
+        cuisine = st.selectbox("Cuisine", ["Indian", "Global", "Mediterranean", "Asian", "Vegan"], index=None, placeholder="Select Cuisine")
         
         col_b1, col_b2 = st.columns([1.5, 1.5])
         with col_b1:
-            budget = st.selectbox("Budget Tier", ["Cheap ($)", "Moderate ($$)", "Premium ($$$)"], index=1)
+            budget = st.selectbox("Budget Tier", ["Cheap ($)", "Moderate ($$)", "Premium ($$$)"], index=None, placeholder="Select Budget Tier")
         with col_b2:
-            currency = st.selectbox("Currency", ["INR (₹)", "USD ($)", "EUR (€)", "GBP (£)", "CAD ($)", "AUD ($)", "AED (د.إ)"], index=0)
+            currency = st.selectbox("Currency", ["INR (₹)", "USD ($)", "EUR (€)", "GBP (£)", "CAD ($)", "AUD ($)", "AED (د.إ)"], index=None, placeholder="Select Currency")
             
-        cooking_skill = st.select_slider("Cooking Skill", options=["Microwave Only", "Basic Stove", "Full Chef"], value="Basic Stove")
+        cooking_skill = st.selectbox("Cooking Skill", ["Microwave Only", "Basic Stove", "Full Chef"], index=None, placeholder="Select Cooking Setup")
 
         st.markdown("<br>", unsafe_allow_html=True)
         generate_btn = st.button("🚀 GENERATE WEEKLY PLAN", use_container_width=True)
@@ -81,21 +81,24 @@ def render():
     """, unsafe_allow_html=True)
 
     if generate_btn:
-        user_profile = {
-            "age": age, "weight": weight, "weight_unit": weight_unit,
-            "height": height, "height_unit": height_unit, "gender": gender, 
-            "goal": goal, "equipment": equipment, "cuisine": cuisine, 
-            "diet_type": "Standard", "budget": budget, "currency": currency,
-            "cooking_skill": cooking_skill
-        }
-        
-        with st.spinner('🗓️ Synchronizing your 7-day schedule with AI... Tailoring exercises, student meals, and localized grocery budgets...'):
-            if use_simulation or not api_key:
-                full_response = generate_plan_mock(user_profile)
-                source = "Simulation (Demo Mode)"
-            else:
-                full_response, used_model = generate_plan_real(user_profile, api_key, model_option)
-                source = f"Groq ({used_model})" if used_model else "Groq"
+        if not all([gender, age, weight, height, goal, equipment, cuisine, budget, currency, cooking_skill]):
+            st.warning("⚠️ Please fill in all information fields (Age, Weight, Height, Goal, Equipment, Cuisine, etc.) to generate your personalized plan!")
+        else:
+            user_profile = {
+                "age": age, "weight": weight, "weight_unit": weight_unit,
+                "height": height, "height_unit": height_unit, "gender": gender, 
+                "goal": goal, "equipment": equipment, "cuisine": cuisine, 
+                "diet_type": "Standard", "budget": budget, "currency": currency,
+                "cooking_skill": cooking_skill
+            }
+            
+            with st.spinner('🗓️ Synchronizing your 7-day schedule with AI... Tailoring exercises, student meals, and localized grocery budgets...'):
+                if use_simulation or not api_key:
+                    full_response = generate_plan_mock(user_profile)
+                    source = "Simulation (Demo Mode)"
+                else:
+                    full_response, used_model = generate_plan_real(user_profile, api_key, model_option)
+                    source = f"Groq ({used_model})" if used_model else "Groq"
 
         if full_response.startswith("Error:"):
             st.error(f"❌ Generation Error: {full_response}")

@@ -1052,25 +1052,26 @@ HTML_TEMPLATE = """
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Gender</label>
-                                <select id="entry_gender" onchange="syncToSidebar('gender', this.value)">
-                                    <option value="Male" selected>Male</option>
+                                <select id="entry_gender" autocomplete="off" onchange="syncToSidebar('gender', this.value)">
+                                    <option value="" disabled selected hidden>Select Gender</option>
+                                    <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Age</label>
-                                <input type="number" id="entry_age" value="20" min="16" max="40" onchange="syncToSidebar('age', this.value)">
+                                <input type="number" id="entry_age" placeholder="Age (e.g. 20)" min="16" max="40" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onchange="syncToSidebar('age', this.value)">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group" style="flex: 2;">
                                 <label>Weight</label>
-                                <input type="number" id="entry_weight" value="70" min="30" max="300" onchange="syncToSidebar('weight', this.value)">
+                                <input type="number" id="entry_weight" placeholder="Weight (e.g. 70)" min="30" max="300" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onchange="syncToSidebar('weight', this.value)">
                             </div>
                             <div class="form-group" style="flex: 1.2;">
                                 <label>Unit</label>
-                                <select id="entry_weightUnit" onchange="syncToSidebar('weightUnit', this.value)">
+                                <select id="entry_weightUnit" autocomplete="off" onchange="syncToSidebar('weightUnit', this.value)">
                                     <option value="kg" selected>kg</option>
                                     <option value="lbs">lbs</option>
                                 </select>
@@ -1079,11 +1080,11 @@ HTML_TEMPLATE = """
                         <div class="form-row">
                             <div class="form-group" style="flex: 2;">
                                 <label>Height</label>
-                                <input type="number" id="entry_height" value="170" min="100" max="250" onchange="syncToSidebar('height', this.value)">
+                                <input type="number" id="entry_height" placeholder="Height (e.g. 170)" min="100" max="250" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onchange="syncToSidebar('height', this.value)">
                             </div>
                             <div class="form-group" style="flex: 1.2;">
                                 <label>Unit</label>
-                                <select id="entry_heightUnit" onchange="syncToSidebar('heightUnit', this.value)">
+                                <select id="entry_heightUnit" autocomplete="off" onchange="syncToSidebar('heightUnit', this.value)">
                                     <option value="cm" selected>cm</option>
                                     <option value="ft/in">ft/in</option>
                                 </select>
@@ -1096,8 +1097,9 @@ HTML_TEMPLATE = """
                         <h4 style="color: var(--coral); margin-bottom: 14px; font-size: 1.05rem;">🎯 Goals & Gear</h4>
                         <div class="form-group">
                             <label>Primary Fitness Target</label>
-                            <select id="entry_goal" onchange="syncToSidebar('goal', this.value)">
-                                <option value="Build Muscle" selected>💪 Build Muscle & Bulk</option>
+                            <select id="entry_goal" autocomplete="off" onchange="syncToSidebar('goal', this.value)">
+                                <option value="" disabled selected hidden>Select Fitness Goal</option>
+                                <option value="Build Muscle">💪 Build Muscle & Bulk</option>
                                 <option value="Lose Weight">🔥 Lose Fat & Lean Out</option>
                                 <option value="Get Shredded">⚡ Athletic Tone & Shred</option>
                                 <option value="Exam Stress Relief">🧘 Exam Stress Relief & Focus</option>
@@ -1105,8 +1107,9 @@ HTML_TEMPLATE = """
                         </div>
                         <div class="form-group">
                             <label>Available Equipment</label>
-                            <select id="entry_equipment" onchange="syncToSidebar('equipment', this.value)">
-                                <option value="Full Gym" selected>🏛️ Full University Gym</option>
+                            <select id="entry_equipment" autocomplete="off" onchange="syncToSidebar('equipment', this.value)">
+                                <option value="" disabled selected hidden>Select Available Gear</option>
+                                <option value="Full Gym">🏛️ Full University Gym</option>
                                 <option value="Dumbbells Only">🏋️ Dumbbells Only</option>
                                 <option value="No Equipment (Dorm)">🏠 No Equipment (Dorm Floor)</option>
                             </select>
@@ -1119,8 +1122,9 @@ HTML_TEMPLATE = """
                     <div class="entry-grid-3" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
                         <div class="form-group">
                             <label>Cuisine Preference</label>
-                            <select id="entry_cuisine" onchange="syncToSidebar('cuisine', this.value)">
-                                <option value="Indian" selected>🍛 Indian</option>
+                            <select id="entry_cuisine" autocomplete="off" onchange="syncToSidebar('cuisine', this.value)">
+                                <option value="" disabled selected hidden>Select Cuisine</option>
+                                <option value="Indian">🍛 Indian</option>
                                 <option value="Global">🌍 Global</option>
                                 <option value="Mediterranean">🥗 Mediterranean</option>
                                 <option value="Asian">🥢 Asian</option>
@@ -1129,16 +1133,18 @@ HTML_TEMPLATE = """
                         </div>
                         <div class="form-group">
                             <label>Budget Tier</label>
-                            <select id="entry_budget" onchange="syncToSidebar('budget', this.value)">
+                            <select id="entry_budget" autocomplete="off" onchange="syncToSidebar('budget', this.value)">
+                                <option value="" disabled selected hidden>Select Budget Tier</option>
                                 <option value="Cheap ($)">Cheap ($)</option>
-                                <option value="Moderate ($$)" selected>Moderate ($$)</option>
+                                <option value="Moderate ($$)">Moderate ($$)</option>
                                 <option value="Premium ($$$)">Premium ($$$)</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Preferred Currency</label>
-                            <select id="entry_currency" onchange="syncToSidebar('currency', this.value)">
-                                <option value="INR (₹)" selected>INR (₹) - Rupee</option>
+                            <select id="entry_currency" autocomplete="off" onchange="syncToSidebar('currency', this.value)">
+                                <option value="" disabled selected hidden>Select Currency</option>
+                                <option value="INR (₹)">INR (₹) - Rupee</option>
                                 <option value="USD ($)">USD ($) - Dollar</option>
                                 <option value="EUR (€)">EUR (€) - Euro</option>
                                 <option value="GBP (£)">GBP (£) - Pound</option>
@@ -1150,9 +1156,10 @@ HTML_TEMPLATE = """
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
                         <label>Cooking Setup / Facility</label>
-                        <select id="entry_cookingSkill" onchange="syncToSidebar('cookingSkill', this.value)">
+                        <select id="entry_cookingSkill" autocomplete="off" onchange="syncToSidebar('cookingSkill', this.value)">
+                            <option value="" disabled selected hidden>Select Cooking Setup</option>
                             <option value="Microwave Only">⚡ Microwave / Kettle Only (Strict Dorm)</option>
-                            <option value="Basic Stove" selected>🍳 Basic Stove / Single Induction</option>
+                            <option value="Basic Stove">🍳 Basic Stove / Single Induction</option>
                             <option value="Full Chef">👨‍🍳 Full Kitchen & Oven</option>
                         </select>
                     </div>
@@ -1181,26 +1188,27 @@ HTML_TEMPLATE = """
                 <div class="form-row" style="margin-top: 8px;">
                     <div class="form-group">
                         <label>Gender</label>
-                        <select id="gender">
-                            <option value="Male" selected>Male</option>
+                        <select id="gender" autocomplete="off">
+                            <option value="" disabled selected hidden>Select Gender</option>
+                            <option value="Male">Male</option>
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Age</label>
-                        <input type="number" id="age" value="20" min="16" max="40">
+                        <input type="number" id="age" placeholder="Age" min="16" max="40" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group" style="flex: 2;">
                         <label>Weight</label>
-                        <input type="number" id="weight" value="70" min="30" max="300">
+                        <input type="number" id="weight" placeholder="Weight" min="30" max="300" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                     </div>
                     <div class="form-group" style="flex: 1.2;">
                         <label>Unit</label>
-                        <select id="weightUnit">
+                        <select id="weightUnit" autocomplete="off">
                             <option value="kg" selected>kg</option>
                             <option value="lbs">lbs</option>
                         </select>
@@ -1210,11 +1218,11 @@ HTML_TEMPLATE = """
                 <div class="form-row">
                     <div class="form-group" style="flex: 2;">
                         <label>Height</label>
-                        <input type="number" id="height" value="170" min="100" max="250">
+                        <input type="number" id="height" placeholder="Height" min="100" max="250" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                     </div>
                     <div class="form-group" style="flex: 1.2;">
                         <label>Unit</label>
-                        <select id="heightUnit">
+                        <select id="heightUnit" autocomplete="off">
                             <option value="cm" selected>cm</option>
                             <option value="ft/in">ft/in</option>
                         </select>
@@ -1224,8 +1232,9 @@ HTML_TEMPLATE = """
                 <span class="mono-label" style="display: block; margin-top: 14px;">🎯 GOALS & GEAR</span>
                 <div class="form-group" style="margin-top: 8px;">
                     <label>Fitness Target</label>
-                    <select id="goal">
-                        <option value="Build Muscle" selected>Build Muscle</option>
+                    <select id="goal" autocomplete="off">
+                        <option value="" disabled selected hidden>Select Fitness Goal</option>
+                        <option value="Build Muscle">Build Muscle</option>
                         <option value="Lose Weight">Lose Weight</option>
                         <option value="Get Shredded">Get Shredded</option>
                         <option value="Exam Stress Relief">Exam Stress Relief</option>
@@ -1234,8 +1243,9 @@ HTML_TEMPLATE = """
 
                 <div class="form-group">
                     <label>Available Equipment</label>
-                    <select id="equipment">
-                        <option value="Full Gym" selected>Full Gym</option>
+                    <select id="equipment" autocomplete="off">
+                        <option value="" disabled selected hidden>Select Available Gear</option>
+                        <option value="Full Gym">Full Gym</option>
                         <option value="Dumbbells Only">Dumbbells Only</option>
                         <option value="No Equipment (Dorm)">No Equipment (Dorm)</option>
                     </select>
@@ -1244,8 +1254,9 @@ HTML_TEMPLATE = """
                 <span class="mono-label" style="display: block; margin-top: 14px;">🥑 KITCHEN & BUDGET</span>
                 <div class="form-group" style="margin-top: 8px;">
                     <label>Cuisine Preference</label>
-                    <select id="cuisine">
-                        <option value="Indian" selected>Indian</option>
+                    <select id="cuisine" autocomplete="off">
+                        <option value="" disabled selected hidden>Select Cuisine</option>
+                        <option value="Indian">Indian</option>
                         <option value="Global">Global</option>
                         <option value="Mediterranean">Mediterranean</option>
                         <option value="Asian">Asian</option>
@@ -1256,16 +1267,18 @@ HTML_TEMPLATE = """
                 <div class="form-row">
                     <div class="form-group" style="flex: 1.5;">
                         <label>Budget Tier</label>
-                        <select id="budget">
+                        <select id="budget" autocomplete="off">
+                            <option value="" disabled selected hidden>Select Budget Tier</option>
                             <option value="Cheap ($)">Cheap ($)</option>
-                            <option value="Moderate ($$)" selected>Moderate ($$)</option>
+                            <option value="Moderate ($$)">Moderate ($$)</option>
                             <option value="Premium ($$$)">Premium ($$$)</option>
                         </select>
                     </div>
                     <div class="form-group" style="flex: 1.5;">
                         <label>Currency</label>
-                        <select id="currency">
-                            <option value="INR (₹)" selected>INR (₹)</option>
+                        <select id="currency" autocomplete="off">
+                            <option value="" disabled selected hidden>Select Currency</option>
+                            <option value="INR (₹)">INR (₹)</option>
                             <option value="USD ($)">USD ($)</option>
                             <option value="EUR (€)">EUR (€)</option>
                             <option value="GBP (£)">GBP (£)</option>
@@ -1278,9 +1291,10 @@ HTML_TEMPLATE = """
 
                 <div class="form-group">
                     <label>Cooking Facility</label>
-                    <select id="cookingSkill">
+                    <select id="cookingSkill" autocomplete="off">
+                        <option value="" disabled selected hidden>Select Cooking Setup</option>
                         <option value="Microwave Only">Microwave Only</option>
-                        <option value="Basic Stove" selected>Basic Stove</option>
+                        <option value="Basic Stove">Basic Stove</option>
                         <option value="Full Chef">Full Chef</option>
                     </select>
                 </div>
@@ -1347,18 +1361,36 @@ HTML_TEMPLATE = """
         }
 
         function submitEntryAndGenerate() {
-            syncToSidebar('gender', document.getElementById('entry_gender').value);
-            syncToSidebar('age', document.getElementById('entry_age').value);
-            syncToSidebar('weight', document.getElementById('entry_weight').value);
-            syncToSidebar('weightUnit', document.getElementById('entry_weightUnit').value);
-            syncToSidebar('height', document.getElementById('entry_height').value);
-            syncToSidebar('heightUnit', document.getElementById('entry_heightUnit').value);
-            syncToSidebar('goal', document.getElementById('entry_goal').value);
-            syncToSidebar('equipment', document.getElementById('entry_equipment').value);
-            syncToSidebar('cuisine', document.getElementById('entry_cuisine').value);
-            syncToSidebar('budget', document.getElementById('entry_budget').value);
-            syncToSidebar('currency', document.getElementById('entry_currency').value);
-            syncToSidebar('cookingSkill', document.getElementById('entry_cookingSkill').value);
+            const gender = document.getElementById('entry_gender').value;
+            const age = document.getElementById('entry_age').value;
+            const weight = document.getElementById('entry_weight').value;
+            const weightUnit = document.getElementById('entry_weightUnit').value;
+            const height = document.getElementById('entry_height').value;
+            const heightUnit = document.getElementById('entry_heightUnit').value;
+            const goal = document.getElementById('entry_goal').value;
+            const equipment = document.getElementById('entry_equipment').value;
+            const cuisine = document.getElementById('entry_cuisine').value;
+            const budget = document.getElementById('entry_budget').value;
+            const currency = document.getElementById('entry_currency').value;
+            const cookingSkill = document.getElementById('entry_cookingSkill').value;
+
+            if (!gender || !age || !weight || !height || !goal || !equipment || !cuisine || !budget || !currency || !cookingSkill) {
+                alert('⚠️ Please fill in all information fields (Age, Weight, Height, Goal, Equipment, Cuisine, etc.) to generate your personalized plan!');
+                return;
+            }
+
+            syncToSidebar('gender', gender);
+            syncToSidebar('age', age);
+            syncToSidebar('weight', weight);
+            syncToSidebar('weightUnit', weightUnit);
+            syncToSidebar('height', height);
+            syncToSidebar('heightUnit', heightUnit);
+            syncToSidebar('goal', goal);
+            syncToSidebar('equipment', equipment);
+            syncToSidebar('cuisine', cuisine);
+            syncToSidebar('budget', budget);
+            syncToSidebar('currency', currency);
+            syncToSidebar('cookingSkill', cookingSkill);
 
             document.getElementById('studio-entry-view').style.display = 'none';
             document.getElementById('studio-dashboard-view').style.display = 'flex';
@@ -1380,6 +1412,24 @@ HTML_TEMPLATE = """
         }
 
         async function generatePlan() {
+            const gender = document.getElementById('gender').value;
+            const age = document.getElementById('age').value;
+            const weight = document.getElementById('weight').value;
+            const weightUnit = document.getElementById('weightUnit').value;
+            const height = document.getElementById('height').value;
+            const heightUnit = document.getElementById('heightUnit').value;
+            const goal = document.getElementById('goal').value;
+            const equipment = document.getElementById('equipment').value;
+            const cuisine = document.getElementById('cuisine').value;
+            const budget = document.getElementById('budget').value;
+            const currency = document.getElementById('currency').value;
+            const cookingSkill = document.getElementById('cookingSkill').value;
+
+            if (!gender || !age || !weight || !height || !goal || !equipment || !cuisine || !budget || !currency || !cookingSkill) {
+                alert('⚠️ Please provide all information in the sidebar controls to generate your plan.');
+                return;
+            }
+
             const btn = document.getElementById('generateBtn');
             const spinner = document.getElementById('spinner');
             const resultsArea = document.getElementById('resultsArea');
@@ -1393,18 +1443,18 @@ HTML_TEMPLATE = """
             spinner.style.display = 'block';
 
             const payload = {
-                gender: document.getElementById('gender').value,
-                age: document.getElementById('age').value,
-                weight: document.getElementById('weight').value,
-                weight_unit: document.getElementById('weightUnit').value,
-                height: document.getElementById('height').value,
-                height_unit: document.getElementById('heightUnit').value,
-                goal: document.getElementById('goal').value,
-                equipment: document.getElementById('equipment').value,
-                cuisine: document.getElementById('cuisine').value,
-                budget: document.getElementById('budget').value,
-                currency: document.getElementById('currency').value,
-                cookingSkill: document.getElementById('cookingSkill').value
+                gender: gender,
+                age: age,
+                weight: weight,
+                weight_unit: weightUnit,
+                height: height,
+                height_unit: heightUnit,
+                goal: goal,
+                equipment: equipment,
+                cuisine: cuisine,
+                budget: budget,
+                currency: currency,
+                cookingSkill: cookingSkill
             };
 
             try {
