@@ -179,11 +179,11 @@ HTML_TEMPLATE = r"""
 
         /* TOP NAVIGATION BAR */
         .navbar {
-            background: rgba(20, 19, 43, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(20, 19, 43, 0.94);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border-bottom: 1px solid var(--line);
-            padding: 12px 24px;
+            padding: 10px clamp(16px, 3vw, 36px);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -191,17 +191,18 @@ HTML_TEMPLATE = r"""
         }
 
         .navbar-inner {
-            max-width: 1180px;
+            max-width: 1320px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
+            gap: 16px;
         }
 
         .brand-logo {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.45rem;
+            font-size: 1.35rem;
             font-weight: 800;
             display: flex;
             align-items: center;
@@ -209,51 +210,81 @@ HTML_TEMPLATE = r"""
             text-decoration: none;
             color: #fff;
             cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .brand-logo span { color: var(--highlighter); }
 
         .nav-links {
             display: flex;
-            gap: 12px;
+            gap: 6px;
             align-items: center;
             list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: nowrap;
         }
 
         .nav-link {
             color: var(--text-soft);
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.92rem;
+            font-size: 0.85rem;
             transition: all 0.2s ease;
             cursor: pointer;
-            padding: 8px 14px;
-            border-radius: 12px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .nav-link:hover {
             color: #ffffff;
-            background: rgba(246, 241, 227, 0.08);
+            background: rgba(246, 241, 227, 0.09);
         }
 
         .nav-link.active {
             color: var(--highlighter);
             background: rgba(228, 255, 91, 0.12);
-            border: 1px solid var(--highlighter);
+            border: 1px solid rgba(228, 255, 91, 0.35);
+        }
+
+        #nav-generator {
+            background: rgba(255, 107, 84, 0.14);
+            color: var(--coral);
+            border: 1px solid rgba(255, 107, 84, 0.3);
+        }
+
+        #nav-generator:hover {
+            background: var(--coral);
+            color: #ffffff;
+            border-color: var(--coral);
+            box-shadow: 0 4px 14px rgba(255, 107, 84, 0.4);
+        }
+
+        #nav-generator.active {
+            background: var(--coral) !important;
+            color: #ffffff !important;
+            border-color: var(--coral) !important;
+            box-shadow: 0 4px 18px rgba(255, 107, 84, 0.5);
         }
 
         .nav-region-badge {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            background: rgba(36, 33, 85, 0.85);
+            gap: 6px;
+            background: rgba(36, 33, 85, 0.8);
             border: 1px solid var(--line);
-            border-radius: 20px;
-            padding: 5px 12px;
+            border-radius: 18px;
+            padding: 5px 11px;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             transition: all 0.25s ease;
             flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .nav-region-badge:hover {
@@ -265,7 +296,7 @@ HTML_TEMPLATE = r"""
             background: transparent;
             color: #ffffff;
             border: none;
-            font-size: 0.84rem;
+            font-size: 0.82rem;
             font-weight: 700;
             cursor: pointer;
             outline: none;
@@ -714,14 +745,17 @@ HTML_TEMPLATE = r"""
             display: contents;
         }
 
-        @media (max-width: 1080px) {
-            .navbar { padding: 12px 18px; }
-            .nav-links { gap: 8px; }
-            .nav-link { padding: 6px 10px; font-size: 0.85rem; }
+        @media (max-width: 1140px) {
+            .navbar { padding: 10px 18px; }
+            .nav-links { gap: 4px; }
+            .nav-link { padding: 5px 9px; font-size: 0.81rem; }
+            .brand-logo { font-size: 1.25rem; }
+            .nav-region-badge { padding: 4px 9px; }
+            #nav-region-select { font-size: 0.78rem; }
             .studio-main { padding: 24px 18px; }
         }
 
-        @media (max-width: 860px) {
+        @media (max-width: 920px) {
             .navbar {
                 padding: 10px 14px 8px 14px;
                 background: rgba(20, 19, 43, 0.96) !important;
@@ -758,7 +792,7 @@ HTML_TEMPLATE = r"""
                 width: 100%;
                 overflow-x: auto;
                 white-space: nowrap;
-                padding: 2px 2px 6px 2px;
+                padding: 4px 2px 6px 2px;
                 justify-content: flex-start;
                 gap: 8px;
                 -webkit-overflow-scrolling: touch;
@@ -771,10 +805,10 @@ HTML_TEMPLATE = r"""
                 height: 0 !important;
             }
             .nav-link {
-                font-size: 0.82rem;
+                font-size: 0.8rem;
                 padding: 6px 12px;
                 flex-shrink: 0;
-                border-radius: 20px;
+                border-radius: 18px;
                 background: rgba(246, 241, 227, 0.06);
                 border: 1px solid rgba(246, 241, 227, 0.08);
             }
@@ -783,6 +817,7 @@ HTML_TEMPLATE = r"""
                 border-color: var(--highlighter);
                 color: var(--highlighter);
             }
+        }
 
             /* HERO SECTION */
             .hero-grid {
