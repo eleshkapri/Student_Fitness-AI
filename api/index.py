@@ -714,7 +714,6 @@ HTML_TEMPLATE = """
                 </span>
                 StudentFit <span>AI</span>
             </a>
-            <button class="nav-cta" onclick="switchPage('generator')">⚡ Generate</button>
         </div>
         <ul class="nav-links">
             <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
@@ -724,7 +723,6 @@ HTML_TEMPLATE = """
             <li><a class="nav-link" id="nav-story" onclick="switchPage('story')">💡 Story</a></li>
             <li><a class="nav-link" id="nav-generator" onclick="switchPage('generator')">⚡ Generator</a></li>
         </ul>
-        <button class="nav-cta" onclick="switchPage('generator')">⚡ Generate My Week</button>
     </nav>
 
     <!-- =========================================================================
