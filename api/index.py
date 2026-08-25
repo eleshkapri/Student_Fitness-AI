@@ -6,6 +6,9 @@ from flask import Flask, render_template_string, request, jsonify
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core import (
+    StudentProfile,
+    MacroCalculator,
+    FitnessPlannerService,
     get_api_key,
     calculate_macros,
     parse_ai_response,
@@ -1818,45 +1821,44 @@ def index():
 @app.route("/api/generate", methods=["POST"])
 def generate():
     data = request.json or {}
-    api_key = get_api_key(data.get("apiKey"))
-    use_demo = data.get("demoMode", False) or not api_key
-    chosen_model = data.get("model", "openai/gpt-oss-20b")
-    
-    if use_demo:
-        raw_text = generate_plan_mock(data)
-        source = "Simulation (Demo Mode)"
-    else:
-        raw_text, used_model = generate_plan_real(data, api_key, chosen_model)
-        source = f"Groq ({used_model})" if used_model else "Groq"
+    try:
+        profile = StudentProfile.from_dict(data)
+        api_key = get_api_key(data.get("apiKey"))
+        use_demo = data.get("demoMode", False) or not api_key
+        chosen_model = data.get("model", "openai/gpt-oss-20b")
+        
+        service = FitnessPlannerService()
+        plan = service.create_weekly_plan(
+            profile_data=profile,
+            api_key=api_key,
+            preferred_model=chosen_model,
+            force_demo=use_demo
+        )
 
-    if raw_text.startswith("Error:"):
-        return jsonify({"error": raw_text}), 500
+        if plan.raw_text.startswith("Error:"):
+            return jsonify({"error": plan.raw_text}), 500
 
-    days, grocery = parse_ai_response(raw_text)
-    
-    if not days:
-        return jsonify({"error": "Failed to parse schedule format. Please retry."}), 500
+        if not plan.days:
+            return jsonify({"error": "Failed to parse schedule format. Please retry."}), 500
 
-    return jsonify({
-        "days": days,
-        "grocery": grocery,
-        "raw": raw_text,
-        "source": source
-    })
+        return jsonify({
+            "days": [d.to_dict() for d in plan.days],
+            "grocery": plan.grocery,
+            "raw": plan.raw_text,
+            "source": plan.model_used or "Groq Cloud"
+        })
+    except Exception as e:
+        return jsonify({"error": f"Planner Service Exception: {str(e)}"}), 500
 
 @app.route("/api/macros", methods=["POST"])
 def macros_endpoint():
     data = request.json or {}
-    result = calculate_macros(
-        age=data.get("age", 20),
-        gender=data.get("gender", "Male"),
-        weight=data.get("weight", 70),
-        weight_unit=data.get("weight_unit", "kg"),
-        height=data.get("height", 170),
-        height_unit=data.get("height_unit", "cm"),
-        goal=data.get("goal", "Build Muscle")
-    )
-    return jsonify(result)
+    try:
+        profile = StudentProfile.from_dict(data)
+        macros = MacroCalculator.calculate(profile)
+        return jsonify(macros.to_dict())
+    except Exception as e:
+        return jsonify({"error": f"Macro Calculation Exception: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

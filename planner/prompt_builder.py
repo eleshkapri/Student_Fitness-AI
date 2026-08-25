@@ -1,39 +1,40 @@
 """
-Prompt Builder for StudentFit AI Weekly Planner.
-Constructs strictly structured prompts honoring student constraints.
+Prompt Engineering Engine for StudentFit AI.
+Encapsulates structured LLM instructions, formatting delimiters, and constraint prompts.
 """
 
-def build_student_prompt(profile: dict) -> str:
-    """Constructs the prompt for 7-day student fitness & nutrition plan."""
-    currency = profile.get('currency', 'INR (₹)')
-    weight = profile.get('weight', 70)
-    weight_unit = profile.get('weight_unit', 'kg')
-    height = profile.get('height', 170)
-    height_unit = profile.get('height_unit', 'cm')
-    gender = profile.get('gender', 'Male')
-    age = profile.get('age', 20)
-    goal = profile.get('goal', 'Build Muscle')
-    equipment = profile.get('equipment', 'Full Gym')
-    cuisine = profile.get('cuisine', 'Indian')
-    diet_type = profile.get('diet_type', 'Standard')
-    budget = profile.get('budget', 'Moderate ($$)')
-    cooking_skill = profile.get('cooking_skill', 'Basic Stove')
+from typing import Union, Dict, Any
+from planner.models import StudentProfile
 
-    return f"""
+
+class StudentPromptBuilder:
+    """
+    Object-oriented prompt builder constructing strictly delineated LLM completion requests.
+    """
+
+    @classmethod
+    def build(cls, profile: Union[StudentProfile, Dict[str, Any]]) -> str:
+        """
+        Constructs the comprehensive 7-day fitness and synchronized nutrition prompt.
+        """
+        if isinstance(profile, dict):
+            profile = StudentProfile.from_dict(profile)
+
+        return f"""
 Act as an elite fitness coach and student budget nutrition specialist.
 Student Profile:
-- Age: {age} years old | Gender: {gender}
-- Weight: {weight} {weight_unit} | Height: {height} {height_unit}
-- Goal: {goal}
-- Available Equipment: {equipment}
-- Cuisine Preference: {cuisine} | Diet: {diet_type}
-- Weekly Budget Tier: {budget} (Preferred Currency: {currency})
-- Cooking Facility / Setup: {cooking_skill}
+- Age: {profile.age} years old | Gender: {profile.gender}
+- Weight: {profile.weight} {profile.weight_unit} | Height: {profile.height} {profile.height_unit}
+- Goal: {profile.goal}
+- Available Equipment: {profile.equipment}
+- Cuisine Preference: {profile.cuisine} | Diet: {profile.diet_type}
+- Weekly Budget Tier: {profile.budget} (Preferred Currency: {profile.currency})
+- Cooking Facility / Setup: {profile.cooking_skill}
 
 REQUIREMENTS:
 1. Provide a comprehensive 7-DAY SCHEDULE (Monday through Sunday).
 2. For EVERY day, output BOTH a tailored Workout Routine and Synchronized Meals matching the student's equipment and cooking skill.
-3. At the end, output a complete Weekly Grocery Shopping List (1 Person) with realistic estimated costs in {currency} and practical student meal-prep tips.
+3. At the end, output a complete Weekly Grocery Shopping List (1 Person) with realistic estimated costs in {profile.currency} and practical student meal-prep tips.
 4. Follow this EXACT plain-text delimiter format:
 
 ### DAY_START
@@ -55,16 +56,22 @@ Meal:
 
 ### GROCERY_START
 #### 🛒 Weekly Student Grocery List (1 Person)
-* **Proteins:** [Items with quantities and prices in {currency}]
-* **Grains & Carbs:** [Items with quantities and prices in {currency}]
-* **Produce & Veggies:** [Items with quantities and prices in {currency}]
-* **Healthy Fats & Dairy:** [Items with quantities and prices in {currency}]
-* **Estimated Weekly Total:** [Realistic student spending total in {currency}]
+* **Proteins:** [Items with quantities and prices in {profile.currency}]
+* **Grains & Carbs:** [Items with quantities and prices in {profile.currency}]
+* **Produce & Veggies:** [Items with quantities and prices in {profile.currency}]
+* **Healthy Fats & Dairy:** [Items with quantities and prices in {profile.currency}]
+* **Estimated Weekly Total:** [Realistic student spending total in {profile.currency}]
 #### 💡 Student Meal Prep & Budget Hacks
 * [Batch cooking advice for dorm rooms / hostels]
 * [Bulk buying savings tip for college budget]
 ### GROCERY_END
 """
 
-# Alias for backwards compatibility
+
+def build_student_prompt(profile: Union[StudentProfile, Dict[str, Any]]) -> str:
+    """Functional facade delegating to StudentPromptBuilder."""
+    return StudentPromptBuilder.build(profile)
+
+
+# Backwards compatibility alias
 build_prompt = build_student_prompt

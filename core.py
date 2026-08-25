@@ -1,13 +1,28 @@
 """
-StudentFit AI - Core Utility Facade
-Provides unified exports for calculations, LLM orchestrations, and PDF generation.
+StudentFit AI - Core Object-Oriented Facade
+Provides unified exports for domain models, services, generators, and PDF reporting.
 """
 
-from planner.prompt_builder import build_prompt
-from planner.llm_client import (
+from planner import (
+    StudentProfile,
+    MacroResult,
+    DailyPlan,
+    WeeklyFitnessPlan,
+    MacroCalculator,
+    StudentPromptBuilder,
+    BasePlanParser,
+    MarkdownPlanParser,
+    PDFReportGenerator,
+    SecretsManager,
+    BasePlanGenerator,
+    MockPlanGenerator,
+    GroqPlanGenerator,
+    FitnessPlannerService,
     CANDIDATE_MODELS,
     get_api_key,
     calculate_macros,
+    build_student_prompt,
+    build_prompt,
     parse_ai_response,
     generate_plan_mock,
     generate_plan_real,
@@ -15,10 +30,27 @@ from planner.llm_client import (
 )
 
 __all__ = [
-    "build_prompt",
+    # Domain Models & Services
+    "StudentProfile",
+    "MacroResult",
+    "DailyPlan",
+    "WeeklyFitnessPlan",
+    "MacroCalculator",
+    "StudentPromptBuilder",
+    "BasePlanParser",
+    "MarkdownPlanParser",
+    "PDFReportGenerator",
+    "SecretsManager",
+    "BasePlanGenerator",
+    "MockPlanGenerator",
+    "GroqPlanGenerator",
+    "FitnessPlannerService",
+    # Facade Functions & Constants
     "CANDIDATE_MODELS",
     "get_api_key",
     "calculate_macros",
+    "build_student_prompt",
+    "build_prompt",
     "parse_ai_response",
     "generate_plan_mock",
     "generate_plan_real",
