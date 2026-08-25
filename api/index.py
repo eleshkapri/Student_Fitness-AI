@@ -1005,6 +1005,7 @@ HTML_TEMPLATE = r"""
             .nav-link { font-size: 0.65rem !important; padding: 2px 4px !important; }
             .panel-card, .paper-card { padding: 10px 8px !important; }
         }
+    </style>
     <script>
         (function() {
             try {
