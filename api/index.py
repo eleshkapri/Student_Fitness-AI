@@ -21,7 +21,7 @@ from planner import (
 app = Flask(__name__)
 
 # --- COMPLETE COHESIVE 6-PAGE STUDENTFIT AI WEB EXPERIENCE ---
-HTML_TEMPLATE = """
+HTML_TEMPLATE = r"""
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1587,6 +1587,29 @@ HTML_TEMPLATE = """
     <script>
         let currentRawPlan = "";
 
+        function renderMarkdownSafe(mdText) {
+            if (!mdText) return "";
+            try {
+                if (typeof marked !== 'undefined' && marked && typeof marked.parse === 'function') {
+                    return marked.parse(mdText);
+                }
+            } catch (e) {
+                console.warn('Marked parser warning:', e);
+            }
+            // Bulletproof built-in fallback parser
+            let html = mdText
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            html = html.replace(/####\s*(.*$)/gim, '<h4 style="color: var(--highlighter) !important; border-bottom: 1px solid var(--line); padding-bottom: 6px; margin: 16px 0 10px 0; font-size: 1.1rem; font-weight: 700;">$1</h4>');
+            html = html.replace(/###\s*(.*$)/gim, '<h3 style="color: var(--highlighter) !important; margin: 16px 0 10px 0; font-size: 1.25rem; font-weight: 700;">$1</h3>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong style="color: var(--coral) !important;">$1</strong>');
+            html = html.replace(/^\*\s*(.*$)/gim, '<div style="margin-bottom: 8px; line-height: 1.6; color: #FFFFFF; font-size: 0.93rem;">• $1</div>');
+            html = html.replace(/^-\s*(.*$)/gim, '<div style="margin-bottom: 8px; line-height: 1.6; color: #FFFFFF; font-size: 0.93rem;">• $1</div>');
+            html = html.replace(/\n/g, '<br>');
+            return html;
+        }
+
         function toggleSidebar() {
             const sidebar = document.getElementById('studioSidebar');
             const openBtn = document.getElementById('toggleOpenSidebarBtn');
@@ -1967,18 +1990,18 @@ HTML_TEMPLATE = """
                             <div class="schedule-card-inner" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                                 <div class="workout-routine-box">
                                     <strong style="color: var(--coral) !important; display: block; margin-bottom: 8px; font-size: 0.95rem; letter-spacing: 0.5px;">🏋️ WORKOUT ROUTINE</strong>
-                                    <div>${marked.parse(day.workout)}</div>
+                                    <div>${renderMarkdownSafe(day.workout)}</div>
                                 </div>
                                 <div class="meal-routine-box">
                                     <strong style="color: var(--highlighter) !important; display: block; margin-bottom: 8px; font-size: 0.95rem; letter-spacing: 0.5px;">🥗 SYNCHRONIZED MEALS</strong>
-                                    <div>${marked.parse(day.meal)}</div>
+                                    <div>${renderMarkdownSafe(day.meal)}</div>
                                 </div>
                             </div>
                         `;
                         daysContainer.appendChild(card);
                     });
 
-                    groceryCard.innerHTML = marked.parse(data.grocery);
+                    groceryCard.innerHTML = renderMarkdownSafe(data.grocery);
                     resultsArea.style.display = 'grid';
                     downloadBtn.style.display = 'inline-block';
                 }
@@ -2206,10 +2229,10 @@ def set_security_headers(response):
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=(), payment=()'
     response.headers['Content-Security-Policy'] = (
-        "default-src 'self' https:; "
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; "
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-        "font-src 'self' https://fonts.gstatic.com; "
+        "default-src 'self' https: data:; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+        "font-src 'self' https://fonts.gstatic.com data:; "
         "img-src 'self' data: https:; "
         "connect-src 'self' https:;"
     )
