@@ -535,7 +535,8 @@ HTML_TEMPLATE = """
 
         /* STUDIO LAYOUT & SIDEBAR */
         .studio-container { display: flex; width: 100%; flex: 1; }
-        .studio-sidebar { width: 360px; background: var(--ink2); border-right: 1px solid var(--line); padding: 26px 22px; overflow-y: auto; max-height: calc(100vh - 72px); position: sticky; top: 72px; }
+        .studio-sidebar { width: 360px; background: var(--ink2); border-right: 1px solid var(--line); padding: 26px 22px; overflow-y: auto; max-height: calc(100vh - 72px); position: sticky; top: 72px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .studio-sidebar.sidebar-closed { display: none !important; }
         .form-group { margin-bottom: 13px; }
         .form-row { display: flex; gap: 10px; }
         .form-row .form-group { flex: 1; }
@@ -547,7 +548,7 @@ HTML_TEMPLATE = """
         .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255, 107, 84, 0.7); }
         .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .studio-main { flex: 1; padding: 30px 38px; overflow-y: auto; }
+        .studio-main { flex: 1; padding: 30px 38px; overflow-y: auto; transition: all 0.3s ease; }
         .studio-grid { display: grid; grid-template-columns: 2.2fr 1.3fr; gap: 28px; }
 
         .spinner-container { display: none; text-align: center; padding: 60px; }
@@ -1148,10 +1149,13 @@ HTML_TEMPLATE = """
 
         <!-- 2. STUDIO DASHBOARD VIEW -->
         <div id="studio-dashboard-view" class="studio-container" style="display: none;">
-            <aside class="studio-sidebar">
+            <aside class="studio-sidebar" id="studioSidebar">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <h2 style="font-size: 1.25rem;">⚡ Studio Controls</h2>
-                    <button onclick="showWizardEntry()" style="background: rgba(246,241,227,0.08); border: 1px solid var(--line); color: var(--highlighter); border-radius: 6px; padding: 4px 8px; font-size: 0.75rem; cursor: pointer;">✏️ Full View</button>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <button onclick="showWizardEntry()" style="background: rgba(246,241,227,0.08); border: 1px solid var(--line); color: var(--highlighter); border-radius: 6px; padding: 4px 8px; font-size: 0.75rem; cursor: pointer;">✏️ Full View</button>
+                        <button onclick="toggleSidebar()" title="Close Sidebar" style="background: rgba(255, 107, 84, 0.15); border: 1px solid var(--coral); color: var(--coral); border-radius: 6px; padding: 4px 8px; font-size: 0.75rem; cursor: pointer; font-weight: 700;">✕ Close</button>
+                    </div>
                 </div>
 
                 <span class="mono-label">🏃‍♂️ BIO-DATA</span>
@@ -1267,10 +1271,15 @@ HTML_TEMPLATE = """
 
             <!-- STUDIO WORKSPACE -->
             <main class="studio-main">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 14px;">
-                    <div>
-                        <h1>AI Planner Studio ⚡</h1>
-                        <p style="color: var(--text-soft); font-size: 0.95rem;">Synchronized Monday–Sunday Workout & Meal Schedules</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <button id="toggleOpenSidebarBtn" onclick="toggleSidebar()" style="display: none; background: rgba(228, 255, 91, 0.15); border: 1px solid var(--highlighter); color: var(--highlighter); border-radius: 10px; padding: 8px 14px; font-family: 'Space Mono', monospace; font-size: 0.85rem; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+                            ⚡ Show Controls ▸
+                        </button>
+                        <div>
+                            <h1>AI Planner Studio ⚡</h1>
+                            <p style="color: var(--text-soft); font-size: 0.95rem;">Synchronized Monday–Sunday Workout & Meal Schedules</p>
+                        </div>
                     </div>
                     <button id="downloadBtn" class="nav-cta" style="display: none;" onclick="downloadPDF()">📥 Save Plan (PDF)</button>
                 </div>
@@ -1292,6 +1301,20 @@ HTML_TEMPLATE = """
     <!-- JAVASCRIPT -->
     <script>
         let currentRawPlan = "";
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('studioSidebar');
+            const openBtn = document.getElementById('toggleOpenSidebarBtn');
+            if (sidebar) {
+                if (sidebar.classList.contains('sidebar-closed')) {
+                    sidebar.classList.remove('sidebar-closed');
+                    if (openBtn) openBtn.style.display = 'none';
+                } else {
+                    sidebar.classList.add('sidebar-closed');
+                    if (openBtn) openBtn.style.display = 'inline-flex';
+                }
+            }
+        }
 
         function syncToSidebar(id, val) {
             const sidebarElem = document.getElementById(id);
