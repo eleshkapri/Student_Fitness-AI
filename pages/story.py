@@ -7,7 +7,7 @@ import streamlit as st
 from theme import apply_theme
 
 def render():
-    apply_theme()
+    apply_theme("Story")
 
     st.markdown('<div class="eyebrow-caveat">our mission & philosophy ~</div>', unsafe_allow_html=True)
     st.markdown('<h1 style="font-size: 2.8rem; margin-bottom: 12px;">Built for Students, Not Gym Culture</h1>', unsafe_allow_html=True)

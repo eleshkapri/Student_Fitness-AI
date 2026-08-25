@@ -7,7 +7,7 @@ import streamlit as st
 from theme import apply_theme
 
 def render():
-    apply_theme()
+    apply_theme("Home")
 
     # --- HERO SECTION ---
     col_hero, col_deck = st.columns([1.2, 1], gap="large")
