@@ -554,11 +554,97 @@ HTML_TEMPLATE = """
         .spinner { width: 50px; height: 50px; border: 4px solid rgba(246, 241, 227, 0.15); border-top-color: var(--coral); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (max-width: 960px) {
+        /* =========================================================================
+           COMPREHENSIVE RESPONSIVE DESIGN (MOBILE, TABLET, LAPTOP, DESKTOP)
+           ========================================================================= */
+        @media (max-width: 1080px) {
+            .navbar { padding: 14px 20px; }
+            .nav-links { gap: 8px; }
+            .nav-link { padding: 6px 10px; font-size: 0.85rem; }
+            .studio-main { padding: 24px 20px; }
+        }
+
+        @media (max-width: 860px) {
+            .navbar {
+                flex-wrap: wrap;
+                gap: 12px;
+                padding: 12px 16px;
+            }
+            .brand-logo { font-size: 1.25rem; }
+            .nav-cta { padding: 8px 14px; font-size: 0.82rem; }
+            .nav-links {
+                width: 100%;
+                order: 3;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 4px;
+                justify-content: flex-start;
+                gap: 6px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .nav-link { font-size: 0.8rem; padding: 6px 12px; flex-shrink: 0; }
+
+            /* HERO SECTION */
+            .hero-grid {
+                grid-template-columns: 1fr !important;
+                gap: 24px !important;
+                text-align: center;
+            }
+            .hero-grid .eyebrow-caveat { margin: 0 auto; }
+            .hero-btns {
+                justify-content: center !important;
+                flex-direction: column !important;
+            }
+            .hero-btns button { width: 100% !important; }
+
+            .hero-deck {
+                transform: scale(0.72);
+                transform-origin: center center;
+                height: 190px;
+                margin: 0 auto;
+                max-width: 100%;
+            }
+
+            /* STUDIO */
             .studio-container { flex-direction: column; }
-            .studio-sidebar { width: 100%; position: relative; top: 0; max-height: none; }
-            .studio-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
+            .studio-sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                max-height: none;
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+                padding: 20px 16px;
+            }
+            .studio-grid { grid-template-columns: 1fr !important; }
+            .grocery-panel { position: relative; top: 0; }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem !important; }
+            h2 { font-size: 1.7rem !important; }
+            .hero-deck {
+                transform: scale(0.54);
+                height: 150px;
+            }
+            section { padding: 40px 16px !important; }
+            .panel-card, .paper-card, .schedule-card, .grocery-panel {
+                padding: 18px 14px !important;
+                border-radius: 16px !important;
+            }
+            .form-row { flex-direction: column !important; gap: 0 !important; }
+            .entry-grid-3 { grid-template-columns: 1fr !important; }
+            .entry-grid-2 { grid-template-columns: 1fr !important; }
+            .schedule-card-inner { grid-template-columns: 1fr !important; }
+            .story-grid { grid-template-columns: 1fr !important; }
+        }
+
+        @media (max-width: 380px) {
+            h1 { font-size: 1.85rem !important; }
+            .hero-deck {
+                transform: scale(0.44);
+                height: 125px;
+            }
         }
     </style>
 </head>
@@ -590,14 +676,14 @@ HTML_TEMPLATE = """
          ========================================================================= -->
     <div class="page-view active-page" id="page-home">
         <section style="padding: 60px 40px 40px 40px; max-width: 1200px; margin: 0 auto;">
-            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
+            <div class="hero-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
                 <div>
                     <div class="eyebrow-caveat">built between lectures & leftovers ~</div>
                     <h1 style="font-size: 3.2rem; line-height: 1.15; margin-bottom: 18px;">Fitness that syncs to your <span style="color: var(--highlighter);">syllabus.</span></h1>
                     <p style="font-size: 1.1rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 28px;">
                         Most fitness apps assume a full kitchen, a car, and endless free time. <strong>StudentFit AI</strong> plans around what students actually have: dorm-room gear, a real grocery budget, cooking skill, and an exam schedule that can't be ignored.
                     </p>
-                    <div style="display: flex; gap: 14px;">
+                    <div class="hero-btns" style="display: flex; gap: 14px;">
                         <button class="btn-primary-lg" onclick="switchPage('generator')">⚡ Generate My Week</button>
                         <button class="btn-secondary-lg" onclick="switchPage('how')">📖 See how it works</button>
                     </div>
@@ -905,7 +991,7 @@ HTML_TEMPLATE = """
             </div>
 
             <h3 style="margin-bottom: 20px;">Who StudentFit AI Is Built For</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="story-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div class="panel-card">
                     <h4>🏠 Dorm & Hostel Dwellers</h4>
                     <p style="color: var(--text-soft); font-size: 0.9rem; margin-top: 6px;">Workouts adapted to small rooms and campus walking.</p>
@@ -939,7 +1025,7 @@ HTML_TEMPLATE = """
                     <p style="color: var(--text-soft); font-size: 1rem;">Configure your campus fitness constraints once. Your customized 7-day schedule & budget grocery list will generate instantly.</p>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div class="entry-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                     <!-- BIO DATA -->
                     <div style="background: rgba(20, 19, 43, 0.6); border: 1px solid var(--line); border-radius: 14px; padding: 20px;">
                         <h4 style="color: var(--highlighter); margin-bottom: 14px; font-size: 1.05rem;">🏃‍♂️ Campus Bio-Data</h4>
@@ -1010,7 +1096,7 @@ HTML_TEMPLATE = """
 
                 <div style="margin-top: 24px; background: rgba(20, 19, 43, 0.6); border: 1px solid var(--line); border-radius: 14px; padding: 20px;">
                     <h4 style="color: var(--lilac); margin-bottom: 14px; font-size: 1.05rem;">🥑 Kitchen, Cuisine & Local Currency</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                    <div class="entry-grid-3" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
                         <div class="form-group">
                             <label>Cuisine Preference</label>
                             <select id="entry_cuisine" onchange="syncToSidebar('cuisine', this.value)">
@@ -1301,7 +1387,7 @@ HTML_TEMPLATE = """
                             <div style="border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 14px;">
                                 <h3 style="margin: 0; font-size: 1.35rem; color: var(--highlighter) !important;">🗓️ ${day.day.toUpperCase()}</h3>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="schedule-card-inner" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                                 <div class="workout-routine-box">
                                     <strong style="color: var(--coral) !important; display: block; margin-bottom: 8px; font-size: 0.95rem; letter-spacing: 0.5px;">🏋️ WORKOUT ROUTINE</strong>
                                     <div>${marked.parse(day.workout)}</div>

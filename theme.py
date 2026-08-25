@@ -333,6 +333,38 @@ def apply_theme():
             border-color: var(--highlighter);
         }
 
+        /* COMPREHENSIVE RESPONSIVE STYLING */
+        @media (max-width: 860px) {
+            .hero-deck {
+                transform: scale(0.72);
+                transform-origin: center center;
+                height: 190px;
+                margin: 0 auto;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem !important; }
+            h2 { font-size: 1.7rem !important; }
+            .hero-deck {
+                transform: scale(0.54);
+                height: 150px;
+            }
+            .panel-card, .paper-card {
+                padding: 18px 14px !important;
+                border-radius: 16px !important;
+            }
+        }
+
+        @media (max-width: 380px) {
+            h1 { font-size: 1.85rem !important; }
+            .hero-deck {
+                transform: scale(0.44);
+                height: 125px;
+            }
+        }
+
         /* REDUCED MOTION */
         @media (prefers-reduced-motion: reduce) {
             * {
