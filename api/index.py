@@ -909,6 +909,20 @@ HTML_TEMPLATE = r"""
             .nav-link { font-size: 0.72rem !important; padding: 4px 7px !important; }
             .panel-card, .paper-card { padding: 14px 10px !important; }
         }
+
+        @media (max-width: 340px) {
+            h1 { font-size: 1.45rem !important; }
+            h2 { font-size: 1.15rem !important; }
+            .hero-deck {
+                transform: scale(0.34);
+                height: 95px;
+            }
+            .navbar { padding: 4px 4px 3px 4px !important; }
+            .brand-logo { font-size: 0.95rem !important; }
+            .nav-region-select { font-size: 0.70rem !important; padding: 3px 5px !important; }
+            .nav-link { font-size: 0.68rem !important; padding: 3px 5px !important; }
+            .panel-card, .paper-card { padding: 10px 8px !important; }
+        }
     </style>
 </head>
 <body>
@@ -2726,7 +2740,7 @@ def set_security_headers(response):
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
     response.headers['X-XSS-Protection'] = '1; mode=block'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-    response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=(), payment=()'
+    response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), vr=(), accelerometer=(), gyroscope=()'
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
@@ -2736,7 +2750,11 @@ def set_security_headers(response):
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
         "font-src 'self' https://fonts.gstatic.com data:; "
         "img-src 'self' data: https:; "
-        "connect-src 'self' https:;"
+        "connect-src 'self' https:; "
+        "object-src 'none'; "
+        "base-uri 'self'; "
+        "form-action 'self'; "
+        "frame-ancestors 'self';"
     )
     return response
 
