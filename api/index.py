@@ -183,7 +183,7 @@ HTML_TEMPLATE = r"""
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--line);
-            padding: 8px 20px;
+            padding: 11px 24px;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -191,22 +191,22 @@ HTML_TEMPLATE = r"""
         }
 
         .navbar-inner {
-            max-width: 1200px;
+            max-width: 1260px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            gap: 12px;
+            gap: 14px;
         }
 
         .brand-logo {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.25rem;
+            font-size: 1.34rem;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
             text-decoration: none;
             color: #fff;
             cursor: pointer;
@@ -217,7 +217,7 @@ HTML_TEMPLATE = r"""
 
         .nav-links {
             display: flex;
-            gap: 4px;
+            gap: 5px;
             align-items: center;
             list-style: none;
             margin: 0;
@@ -228,11 +228,11 @@ HTML_TEMPLATE = r"""
             color: var(--text-soft);
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.82rem;
+            font-size: 0.88rem;
             transition: all 0.2s ease;
             cursor: pointer;
-            padding: 6px 11px;
-            border-radius: 10px;
+            padding: 7px 13px;
+            border-radius: 11px;
             white-space: nowrap;
         }
 
@@ -243,7 +243,7 @@ HTML_TEMPLATE = r"""
 
         .nav-link.active {
             color: var(--highlighter);
-            background: rgba(228, 255, 91, 0.12);
+            background: rgba(228, 255, 91, 0.14);
             border: 1px solid var(--highlighter);
         }
 
@@ -259,10 +259,10 @@ HTML_TEMPLATE = r"""
             background: rgba(28, 26, 66, 0.85);
             color: #ffffff;
             border: 1px solid rgba(228, 255, 91, 0.35);
-            border-radius: 10px;
-            padding: 5px 9px;
+            border-radius: 11px;
+            padding: 6px 11px;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.80rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             outline: none;
@@ -923,8 +923,8 @@ HTML_TEMPLATE = r"""
         <div class="navbar-inner">
             <div class="navbar-top-row">
                 <a class="brand-logo" onclick="switchPage('home')">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 107, 84, 0.4); margin-right: 2px;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </span>
