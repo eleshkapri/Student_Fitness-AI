@@ -32,6 +32,7 @@ ENV/
 # Environment variables
 .env
 .env.local
+.env.*
 
 # IDEs & Editors
 .vscode/
@@ -42,3 +43,8 @@ ENV/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Logs & Temporary Media
+*.log
+*.pdf
+Screenshot*.png
