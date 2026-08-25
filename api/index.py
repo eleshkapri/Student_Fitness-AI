@@ -577,15 +577,18 @@ HTML_TEMPLATE = """
         .spinner { width: 50px; height: 50px; border: 4px solid rgba(246, 241, 227, 0.15); border-top-color: var(--coral); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* =========================================================================
+           COMPREHENSIVE RESPONSIVE DESIGN (MOBILE PHONE, TABLET, LAPTOP, DESKTOP)
+           ========================================================================= */
         .navbar-top-row {
             display: contents;
         }
 
         @media (max-width: 1080px) {
-            .navbar { padding: 14px 20px; }
+            .navbar { padding: 12px 18px; }
             .nav-links { gap: 8px; }
             .nav-link { padding: 6px 10px; font-size: 0.85rem; }
-            .studio-main { padding: 24px 20px; }
+            .studio-main { padding: 24px 18px; }
         }
 
         @media (max-width: 860px) {
@@ -680,30 +683,74 @@ HTML_TEMPLATE = """
         }
 
         @media (max-width: 600px) {
-            h1 { font-size: 2.2rem !important; }
-            h2 { font-size: 1.7rem !important; }
-            .hero-deck {
-                transform: scale(0.56);
-                height: 150px;
+            html, body {
+                overflow-x: hidden !important;
+                width: 100% !important;
+                max-width: 100vw !important;
             }
-            section { padding: 40px 16px !important; }
+            h1 { font-size: clamp(1.85rem, 6.5vw, 2.2rem) !important; line-height: 1.2 !important; }
+            h2 { font-size: clamp(1.4rem, 5vw, 1.7rem) !important; line-height: 1.25 !important; }
+            h3 { font-size: 1.2rem !important; }
+            p { font-size: 0.95rem !important; line-height: 1.55 !important; }
+            section { padding: 34px 14px !important; }
+            
+            .navbar { padding: 8px 10px 6px 10px !important; }
+            .brand-logo { font-size: 1.15rem !important; }
+            .nav-link { font-size: 0.78rem !important; padding: 5px 10px !important; }
+
+            .hero-deck {
+                transform: scale(0.52);
+                transform-origin: center center;
+                height: 150px;
+                margin: 0 auto;
+                max-width: 100%;
+            }
+            .btn-primary-lg, .btn-secondary-lg {
+                padding: 14px 20px !important;
+                font-size: 0.95rem !important;
+                border-radius: 12px !important;
+            }
             .panel-card, .paper-card, .schedule-card, .grocery-panel {
                 padding: 18px 14px !important;
                 border-radius: 16px !important;
             }
-            .form-row { flex-direction: column !important; gap: 0 !important; }
-            .entry-grid-3 { grid-template-columns: 1fr !important; }
-            .entry-grid-2 { grid-template-columns: 1fr !important; }
-            .schedule-card-inner { grid-template-columns: 1fr !important; }
-            .story-grid { grid-template-columns: 1fr !important; }
+            #studio-entry-view {
+                margin: 15px auto 40px auto !important;
+                padding: 0 8px !important;
+            }
+            #studio-entry-view .panel-card {
+                padding: 20px 14px !important;
+            }
+            .form-row {
+                flex-direction: column !important;
+                gap: 8px !important;
+            }
+            .form-row .form-group {
+                width: 100% !important;
+                flex: none !important;
+            }
+            .entry-grid-3 { grid-template-columns: 1fr !important; gap: 10px !important; }
+            .entry-grid-2 { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .schedule-card-inner { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .story-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .studio-sidebar { padding: 16px 12px !important; }
+            .studio-main { padding: 16px 10px !important; }
+            input, select {
+                font-size: 16px !important;
+                padding: 10px 12px !important;
+            }
         }
 
         @media (max-width: 380px) {
-            h1 { font-size: 1.85rem !important; }
+            h1 { font-size: 1.65rem !important; }
+            h2 { font-size: 1.3rem !important; }
             .hero-deck {
-                transform: scale(0.46);
-                height: 125px;
+                transform: scale(0.42);
+                height: 120px;
             }
+            .navbar { padding: 6px 8px 4px 8px !important; }
+            .brand-logo { font-size: 1.05rem !important; }
+            .nav-link { font-size: 0.74rem !important; padding: 4px 8px !important; }
         }
     </style>
 </head>
