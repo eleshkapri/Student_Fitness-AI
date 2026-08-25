@@ -671,7 +671,7 @@ HTML_TEMPLATE = """
             }
 
             /* STUDIO & MACRO HUB */
-            .macro-grid-container { grid-template-columns: 1fr !important; }
+            .macro-grid-container { grid-template-columns: 1fr !important; gap: 20px !important; }
             .studio-container { flex-direction: column; }
             .studio-sidebar {
                 width: 100%;
@@ -692,27 +692,29 @@ HTML_TEMPLATE = """
                 width: 100% !important;
                 max-width: 100vw !important;
             }
-            h1 { font-size: clamp(1.85rem, 6.5vw, 2.2rem) !important; line-height: 1.2 !important; }
-            h2 { font-size: clamp(1.4rem, 5vw, 1.7rem) !important; line-height: 1.25 !important; }
-            h3 { font-size: 1.2rem !important; }
-            p { font-size: 0.95rem !important; line-height: 1.55 !important; }
-            section { padding: 34px 14px !important; }
+            h1 { font-size: clamp(1.8rem, 6.5vw, 2.2rem) !important; line-height: 1.2 !important; }
+            h2 { font-size: clamp(1.35rem, 5vw, 1.65rem) !important; line-height: 1.25 !important; }
+            h3 { font-size: 1.18rem !important; }
+            p { font-size: 0.94rem !important; line-height: 1.55 !important; }
+            section { padding: 30px 12px !important; }
             
             .navbar { padding: 8px 10px 6px 10px !important; }
-            .brand-logo { font-size: 1.15rem !important; }
+            .brand-logo { font-size: 1.12rem !important; }
             .nav-link { font-size: 0.78rem !important; padding: 5px 10px !important; }
 
             .hero-deck {
                 transform: scale(0.52);
                 transform-origin: center center;
-                height: 150px;
+                height: 145px;
                 margin: 0 auto;
                 max-width: 100%;
             }
             .btn-primary-lg, .btn-secondary-lg {
-                padding: 14px 20px !important;
-                font-size: 0.95rem !important;
+                padding: 14px 18px !important;
+                font-size: 0.94rem !important;
                 border-radius: 12px !important;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
             }
             .panel-card, .paper-card, .schedule-card, .grocery-panel {
                 padding: 18px 14px !important;
@@ -720,7 +722,7 @@ HTML_TEMPLATE = """
             }
             #studio-entry-view {
                 margin: 15px auto 40px auto !important;
-                padding: 0 8px !important;
+                padding: 0 6px !important;
             }
             #studio-entry-view .panel-card {
                 padding: 20px 14px !important;
@@ -742,19 +744,21 @@ HTML_TEMPLATE = """
             input, select {
                 font-size: 16px !important;
                 padding: 10px 12px !important;
+                -webkit-appearance: none;
             }
         }
 
         @media (max-width: 380px) {
-            h1 { font-size: 1.65rem !important; }
-            h2 { font-size: 1.3rem !important; }
+            h1 { font-size: 1.6rem !important; }
+            h2 { font-size: 1.25rem !important; }
             .hero-deck {
-                transform: scale(0.42);
-                height: 120px;
+                transform: scale(0.40);
+                height: 115px;
             }
-            .navbar { padding: 6px 8px 4px 8px !important; }
-            .brand-logo { font-size: 1.05rem !important; }
-            .nav-link { font-size: 0.74rem !important; padding: 4px 8px !important; }
+            .navbar { padding: 6px 6px 4px 6px !important; }
+            .brand-logo { font-size: 1.02rem !important; }
+            .nav-link { font-size: 0.72rem !important; padding: 4px 7px !important; }
+            .panel-card, .paper-card { padding: 14px 10px !important; }
         }
     </style>
 </head>
@@ -2187,12 +2191,28 @@ def macros_endpoint():
     except Exception as e:
         return jsonify({"error": f"Macro Calculation Exception: {str(e)}"}), 500
 
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024  # 100 KB payload limit
+
+@app.before_request
+def check_request_limits():
+    if request.content_length and request.content_length > 100 * 1024:
+        return jsonify({"error": "Payload size exceeds maximum permitted limit (100KB)."}), 413
+
 @app.after_request
 def set_security_headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
     response.headers['X-XSS-Protection'] = '1; mode=block'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=(), payment=()'
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self' https:; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data: https:; "
+        "connect-src 'self' https:;"
+    )
     return response
 
 if __name__ == "__main__":
