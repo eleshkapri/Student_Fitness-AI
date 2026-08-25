@@ -947,13 +947,147 @@ HTML_TEMPLATE = """
     </div>
 
     <!-- =========================================================================
-         PAGE 2: AI PLANNER STUDIO (WITH LIVE EDITABLE SIDEBAR)
+         PAGE 2: AI PLANNER STUDIO (ENTRY WIZARD -> SIDEBAR DASHBOARD)
          ========================================================================= -->
     <div class="page-view" id="page-studio">
-        <div class="studio-container">
+        <!-- 1. ENTRY SETUP WIZARD (FIRST TIME VIEW) -->
+        <div id="studio-entry-view" style="max-width: 900px; margin: 40px auto 80px auto; padding: 0 20px;">
+            <div class="card-3d" style="background: rgba(13, 10, 32, 0.85); border: 1px solid rgba(0, 229, 255, 0.35); box-shadow: 0 20px 60px rgba(0,0,0,0.6); padding: 40px;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div class="pill-badge">⚡ Step 1 of 1 — Personalize Your Week</div>
+                    <h2 style="font-size: 2.2rem; font-weight: 800; color: #fff; margin: 10px 0;">Student Fit Profile Setup</h2>
+                    <p style="color: var(--text-secondary); font-size: 1rem;">Configure your campus fitness constraints once. Your customized 7-day schedule & budget grocery list will generate instantly.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <!-- BIO DATA -->
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 20px;">
+                        <h4 style="color: var(--neon-cyan); margin-bottom: 14px; font-size: 1.05rem;">🏃‍♂️ Campus Bio-Data</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select id="entry_gender" onchange="syncToSidebar('gender', this.value)">
+                                    <option value="Male" selected>Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Age</label>
+                                <input type="number" id="entry_age" value="20" min="16" max="40" onchange="syncToSidebar('age', this.value)">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2;">
+                                <label>Weight</label>
+                                <input type="number" id="entry_weight" value="70" min="30" max="300" onchange="syncToSidebar('weight', this.value)">
+                            </div>
+                            <div class="form-group" style="flex: 1.2;">
+                                <label>Unit</label>
+                                <select id="entry_weightUnit" onchange="syncToSidebar('weightUnit', this.value)">
+                                    <option value="kg" selected>kg</option>
+                                    <option value="lbs">lbs</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2;">
+                                <label>Height</label>
+                                <input type="number" id="entry_height" value="170" min="100" max="250" onchange="syncToSidebar('height', this.value)">
+                            </div>
+                            <div class="form-group" style="flex: 1.2;">
+                                <label>Unit</label>
+                                <select id="entry_heightUnit" onchange="syncToSidebar('heightUnit', this.value)">
+                                    <option value="cm" selected>cm</option>
+                                    <option value="ft/in">ft/in</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GOALS & GEAR -->
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 20px;">
+                        <h4 style="color: var(--neon-gold); margin-bottom: 14px; font-size: 1.05rem;">🎯 Goals & Gear</h4>
+                        <div class="form-group">
+                            <label>Primary Fitness Target</label>
+                            <select id="entry_goal" onchange="syncToSidebar('goal', this.value)">
+                                <option value="Build Muscle" selected>💪 Build Muscle & Bulk</option>
+                                <option value="Lose Weight">🔥 Lose Fat & Lean Out</option>
+                                <option value="Get Shredded">⚡ Athletic Tone & Shred</option>
+                                <option value="Exam Stress Relief">🧘 Exam Stress Relief & Focus</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Available Equipment</label>
+                            <select id="entry_equipment" onchange="syncToSidebar('equipment', this.value)">
+                                <option value="Full Gym" selected>🏛️ Full University Gym</option>
+                                <option value="Dumbbells Only">🏋️ Dumbbells Only</option>
+                                <option value="No Equipment (Dorm)">🏠 No Equipment (Dorm Floor)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 20px;">
+                    <h4 style="color: var(--neon-pink); margin-bottom: 14px; font-size: 1.05rem;">🥑 Kitchen, Cuisine & Local Currency</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label>Cuisine Preference</label>
+                            <select id="entry_cuisine" onchange="syncToSidebar('cuisine', this.value)">
+                                <option value="Indian" selected>🍛 Indian</option>
+                                <option value="Global">🌍 Global</option>
+                                <option value="Mediterranean">🥗 Mediterranean</option>
+                                <option value="Asian">🥢 Asian</option>
+                                <option value="Vegan">🌱 Vegan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Budget Tier</label>
+                            <select id="entry_budget" onchange="syncToSidebar('budget', this.value)">
+                                <option value="Cheap ($)">Cheap ($)</option>
+                                <option value="Moderate ($$)" selected>Moderate ($$)</option>
+                                <option value="Premium ($$$)">Premium ($$$)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Currency</label>
+                            <select id="entry_currency" onchange="syncToSidebar('currency', this.value)">
+                                <option value="INR (₹)" selected>INR (₹) - Rupee</option>
+                                <option value="USD ($)">USD ($) - Dollar</option>
+                                <option value="EUR (€)">EUR (€) - Euro</option>
+                                <option value="GBP (£)">GBP (£) - Pound</option>
+                                <option value="CAD ($)">CAD ($) - Dollar</option>
+                                <option value="AUD ($)">AUD ($) - Dollar</option>
+                                <option value="AED (د.إ)">AED (د.إ) - Dirham</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Cooking Setup / Facility</label>
+                        <select id="entry_cookingSkill" onchange="syncToSidebar('cookingSkill', this.value)">
+                            <option value="Microwave Only">⚡ Microwave / Kettle Only (Strict Dorm)</option>
+                            <option value="Basic Stove" selected>🍳 Basic Stove / Single Induction</option>
+                            <option value="Full Chef">👨‍🍳 Full Kitchen & Oven</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn-primary-lg" style="width: 100%; max-width: 480px; font-size: 1.15rem;" onclick="submitEntryAndGenerate()">
+                        🚀 GENERATE 7-DAY SCHEDULE & GROCERIES
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. STUDIO DASHBOARD VIEW (ACTIVATED AFTER GENERATING, WITH EDITABLE SIDEBAR) -->
+        <div id="studio-dashboard-view" class="studio-container" style="display: none;">
             <!-- LIVE EDITABLE SIDEBAR -->
             <aside class="studio-sidebar">
-                <h2>⚡ Studio Controls</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h2>⚡ Studio Controls</h2>
+                    <button onclick="showWizardEntry()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: var(--neon-cyan); border-radius: 6px; padding: 4px 8px; font-size: 0.75rem; cursor: pointer;">✏️ Full View</button>
+                </div>
 
                 <h3>🏃‍♂️ Bio-Data</h3>
                 <div class="form-row">
@@ -1063,7 +1197,7 @@ HTML_TEMPLATE = """
                     </select>
                 </div>
 
-                <button class="btn-generate" id="generateBtn" onclick="generatePlan()">🚀 UPDATE & GENERATE PLAN</button>
+                <button class="btn-generate" id="generateBtn" onclick="generatePlan()">🔄 RE-GENERATE PLAN</button>
             </aside>
 
             <!-- STUDIO WORKSPACE -->
@@ -1090,7 +1224,7 @@ HTML_TEMPLATE = """
                 </div>
 
                 <div id="placeholder" class="info-placeholder">
-                    👈 Customize your student bio-data, available gear, and cuisine in the live sidebar, then click <strong>"UPDATE & GENERATE PLAN"</strong>.
+                    👈 Customize your student bio-data, available gear, and cuisine in the live sidebar, then click <strong>"RE-GENERATE PLAN"</strong>.
                 </div>
 
                 <div id="resultsArea" class="studio-grid" style="display: none;">
@@ -1223,6 +1357,40 @@ HTML_TEMPLATE = """
     <!-- JAVASCRIPT FOR MULTI-PAGE & AI STUDIO -->
     <script>
         let currentRawPlan = "";
+
+        function syncToSidebar(id, val) {
+            const sidebarElem = document.getElementById(id);
+            if (sidebarElem) sidebarElem.value = val;
+        }
+
+        function showWizardEntry() {
+            document.getElementById('studio-entry-view').style.display = 'block';
+            document.getElementById('studio-dashboard-view').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function submitEntryAndGenerate() {
+            // Synchronize all fields from entry to sidebar
+            syncToSidebar('gender', document.getElementById('entry_gender').value);
+            syncToSidebar('age', document.getElementById('entry_age').value);
+            syncToSidebar('weight', document.getElementById('entry_weight').value);
+            syncToSidebar('weightUnit', document.getElementById('entry_weightUnit').value);
+            syncToSidebar('height', document.getElementById('entry_height').value);
+            syncToSidebar('heightUnit', document.getElementById('entry_heightUnit').value);
+            syncToSidebar('goal', document.getElementById('entry_goal').value);
+            syncToSidebar('equipment', document.getElementById('entry_equipment').value);
+            syncToSidebar('cuisine', document.getElementById('entry_cuisine').value);
+            syncToSidebar('budget', document.getElementById('entry_budget').value);
+            syncToSidebar('currency', document.getElementById('entry_currency').value);
+            syncToSidebar('cookingSkill', document.getElementById('entry_cookingSkill').value);
+
+            // Hide entry view and show studio dashboard view
+            document.getElementById('studio-entry-view').style.display = 'none';
+            document.getElementById('studio-dashboard-view').style.display = 'flex';
+            
+            // Trigger generation
+            generatePlan();
+        }
 
         function switchPage(pageId) {
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active-page'));
