@@ -527,8 +527,8 @@ HTML_TEMPLATE = r"""
             box-shadow: 0 12px 32px rgba(255, 107, 84, 0.7);
         }
 
-        /* FANNED 7-CARD HERO DECK */
-        .hero-deck {
+        /* FANNED 7-CARD HERO DECK (DESKTOP) */
+        .hero-deck-desktop {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -579,6 +579,60 @@ HTML_TEMPLATE = r"""
             .deck-card-5:hover { transform: translateX(70px) translateY(-26px) rotate(6deg) scale(1.08) !important; }
             .deck-card-6:hover { transform: translateX(140px) translateY(-26px) rotate(12deg) scale(1.08) !important; }
             .deck-card-7:hover { transform: translateX(210px) translateY(-26px) rotate(18deg) scale(1.08) !important; }
+        }
+
+        /* TOUCH-FRIENDLY HERO DAY STRIP (MOBILE / TABLET) */
+        .hero-mobile-strip {
+            display: none;
+            width: 100%;
+            overflow-x: auto;
+            padding: 12px 2px 14px 2px;
+            gap: 10px;
+            margin-top: 24px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .hero-mobile-strip::-webkit-scrollbar { display: none; }
+
+        .mobile-day-pill {
+            flex: 0 0 92px;
+            background: var(--paper);
+            color: #14132B;
+            border-radius: 14px;
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        .mobile-day-pill.active-pill {
+            border: 2px solid var(--coral);
+            background: #FFFDF7;
+            box-shadow: 0 8px 22px rgba(255, 107, 84, 0.35);
+        }
+        .mobile-day-pill .m-day {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #7B7993;
+        }
+        .mobile-day-pill.active-pill .m-day {
+            color: var(--coral);
+        }
+        .mobile-day-pill .m-emoji {
+            font-size: 1.6rem;
+            line-height: 1.2;
+        }
+        .mobile-day-pill .m-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #14132B;
+            white-space: nowrap;
         }
 
         /* MARQUEE */
@@ -801,9 +855,10 @@ HTML_TEMPLATE = r"""
             }
 
             /* HERO SECTION (Stack Vertically on Tablet & Mobile to Prevent Overlap) */
+            #bg-3d-canvas { display: none !important; }
             .hero-grid {
                 grid-template-columns: 1fr !important;
-                gap: 30px !important;
+                gap: 24px !important;
                 text-align: left !important;
             }
             .hero-grid .eyebrow-caveat { margin: 0 !important; }
@@ -819,14 +874,8 @@ HTML_TEMPLATE = r"""
                 flex: none !important;
             }
 
-            .hero-deck {
-                transform: scale(0.65);
-                transform-origin: center center;
-                height: 170px;
-                margin: 20px auto 10px auto !important;
-                max-width: 100%;
-                width: 100%;
-            }
+            .hero-deck-desktop { display: none !important; }
+            .hero-mobile-strip { display: flex !important; }
 
             /* STUDIO & MACRO HUB */
             .macro-grid-container { grid-template-columns: 1fr !important; gap: 20px !important; }
@@ -956,7 +1005,16 @@ HTML_TEMPLATE = r"""
             .nav-link { font-size: 0.65rem !important; padding: 2px 4px !important; }
             .panel-card, .paper-card { padding: 10px 8px !important; }
         }
-    </style>
+    <script>
+        (function() {
+            try {
+                const reg = localStorage.getItem('studentfit_saved_region');
+                if (reg) window.__savedRegion = reg;
+                const page = (window.location.hash ? window.location.hash.replace('#', '') : null) || localStorage.getItem('studentfit_active_page');
+                if (page) window.__savedPage = page;
+            } catch(e) {}
+        })();
+    </script>
 </head>
 <body>
     <canvas id="bg-3d-canvas"></canvas>
@@ -979,8 +1037,8 @@ HTML_TEMPLATE = r"""
                 </a>
                 <div class="nav-region-wrapper mobile-only-region">
                     <select id="nav_region_select_mobile" class="nav-region-select" onchange="onGlobalRegionChange(this.value)" title="Choose Country / Currency">
-                        <option value="INR">🇮🇳 INR (₹)</option>
-                        <option value="USD" selected>🇺🇸 USD ($)</option>
+                        <option value="INR" selected>🇮🇳 INR (₹)</option>
+                        <option value="USD">🇺🇸 USD ($)</option>
                         <option value="EUR">🇪🇺 EUR (€)</option>
                         <option value="GBP">🇬🇧 GBP (£)</option>
                         <option value="CAD">🇨🇦 CAD ($)</option>
@@ -1000,8 +1058,8 @@ HTML_TEMPLATE = r"""
             </ul>
             <div class="nav-region-wrapper desktop-only-region">
                 <select id="nav_region_select_desktop" class="nav-region-select" onchange="onGlobalRegionChange(this.value)" title="Choose Country / Region & Local Currency">
-                    <option value="INR">🇮🇳 India (₹)</option>
-                    <option value="USD" selected>🇺🇸 USA ($)</option>
+                    <option value="INR" selected>🇮🇳 India (₹)</option>
+                    <option value="USD">🇺🇸 USA ($)</option>
                     <option value="EUR">🇪🇺 Europe (€)</option>
                     <option value="GBP">🇬🇧 UK (£)</option>
                     <option value="CAD">🇨🇦 Canada ($)</option>
@@ -1043,10 +1101,21 @@ HTML_TEMPLATE = r"""
                         <button class="btn-primary-lg" onclick="switchPage('generator')">⚡ Generate My Week</button>
                         <button class="btn-secondary-lg" onclick="switchPage('how')">📖 How it Works</button>
                     </div>
+
+                    <!-- TOUCH-FRIENDLY HERO DAY STRIP FOR MOBILE / TABLET -->
+                    <div class="hero-mobile-strip">
+                        <div class="mobile-day-pill"><span class="m-day">MON</span><span class="m-emoji">🏋️</span><span class="m-title">Push</span></div>
+                        <div class="mobile-day-pill"><span class="m-day">TUE</span><span class="m-emoji">⚡</span><span class="m-title">Pull</span></div>
+                        <div class="mobile-day-pill"><span class="m-day">WED</span><span class="m-emoji">🦵</span><span class="m-title">Legs</span></div>
+                        <div class="mobile-day-pill active-pill"><span class="m-day">THU</span><span class="m-emoji">🥑</span><span class="m-title">Meal Prep</span></div>
+                        <div class="mobile-day-pill"><span class="m-day">FRI</span><span class="m-emoji">💥</span><span class="m-title">Upper</span></div>
+                        <div class="mobile-day-pill"><span class="m-day">SAT</span><span class="m-emoji">🏃</span><span class="m-title">Full Body</span></div>
+                        <div class="mobile-day-pill"><span class="m-day">SUN</span><span class="m-emoji">🧘</span><span class="m-title">Recovery</span></div>
+                    </div>
                 </div>
 
-                <!-- 7-CARD HERO DECK -->
-                <div class="hero-deck">
+                <!-- 7-CARD HERO DECK (DESKTOP) -->
+                <div class="hero-deck-desktop">
                     <div class="deck-card deck-card-1">
                         <span class="mono-label">MON</span>
                         <div style="font-size: 2.2rem;">🏋️</div>
