@@ -730,15 +730,15 @@ HTML_TEMPLATE = r"""
         }
 
         @media (max-width: 1080px) {
-            .navbar { padding: 8px 16px; }
+            .navbar { padding: 9px 18px; }
             .nav-links { gap: 4px; }
-            .nav-link { padding: 5px 9px; font-size: 0.80rem; }
+            .nav-link { padding: 6px 10px; font-size: 0.82rem; }
             .studio-main { padding: 24px 18px; }
         }
 
         @media (max-width: 860px) {
             .navbar {
-                padding: 6px 12px 6px 12px;
+                padding: 8px 14px 6px 14px;
                 background: rgba(20, 19, 43, 0.98) !important;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
@@ -750,7 +750,7 @@ HTML_TEMPLATE = r"""
             .navbar-inner {
                 display: flex;
                 flex-direction: column;
-                gap: 5px;
+                gap: 6px;
                 width: 100%;
             }
             .navbar-top-row {
@@ -758,10 +758,16 @@ HTML_TEMPLATE = r"""
                 width: 100%;
                 justify-content: space-between;
                 align-items: center;
+                gap: 8px;
             }
             .brand-logo { font-size: 1.15rem; }
             .desktop-only-region { display: none !important; }
-            .mobile-only-region { display: flex !important; }
+            .mobile-only-region { display: flex !important; flex-shrink: 0; }
+            .mobile-only-region .nav-region-select {
+                padding: 4px 7px;
+                font-size: 0.75rem;
+                max-width: 125px;
+            }
             .nav-links {
                 width: 100%;
                 overflow-x: auto;
@@ -782,7 +788,7 @@ HTML_TEMPLATE = r"""
                 font-size: 0.78rem;
                 padding: 5px 10px;
                 flex-shrink: 0;
-                border-radius: 14px;
+                border-radius: 12px;
                 background: rgba(246, 241, 227, 0.06);
                 border: 1px solid rgba(246, 241, 227, 0.08);
             }
@@ -792,19 +798,19 @@ HTML_TEMPLATE = r"""
                 color: var(--highlighter);
             }
 
-            /* HERO SECTION (Preserve 2-Column Left-Aligned Layout as in Photo 1) */
+            /* HERO SECTION (Stack Vertically on Tablet & Mobile to Prevent Overlap) */
             .hero-grid {
-                grid-template-columns: 1.1fr 1fr !important;
+                grid-template-columns: 1fr !important;
                 gap: 30px !important;
                 text-align: left !important;
-                align-items: center !important;
             }
             .hero-grid .eyebrow-caveat { margin: 0 !important; }
             .hero-btns {
                 justify-content: flex-start !important;
                 flex-direction: row !important;
                 flex-wrap: wrap !important;
-                gap: 14px !important;
+                gap: 12px !important;
+                margin-top: 18px !important;
             }
             .hero-btns button {
                 width: auto !important;
@@ -812,11 +818,12 @@ HTML_TEMPLATE = r"""
             }
 
             .hero-deck {
-                transform: scale(0.75);
+                transform: scale(0.65);
                 transform-origin: center center;
-                height: 210px;
-                margin: 0 auto;
+                height: 170px;
+                margin: 20px auto 10px auto !important;
                 max-width: 100%;
+                width: 100%;
             }
 
             /* STUDIO & MACRO HUB */
@@ -841,29 +848,46 @@ HTML_TEMPLATE = r"""
                 width: 100% !important;
                 max-width: 100vw !important;
             }
-            h1 { font-size: clamp(1.8rem, 6.5vw, 2.2rem) !important; line-height: 1.2 !important; }
-            h2 { font-size: clamp(1.35rem, 5vw, 1.65rem) !important; line-height: 1.25 !important; }
-            h3 { font-size: 1.18rem !important; }
-            p { font-size: 0.94rem !important; line-height: 1.55 !important; }
-            section { padding: 30px 12px !important; }
+            h1 { font-size: clamp(1.75rem, 6vw, 2.1rem) !important; line-height: 1.2 !important; }
+            h2 { font-size: clamp(1.3rem, 5vw, 1.6rem) !important; line-height: 1.25 !important; }
+            h3 { font-size: 1.15rem !important; }
+            p { font-size: 0.92rem !important; line-height: 1.55 !important; }
+            section { padding: 24px 14px !important; }
             
-            .navbar { padding: 8px 10px 6px 10px !important; }
-            .brand-logo { font-size: 1.12rem !important; }
-            .nav-link { font-size: 0.78rem !important; padding: 5px 10px !important; }
-
-            .hero-deck {
-                transform: scale(0.52);
-                transform-origin: center center;
-                height: 145px;
-                margin: 0 auto;
-                max-width: 100%;
+            .navbar { padding: 7px 10px 5px 10px !important; }
+            .brand-logo { font-size: 1.08rem !important; }
+            .mobile-only-region .nav-region-select {
+                font-size: 0.72rem !important;
+                padding: 3px 6px !important;
+                max-width: 110px !important;
             }
-            .btn-primary-lg, .btn-secondary-lg {
-                padding: 14px 18px !important;
-                font-size: 0.94rem !important;
+            .nav-link { font-size: 0.76rem !important; padding: 4px 9px !important; }
+
+            .hero-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+                text-align: left !important;
+            }
+            .hero-btns {
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 10px !important;
+            }
+            .hero-btns button {
+                padding: 12px 18px !important;
+                font-size: 0.90rem !important;
                 border-radius: 12px !important;
                 touch-action: manipulation;
                 -webkit-tap-highlight-color: transparent;
+            }
+
+            .hero-deck {
+                transform: scale(0.48);
+                transform-origin: center center;
+                height: 130px;
+                margin: 15px auto 0 auto !important;
+                max-width: 100%;
+                width: 100%;
             }
             .panel-card, .paper-card, .schedule-card, .grocery-panel {
                 padding: 18px 14px !important;
@@ -898,29 +922,36 @@ HTML_TEMPLATE = r"""
         }
 
         @media (max-width: 380px) {
-            h1 { font-size: 1.6rem !important; }
-            h2 { font-size: 1.25rem !important; }
+            h1 { font-size: 1.55rem !important; }
+            h2 { font-size: 1.20rem !important; }
             .hero-deck {
                 transform: scale(0.40);
-                height: 115px;
+                height: 110px;
+                margin: 10px auto 0 auto !important;
             }
-            .navbar { padding: 6px 6px 4px 6px !important; }
-            .brand-logo { font-size: 1.02rem !important; }
-            .nav-link { font-size: 0.72rem !important; padding: 4px 7px !important; }
+            .navbar { padding: 5px 8px 4px 8px !important; }
+            .brand-logo { font-size: 1.0rem !important; }
+            .mobile-only-region .nav-region-select {
+                font-size: 0.68rem !important;
+                padding: 2px 4px !important;
+                max-width: 95px !important;
+            }
+            .nav-link { font-size: 0.70rem !important; padding: 3px 6px !important; }
             .panel-card, .paper-card { padding: 14px 10px !important; }
         }
 
         @media (max-width: 340px) {
-            h1 { font-size: 1.45rem !important; }
-            h2 { font-size: 1.15rem !important; }
+            h1 { font-size: 1.40rem !important; }
+            h2 { font-size: 1.10rem !important; }
             .hero-deck {
                 transform: scale(0.34);
-                height: 95px;
+                height: 90px;
+                margin: 5px auto 0 auto !important;
             }
             .navbar { padding: 4px 4px 3px 4px !important; }
-            .brand-logo { font-size: 0.95rem !important; }
-            .nav-region-select { font-size: 0.70rem !important; padding: 3px 5px !important; }
-            .nav-link { font-size: 0.68rem !important; padding: 3px 5px !important; }
+            .brand-logo { font-size: 0.92rem !important; }
+            .mobile-only-region .nav-region-select { font-size: 0.65rem !important; padding: 2px 3px !important; max-width: 85px !important; }
+            .nav-link { font-size: 0.65rem !important; padding: 2px 4px !important; }
             .panel-card, .paper-card { padding: 10px 8px !important; }
         }
     </style>
