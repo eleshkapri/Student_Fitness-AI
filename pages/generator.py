@@ -121,31 +121,23 @@ def render():
             
             for plan in day_plans:
                 st.markdown(f"""
-                <div class="paper-card" style="margin-bottom: 24px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(20,19,43,0.1); padding-bottom: 8px; margin-bottom: 14px;">
-                        <h3 style="margin: 0; font-size: 1.4rem; color: #14132B !important;">🗓️ {plan['day'].upper()}</h3>
-                        <span class="tag-pill" style="background: rgba(20,19,43,0.08); border-color: rgba(20,19,43,0.2); color: #14132B;">SYNCHRONIZED</span>
+                <div class="panel-card" style="margin-bottom: 24px; padding: 22px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 14px;">
+                        <h3 style="margin: 0; font-size: 1.35rem; color: var(--highlighter) !important;">🗓️ {plan['day'].upper()}</h3>
+                        <span class="tag-pill">SYNCHRONIZED</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(20, 19, 43, 0.7); border: 1px solid rgba(255, 107, 84, 0.3); border-radius: 14px; padding: 16px;">
+                            <strong style="color: var(--coral) !important; display: block; margin-bottom: 8px; font-size: 0.95rem; letter-spacing: 0.5px;">🏋️ WORKOUT ROUTINE</strong>
+                            <div style="color: #FFFFFF; font-size: 0.92rem; line-height: 1.6;">{plan['workout']}</div>
+                        </div>
+                        <div style="background: rgba(20, 19, 43, 0.7); border: 1px solid rgba(228, 255, 91, 0.3); border-radius: 14px; padding: 16px;">
+                            <strong style="color: var(--highlighter) !important; display: block; margin-bottom: 8px; font-size: 0.95rem; letter-spacing: 0.5px;">🥗 SYNCHRONIZED MEALS</strong>
+                            <div style="color: #FFFFFF; font-size: 0.92rem; line-height: 1.6;">{plan['meal']}</div>
+                        </div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
-                
-                c_w, c_m = st.columns(2, gap="medium")
-                with c_w:
-                    st.markdown("""
-                    <div style="background: rgba(20, 19, 43, 0.5); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 20px;">
-                        <span class="mono-label" style="color: var(--highlighter);">🏋️ WORKOUT ROUTINE</span>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    st.markdown(plan['workout'])
-                with c_m:
-                    st.markdown("""
-                    <div style="background: rgba(20, 19, 43, 0.5); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 20px;">
-                        <span class="mono-label" style="color: var(--coral);">🥗 SYNCHRONIZED MEALS</span>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    st.markdown(plan['meal'])
-                
-                st.markdown("<hr style='border-color: var(--line); margin: 20px 0;'>", unsafe_allow_html=True)
 
         with side_col:
             st.markdown('<span class="mono-label">🛒 1-PERSON GROCERY LIST</span>', unsafe_allow_html=True)
@@ -153,19 +145,19 @@ def render():
             
             formatted_grocery = re.sub(
                 r'####\s*(.*)',
-                r'<h4 style="color: var(--coral) !important; border-bottom: 1px solid rgba(20,19,43,0.15); padding-bottom: 6px; margin-top: 18px; margin-bottom: 10px; font-size: 1.05rem;">\1</h4>',
+                r'<h4 style="color: var(--highlighter) !important; border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-top: 18px; margin-bottom: 10px; font-size: 1.1rem; font-weight: 700;">\1</h4>',
                 grocery_text
             )
-            formatted_grocery = re.sub(r'\*\*(.*?)\*\*', r'<strong style="color: #14132B !important;">\1</strong>', formatted_grocery)
-            formatted_grocery = re.sub(r'\n\*\s*(.*)', r'<div style="margin-bottom: 8px; line-height: 1.5; color: #2D2A4A;">• \1</div>', formatted_grocery)
-            formatted_grocery = re.sub(r'^\*\s*(.*)', r'<div style="margin-bottom: 8px; line-height: 1.5; color: #2D2A4A;">• \1</div>', formatted_grocery)
+            formatted_grocery = re.sub(r'\*\*(.*?)\*\*', r'<strong style="color: var(--coral) !important;">\1</strong>', formatted_grocery)
+            formatted_grocery = re.sub(r'\n\*\s*(.*)', r'<div style="margin-bottom: 10px; line-height: 1.6; color: #FFFFFF; font-size: 0.93rem;">• \1</div>', formatted_grocery)
+            formatted_grocery = re.sub(r'^\*\s*(.*)', r'<div style="margin-bottom: 10px; line-height: 1.6; color: #FFFFFF; font-size: 0.93rem;">• \1</div>', formatted_grocery)
             formatted_grocery = formatted_grocery.replace("\n", "")
 
             st.markdown(f"""
-            <div class="paper-card" style="position: sticky; top: 30px;">
+            <div class="panel-card" style="position: sticky; top: 30px; border: 1px solid var(--coral); padding: 24px;">
                 {formatted_grocery}
-                <hr style="border-color: rgba(20,19,43,0.15); margin: 20px 0 15px 0;">
-                <div style="font-size: 0.8rem; font-family: 'Space Mono', monospace; color: #64748B;">
+                <hr style="border-color: var(--line); margin: 20px 0 15px 0;">
+                <div style="font-size: 0.8rem; font-family: 'Space Mono', monospace; color: var(--text-soft);">
                     Generated via {st.session_state.plan_source}
                 </div>
             </div>

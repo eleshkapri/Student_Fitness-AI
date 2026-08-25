@@ -225,6 +225,130 @@ HTML_TEMPLATE = """
             box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
         }
 
+        /* SCHEDULE & GROCERY LIST CARDS (HIGH CONTRAST VIBRANT COLORS) */
+        .schedule-card {
+            background: var(--ink2);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .schedule-card:hover {
+            border-color: var(--highlighter);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+        }
+        .schedule-card h3 {
+            color: var(--highlighter) !important;
+            font-size: 1.35rem;
+            margin: 0;
+        }
+
+        .grocery-panel {
+            background: var(--ink2);
+            border: 1px solid var(--coral);
+            border-radius: var(--radius);
+            padding: 26px 22px;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+        }
+        .grocery-panel h4 {
+            color: var(--highlighter) !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 8px;
+            margin-top: 20px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .grocery-panel h4:first-child { margin-top: 0; }
+        .grocery-panel ul {
+            list-style: none !important;
+            padding-left: 0 !important;
+            margin-bottom: 16px;
+        }
+        .grocery-panel li {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: #FFFFFF !important;
+            line-height: 1.6;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .grocery-panel li::before {
+            content: "•";
+            color: var(--coral) !important;
+            font-size: 1.4rem;
+            line-height: 1;
+            font-weight: 800;
+        }
+        .grocery-panel strong {
+            color: var(--highlighter) !important;
+            font-weight: 700;
+        }
+        .grocery-panel p {
+            color: var(--text-soft) !important;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .workout-routine-box {
+            background: rgba(20, 19, 43, 0.7);
+            border: 1px solid rgba(255, 107, 84, 0.3);
+            border-radius: 14px;
+            padding: 16px;
+        }
+        .workout-routine-box ul { list-style: none !important; padding-left: 0 !important; }
+        .workout-routine-box li {
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+            color: #FFFFFF !important;
+            line-height: 1.6;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .workout-routine-box li::before {
+            content: "▸";
+            color: var(--coral) !important;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .workout-routine-box strong { color: var(--coral) !important; }
+
+        .meal-routine-box {
+            background: rgba(20, 19, 43, 0.7);
+            border: 1px solid rgba(228, 255, 91, 0.3);
+            border-radius: 14px;
+            padding: 16px;
+        }
+        .meal-routine-box ul { list-style: none !important; padding-left: 0 !important; }
+        .meal-routine-box li {
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+            color: #FFFFFF !important;
+            line-height: 1.6;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .meal-routine-box li::before {
+            content: "▸";
+            color: var(--highlighter) !important;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .meal-routine-box strong { color: var(--highlighter) !important; }
+
         .paper-card {
             background: var(--paper);
             color: #14132B !important;
@@ -1016,7 +1140,7 @@ HTML_TEMPLATE = """
 
                 <div id="resultsArea" class="studio-grid" style="display: none;">
                     <div id="daysContainer"></div>
-                    <div class="paper-card" id="groceryCard" style="height: fit-content; position: sticky; top: 90px;"></div>
+                    <div class="grocery-panel" id="groceryCard"></div>
                 </div>
             </main>
         </div>
@@ -1115,19 +1239,18 @@ HTML_TEMPLATE = """
                     
                     data.days.forEach(day => {
                         const card = document.createElement('div');
-                        card.className = 'paper-card';
-                        card.style.marginBottom = '24px';
+                        card.className = 'schedule-card';
                         card.innerHTML = `
-                            <div style="border-bottom: 2px solid rgba(20,19,43,0.1); padding-bottom: 8px; margin-bottom: 14px;">
-                                <h3 style="margin: 0; font-size: 1.4rem; color: #14132B !important;">🗓️ ${day.day.toUpperCase()}</h3>
+                            <div style="border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 14px;">
+                                <h3 style="margin: 0; font-size: 1.35rem; color: var(--highlighter) !important;">🗓️ ${day.day.toUpperCase()}</h3>
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                                <div style="background: rgba(20, 19, 43, 0.05); padding: 14px; border-radius: 12px;">
-                                    <strong style="color: var(--coral) !important; display: block; margin-bottom: 6px;">🏋️ WORKOUT ROUTINE</strong>
+                                <div class="workout-routine-box">
+                                    <strong style="color: var(--coral) !important; display: block; margin-bottom: 8px; font-size: 0.95rem; letter-spacing: 0.5px;">🏋️ WORKOUT ROUTINE</strong>
                                     <div>${marked.parse(day.workout)}</div>
                                 </div>
-                                <div style="background: rgba(20, 19, 43, 0.05); padding: 14px; border-radius: 12px;">
-                                    <strong style="color: #14132B !important; display: block; margin-bottom: 6px;">🥗 SYNCHRONIZED MEALS</strong>
+                                <div class="meal-routine-box">
+                                    <strong style="color: var(--highlighter) !important; display: block; margin-bottom: 8px; font-size: 0.95rem; letter-spacing: 0.5px;">🥗 SYNCHRONIZED MEALS</strong>
                                     <div>${marked.parse(day.meal)}</div>
                                 </div>
                             </div>
