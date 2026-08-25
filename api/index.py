@@ -11,65 +11,118 @@ from core import (
     parse_ai_response,
     generate_plan_mock,
     generate_plan_real,
+    create_fitness_pdf,
     CANDIDATE_MODELS
 )
 
 app = Flask(__name__)
 
-# --- COMPLETE MULTI-PAGE 3D ANIMATED MODERN WEB INTERFACE ---
+# --- COMPLETE COHESIVE 6-PAGE STUDENTFIT AI WEB EXPERIENCE ---
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudentFit AI ⚡ | The #1 Student Fitness & Nutrition Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>StudentFit AI ⚡ | Fitness that Syncs to Your Syllabus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #09071c 0%, #17133d 50%, #15112e 100%);
-            --card-bg: rgba(255, 255, 255, 0.04);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --neon-cyan: #00e5ff;
-            --neon-gold: #FFD700;
-            --neon-pink: #ff416c;
-            --neon-orange: #ff4b2b;
-            --text-primary: #ffffff;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
+            --ink: #14132B;
+            --ink2: #1C1A42;
+            --ink3: #242155;
+            --paper: #F6F1E3;
+            --highlighter: #E4FF5B;
+            --coral: #FF6B54;
+            --lilac: #9C8CFF;
+            --text-soft: #B7B3DA;
+            --text-faint: #8582AC;
+            --line: rgba(246,241,227,0.14);
+            --radius: 22px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+            scrollbar-color: rgba(246, 241, 227, 0.2) transparent;
         }
 
         body {
-            background: var(--bg-gradient);
-            color: var(--text-primary);
+            background: var(--ink);
+            color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
         }
 
-        /* ULTRA-THIN TRANSPARENT SCROLLBAR */
+        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 229, 255, 0.6); }
+        ::-webkit-scrollbar-thumb { background: rgba(246, 241, 227, 0.18); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--highlighter); }
+
+        /* AMBIENT GLOW BLOBS */
+        .ambient-blob-1 {
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(156, 140, 255, 0.16) 0%, rgba(20, 19, 43, 0) 70%);
+            top: -80px;
+            left: -80px;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(50px);
+        }
+        .ambient-blob-2 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 107, 84, 0.12) 0%, rgba(20, 19, 43, 0) 70%);
+            bottom: -100px;
+            right: -80px;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(60px);
+        }
+
+        /* TYPOGRAPHY */
+        h1, h2, h3, .heading-display {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+        }
+
+        .eyebrow-caveat {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: var(--highlighter);
+            display: inline-block;
+            transform: rotate(-2deg);
+            margin-bottom: 6px;
+        }
+
+        .mono-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.82rem;
+            color: var(--text-soft);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
 
         /* TOP NAVIGATION BAR */
         .navbar {
-            background: rgba(13, 10, 32, 0.85);
+            background: rgba(20, 19, 43, 0.92);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--line);
             padding: 16px 36px;
             display: flex;
             justify-content: space-between;
@@ -80,889 +133,635 @@ HTML_TEMPLATE = """
         }
 
         .brand-logo {
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1.45rem;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             text-decoration: none;
             color: #fff;
             cursor: pointer;
-            letter-spacing: -0.5px;
         }
 
-        .brand-logo span {
-            background: linear-gradient(90deg, #ffffff, #00e5ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .brand-logo span { color: var(--highlighter); }
 
         .nav-links {
             display: flex;
-            gap: 28px;
+            gap: 16px;
             align-items: center;
             list-style: none;
         }
 
         .nav-link {
-            color: var(--text-muted);
+            color: var(--text-soft);
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             transition: all 0.2s ease;
             cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 8px 14px;
+            border-radius: 12px;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover {
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(246, 241, 227, 0.08);
         }
 
         .nav-link.active {
-            color: var(--neon-cyan);
-            border-bottom: 2px solid var(--neon-cyan);
-            border-radius: 8px 8px 0 0;
+            color: var(--highlighter);
+            background: rgba(228, 255, 91, 0.12);
+            border: 1px solid var(--highlighter);
         }
 
         .nav-cta {
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-orange));
+            background: var(--coral);
             color: #fff;
             border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
+            padding: 10px 22px;
+            border-radius: 14px;
+            font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.35);
+            box-shadow: 0 4px 16px rgba(255, 107, 84, 0.35);
         }
 
         .nav-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 65, 108, 0.6);
+            box-shadow: 0 6px 22px rgba(255, 107, 84, 0.6);
         }
 
-        /* PAGE ROUTER CONTAINERS */
+        /* PAGE VIEWS */
         .page-view {
             display: none;
             flex: 1;
             width: 100%;
-            animation: fadeIn 0.4s ease forwards;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.3s ease forwards;
         }
 
-        .page-view.active-page {
-            display: block;
-        }
+        .page-view.active-page { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ==========================================================================
-           PAGE 1: 3D LANDING PAGE STYLES
-           ========================================================================== */
-        .landing-hero {
-            padding: 70px 40px 50px 40px;
-            max-width: 1240px;
-            margin: 0 auto;
-            text-align: center;
-            position: relative;
+        /* PANELS & CARDS */
+        .panel-card {
+            background: var(--ink2);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 28px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .panel-card:hover {
+            border-color: var(--highlighter);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
         }
 
-        .pill-badge {
+        .paper-card {
+            background: var(--paper);
+            color: #14132B !important;
+            border-radius: var(--radius);
+            padding: 26px;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+        }
+        .paper-card h3, .paper-card h4, .paper-card strong { color: #14132B !important; }
+        .paper-card p, .paper-card li { color: #2D2A4A !important; line-height: 1.6; }
+
+        .tag-pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(0, 229, 255, 0.12);
-            border: 1px solid rgba(0, 229, 255, 0.4);
-            color: var(--neon-cyan);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 0.88rem;
+            gap: 6px;
+            background: rgba(228, 255, 91, 0.12);
+            border: 1px solid var(--highlighter);
+            color: var(--highlighter);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.82rem;
             font-weight: 700;
-            margin-bottom: 24px;
-            letter-spacing: 0.5px;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
-        }
-
-        .hero-title {
-            font-size: 3.4rem;
-            font-weight: 800;
-            line-height: 1.15;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-        }
-
-        .hero-title .gradient-text {
-            background: linear-gradient(90deg, #ffffff 0%, #00e5ff 50%, #FFD700 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 780px;
-            margin: 0 auto 35px auto;
-            line-height: 1.6;
-        }
-
-        .hero-cta-group {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 60px;
         }
 
         .btn-primary-lg {
-            background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+            background: var(--coral);
             color: white;
-            padding: 16px 36px;
+            padding: 16px 34px;
             border-radius: 14px;
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1.05rem;
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 6px 25px rgba(255, 75, 43, 0.45);
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 25px rgba(255, 107, 84, 0.4);
         }
-
         .btn-primary-lg:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(255, 75, 43, 0.7);
+            box-shadow: 0 10px 30px rgba(255, 107, 84, 0.7);
         }
 
         .btn-secondary-lg {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(246, 241, 227, 0.08);
             color: white;
-            padding: 16px 32px;
+            padding: 16px 30px;
             border-radius: 14px;
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1.05rem;
             font-weight: 700;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--line);
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .btn-secondary-lg:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--neon-cyan);
+            background: rgba(246, 241, 227, 0.15);
+            border-color: var(--highlighter);
             transform: translateY(-3px);
         }
 
-        /* 3D FLOATING SHOWCASE CARDS */
-        .showcase-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 28px;
-            margin: 40px auto 80px auto;
-            max-width: 1200px;
-            perspective: 1200px;
-        }
-
-        .card-3d {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 32px 26px;
-            text-align: left;
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.4s ease, box-shadow 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-3d::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .card-3d:hover {
-            transform: translateY(-8px) rotateX(4deg) rotateY(-2deg);
-            border-color: rgba(0, 229, 255, 0.5);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 229, 255, 0.2);
-        }
-
-        .card-3d:hover::before {
-            opacity: 1;
-        }
-
-        .card-icon {
-            font-size: 2.4rem;
-            margin-bottom: 16px;
-            display: inline-block;
-            filter: drop-shadow(0 4px 10px rgba(0, 229, 255, 0.3));
-        }
-
-        .card-3d h3 {
-            font-size: 1.35rem;
-            color: #fff;
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
-        .card-3d p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* 3-STEP GUIDE SECTION */
-        .guide-section {
-            background: rgba(0, 0, 0, 0.25);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 80px 40px;
-        }
-
-        .section-header {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 50px auto;
-        }
-
-        .section-header h2 {
-            font-size: 2.3rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-            color: #fff;
-        }
-
-        .section-header p {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        .steps-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            max-width: 1140px;
-            margin: 0 auto;
-        }
-
-        .step-box {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            padding: 30px 24px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .step-box:hover {
-            border-color: var(--neon-gold);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .step-number {
-            background: linear-gradient(135deg, var(--neon-gold), #ff9100);
-            color: #000;
-            font-weight: 800;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+        /* FANNED 7-CARD HERO DECK */
+        .hero-deck {
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
-            margin-bottom: 18px;
+            align-items: center;
+            height: 260px;
+            position: relative;
+            margin: 30px auto;
+            max-width: 750px;
         }
-
-        .step-box h4 {
-            font-size: 1.2rem;
-            color: #fff;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .step-box p {
-            color: var(--text-secondary);
-            font-size: 0.93rem;
-            line-height: 1.6;
-        }
-
-        /* COMPARISON TABLE */
-        .comparison-section {
-            max-width: 1000px;
-            margin: 80px auto;
-            padding: 0 20px;
-        }
-
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(255, 255, 255, 0.03);
+        .deck-card {
+            width: 140px;
+            height: 190px;
+            background: var(--paper);
+            color: #14132B;
             border-radius: 16px;
+            padding: 16px 12px;
+            position: absolute;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .deck-card:hover {
+            transform: translateY(-24px) scale(1.1) !important;
+            z-index: 50 !important;
+            box-shadow: 0 20px 45px rgba(228, 255, 91, 0.4);
+            border-color: var(--coral);
+        }
+        .deck-card-1 { transform: translateX(-210px) rotate(-18deg); z-index: 1; }
+        .deck-card-2 { transform: translateX(-140px) rotate(-12deg); z-index: 2; }
+        .deck-card-3 { transform: translateX(-70px) rotate(-6deg); z-index: 3; }
+        .deck-card-4 { transform: translateX(0px) rotate(0deg); z-index: 4; border: 2px solid var(--coral); }
+        .deck-card-5 { transform: translateX(70px) rotate(6deg); z-index: 5; }
+        .deck-card-6 { transform: translateX(140px) rotate(12deg); z-index: 6; }
+        .deck-card-7 { transform: translateX(210px) rotate(18deg); z-index: 7; }
+
+        /* MARQUEE */
+        .marquee-container {
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+            background: var(--ink3);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 14px 0;
+            position: relative;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 28s linear infinite;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--highlighter);
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
         }
 
-        .comparison-table th, .comparison-table td {
-            padding: 18px 22px;
-            text-align: left;
-        }
+        /* FLIP CARDS */
+        .flip-card-container { perspective: 1000px; height: 220px; margin-bottom: 20px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; border-radius: var(--radius); }
+        .flip-card-container:hover .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid var(--line); }
+        .flip-card-front { background: var(--ink2); color: #ffffff; }
+        .flip-card-back { background: var(--ink3); color: var(--highlighter); transform: rotateY(180deg); border-color: var(--highlighter); }
 
-        .comparison-table th {
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--neon-gold);
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .comparison-table tr:not(:last-child) {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .comparison-table td {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        .check-badge {
-            color: #00e676;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .cross-badge {
-            color: #ff5252;
-            font-weight: 600;
-        }
-
-        /* ==========================================================================
-           PAGE 2: AI PLANNER STUDIO STYLES
-           ========================================================================== */
-        .studio-container {
-            display: flex;
-            width: 100%;
-            flex: 1;
-        }
-
-        .studio-sidebar {
-            width: 360px;
-            background: rgba(13, 10, 30, 0.96);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 26px 22px;
-            overflow-y: auto;
-            max-height: calc(100vh - 72px);
-            position: sticky;
-            top: 72px;
-        }
-
-        .studio-sidebar h2 {
-            font-size: 1.3rem;
-            color: #fff;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .studio-sidebar h3 {
-            font-size: 0.92rem;
-            color: var(--neon-gold);
-            margin: 18px 0 10px 0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
+        /* STUDIO LAYOUT & SIDEBAR */
+        .studio-container { display: flex; width: 100%; flex: 1; }
+        .studio-sidebar { width: 360px; background: var(--ink2); border-right: 1px solid var(--line); padding: 26px 22px; overflow-y: auto; max-height: calc(100vh - 72px); position: sticky; top: 72px; }
         .form-group { margin-bottom: 13px; }
         .form-row { display: flex; gap: 10px; }
         .form-row .form-group { flex: 1; }
-        label { display: block; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
-        
-        input, select {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            padding: 10px 12px;
-            color: #fff;
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.2s;
-        }
+        label { display: block; font-size: 0.82rem; color: var(--text-soft); margin-bottom: 4px; font-weight: 600; font-family: 'Space Mono', monospace; }
+        input, select { width: 100%; background: rgba(246, 241, 227, 0.08); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 0.9rem; outline: none; transition: all 0.2s; }
+        input:focus, select:focus { border-color: var(--highlighter); box-shadow: 0 0 10px rgba(228, 255, 91, 0.3); }
+        select option { background: #1C1A42; color: #fff; }
+        .btn-generate { width: 100%; background: var(--coral); color: #fff; border: none; padding: 14px; border-radius: 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 15px; transition: all 0.3s; box-shadow: 0 4px 18px rgba(255, 107, 84, 0.4); }
+        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255, 107, 84, 0.7); }
+        .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        input:focus, select:focus {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
-        }
+        .studio-main { flex: 1; padding: 30px 38px; overflow-y: auto; }
+        .studio-grid { display: grid; grid-template-columns: 2.2fr 1.3fr; gap: 28px; }
 
-        select option { background: #161233; color: #fff; }
-
-        .btn-generate {
-            width: 100%;
-            background: linear-gradient(90deg, var(--neon-pink) 0%, var(--neon-orange) 100%);
-            color: #fff;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 18px rgba(255, 75, 43, 0.4);
-        }
-
-        .btn-generate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(255, 75, 43, 0.7);
-        }
-
-        .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-        /* STUDIO MAIN VIEW */
-        .studio-main {
-            flex: 1;
-            padding: 30px 38px;
-            overflow-y: auto;
-        }
-
-        .studio-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .studio-title-block h1 {
-            font-size: 2.1rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, #ffffff, #00e5ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .studio-title-block p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-top: 4px;
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tab-btn {
-            background: transparent;
-            color: var(--text-muted);
-            border: none;
-            padding: 7px 14px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .tab-btn.active, .tab-btn:hover {
-            background: rgba(0, 229, 255, 0.15);
-            color: #fff;
-        }
-
-        .tab-btn.active { color: var(--neon-cyan); }
-
-        .action-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border-radius: 8px;
-            padding: 8px 14px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .action-btn:hover { background: rgba(0, 229, 255, 0.2); border-color: var(--neon-cyan); }
-
-        /* STUDIO CARDS */
-        .studio-grid {
-            display: grid;
-            grid-template-columns: 2.4fr 1.2fr;
-            gap: 28px;
-        }
-
-        .day-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            padding: 22px;
-            margin-bottom: 22px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .day-card:hover {
-            border-color: rgba(0, 229, 255, 0.6);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-        }
-
-        .day-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-            padding-bottom: 8px;
-            margin-bottom: 16px;
-        }
-
-        .day-title {
-            color: var(--neon-gold);
-            font-size: 1.3rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .day-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .workout-box, .meal-box {
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 12px;
-            padding: 16px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .box-header {
-            color: var(--neon-cyan);
-            font-weight: 700;
-            font-size: 0.95rem;
-            margin-bottom: 12px;
-            display: block;
-            letter-spacing: 0.5px;
-            border-bottom: 1px dashed rgba(0, 229, 255, 0.2);
-            padding-bottom: 6px;
-        }
-
-        .markdown-content ul { list-style: none; padding-left: 0; }
-        .markdown-content li { margin-bottom: 10px; font-size: 0.92rem; color: #e2e8f0; line-height: 1.6; }
-        .markdown-content strong { color: #fff; }
-
-        /* GROCERY CARD */
-        .grocery-card {
-            background: rgba(0, 0, 0, 0.38);
-            border: 1px solid var(--neon-gold);
-            border-radius: 18px;
-            padding: 24px 22px;
-            height: fit-content;
-            position: sticky;
-            top: 92px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        .grocery-card h4 {
-            color: var(--neon-gold);
-            border-bottom: 1px solid rgba(255, 215, 0, 0.35);
-            padding-bottom: 8px;
-            margin-top: 22px;
-            margin-bottom: 14px;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        .grocery-card h4:first-child { margin-top: 0; }
-        .grocery-card ul { list-style: none; padding-left: 0; margin-bottom: 14px; }
-        .grocery-card li { margin-bottom: 12px; font-size: 0.93rem; color: #e2e8f0; line-height: 1.65; display: flex; align-items: flex-start; gap: 8px; }
-        .grocery-card li::before { content: "•"; color: var(--neon-cyan); font-weight: bold; font-size: 1.2rem; line-height: 1.2; }
-        .grocery-card p { margin-bottom: 12px; line-height: 1.6; color: #cbd5e1; font-size: 0.93rem; }
-
-        /* ==========================================================================
-           PAGE 3: STUDENT MACRO & NUTRITION HUB STYLES
-           ========================================================================== */
-        .hub-container {
-            max-width: 1140px;
-            margin: 40px auto 80px auto;
-            padding: 0 30px;
-        }
-
-        .macro-calc-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.3fr;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .calc-form-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 30px;
-        }
-
-        .calc-result-card {
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(0, 229, 255, 0.4);
-            border-radius: 20px;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .macro-metrics-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin: 24px 0;
-        }
-
-        .macro-metric-box {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .macro-metric-box .val {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--neon-cyan);
-        }
-
-        .macro-metric-box .lbl {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        .macro-bar-container {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            height: 12px;
-            overflow: hidden;
-            display: flex;
-            margin-top: 10px;
-        }
-
-        .macro-bar-protein { background: #ff416c; }
-        .macro-bar-carbs { background: var(--neon-gold); }
-        .macro-bar-fats { background: var(--neon-cyan); }
-
-        /* TIPS GRID */
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 22px;
-            margin-top: 40px;
-        }
-
-        .tip-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 22px;
-            transition: all 0.2s ease;
-        }
-
-        .tip-card:hover {
-            border-color: var(--neon-cyan);
-            transform: translateY(-3px);
-        }
-
-        .tip-card h4 {
-            color: var(--neon-gold);
-            margin-bottom: 8px;
-            font-size: 1.05rem;
-        }
-
-        .tip-card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* SPINNER */
         .spinner-container { display: none; text-align: center; padding: 60px; }
-        .spinner { width: 50px; height: 50px; border: 4px solid rgba(255, 255, 255, 0.1); border-top-color: var(--neon-cyan); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
+        .spinner { width: 50px; height: 50px; border: 4px solid rgba(246, 241, 227, 0.15); border-top-color: var(--coral); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .info-placeholder { background: rgba(255, 255, 255, 0.03); border: 1px dashed rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 60px; text-align: center; color: var(--text-muted); font-size: 1.1rem; }
 
         @media (max-width: 960px) {
             .studio-container { flex-direction: column; }
             .studio-sidebar { width: 100%; position: relative; top: 0; max-height: none; }
             .studio-grid { grid-template-columns: 1fr; }
-            .day-columns { grid-template-columns: 1fr; }
-            .hero-title { font-size: 2.4rem; }
-            .macro-calc-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
+    <div class="ambient-blob-1"></div>
+    <div class="ambient-blob-2"></div>
 
     <!-- TOP NAVIGATION BAR -->
     <nav class="navbar">
         <a class="brand-logo" onclick="switchPage('home')">
-            ⚡ <span>StudentFit AI</span>
+            ⚡ StudentFit <span>AI</span>
         </a>
         <ul class="nav-links">
-            <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home & Features</a></li>
-            <li><a class="nav-link" id="nav-studio" onclick="switchPage('studio')">⚡ AI Planner Studio</a></li>
-            <li><a class="nav-link" id="nav-macros" onclick="switchPage('macros')">📊 Student Macro Hub</a></li>
+            <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
+            <li><a class="nav-link" id="nav-how" onclick="switchPage('how')">📖 How it Works</a></li>
+            <li><a class="nav-link" id="nav-features" onclick="switchPage('features')">✨ Features</a></li>
+            <li><a class="nav-link" id="nav-plans" onclick="switchPage('plans')">🏷️ Plans</a></li>
+            <li><a class="nav-link" id="nav-story" onclick="switchPage('story')">💡 Story</a></li>
+            <li><a class="nav-link" id="nav-generator" onclick="switchPage('generator')">⚡ Generator</a></li>
         </ul>
-        <button class="nav-cta" onclick="switchPage('studio')">🚀 Launch AI Studio</button>
+        <button class="nav-cta" onclick="switchPage('generator')">⚡ Generate My Week</button>
     </nav>
 
     <!-- =========================================================================
-         PAGE 1: 3D ANIMATED LANDING PAGE
+         PAGE 1: HOME
          ========================================================================= -->
     <div class="page-view active-page" id="page-home">
-        <section class="landing-hero">
-            <div class="pill-badge">🎓 Built Exclusively for College & University Students</div>
-            <h1 class="hero-title">
-                Smart Fitness & Nutrition.<br>
-                <span class="gradient-text">Zero Compromise on Budget or Studies.</span>
-            </h1>
-            <p class="hero-subtitle">
-                Unlike generic fitness apps, StudentFit AI understands the reality of campus life: tight budgets, microwave/dorm rooms, and intense study schedules. Powered by high-speed Groq AI.
-            </p>
-            <div class="hero-cta-group">
-                <button class="btn-primary-lg" onclick="switchPage('studio')">⚡ Generate My 7-Day Plan</button>
-                <button class="btn-secondary-lg" onclick="switchPage('macros')">📊 Calculate Daily Macros</button>
-            </div>
+        <section style="padding: 60px 40px 40px 40px; max-width: 1200px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
+                <div>
+                    <div class="eyebrow-caveat">built between lectures & leftovers ~</div>
+                    <h1 style="font-size: 3.2rem; line-height: 1.15; margin-bottom: 18px;">Fitness that syncs to your <span style="color: var(--highlighter);">syllabus.</span></h1>
+                    <p style="font-size: 1.1rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 28px;">
+                        Most fitness apps assume a full kitchen, a car, and endless free time. <strong>StudentFit AI</strong> plans around what students actually have: dorm-room gear, a real grocery budget, cooking skill, and an exam schedule that can't be ignored.
+                    </p>
+                    <div style="display: flex; gap: 14px;">
+                        <button class="btn-primary-lg" onclick="switchPage('generator')">⚡ Generate My Week</button>
+                        <button class="btn-secondary-lg" onclick="switchPage('how')">📖 See how it works</button>
+                    </div>
+                </div>
 
-            <!-- 3D FLOATING SHOWCASE CARDS -->
-            <div class="showcase-grid">
-                <div class="card-3d">
-                    <div class="card-icon">🏋️</div>
-                    <h3>Dorm & Campus Adaptive</h3>
-                    <p>Whether you only have 2 square meters on a dorm floor, light dumbbells, or a university gym, the AI designs exact sets, reps, and active recovery routines.</p>
-                </div>
-                <div class="card-3d">
-                    <div class="card-icon">🥗</div>
-                    <h3>Cultural & Student Cuisine</h3>
-                    <p>Respects your culinary heritage (Indian, Global, Mediterranean, Asian, Vegan) while factoring in simple appliances (Microwave Only, Basic Stove, or Full Chef).</p>
-                </div>
-                <div class="card-3d">
-                    <div class="card-icon">🛒</div>
-                    <h3>Localized Grocery & Budget</h3>
-                    <p>Auto-computes essential 1-person weekly grocery quantities with estimated costs in your local currency (INR ₹, USD $, EUR €, GBP £, CAD $, etc.).</p>
+                <!-- 7-CARD HERO DECK -->
+                <div class="hero-deck">
+                    <div class="deck-card deck-card-1">
+                        <span class="mono-label">MON</span>
+                        <div style="font-size: 2.2rem;">🏋️</div>
+                        <strong style="font-size: 0.85rem;">Push Day</strong>
+                    </div>
+                    <div class="deck-card deck-card-2">
+                        <span class="mono-label">TUE</span>
+                        <div style="font-size: 2.2rem;">⚡</div>
+                        <strong style="font-size: 0.85rem;">Pull Power</strong>
+                    </div>
+                    <div class="deck-card deck-card-3">
+                        <span class="mono-label">WED</span>
+                        <div style="font-size: 2.2rem;">🦵</div>
+                        <strong style="font-size: 0.85rem;">Legs & Core</strong>
+                    </div>
+                    <div class="deck-card deck-card-4">
+                        <span class="mono-label" style="color: var(--coral);">THU</span>
+                        <div style="font-size: 2.2rem;">🥑</div>
+                        <strong style="font-size: 0.85rem;">Meal Prep</strong>
+                    </div>
+                    <div class="deck-card deck-card-5">
+                        <span class="mono-label">FRI</span>
+                        <div style="font-size: 2.2rem;">💥</div>
+                        <strong style="font-size: 0.85rem;">Upper Body</strong>
+                    </div>
+                    <div class="deck-card deck-card-6">
+                        <span class="mono-label">SAT</span>
+                        <div style="font-size: 2.2rem;">🏃</div>
+                        <strong style="font-size: 0.85rem;">Full Body</strong>
+                    </div>
+                    <div class="deck-card deck-card-7">
+                        <span class="mono-label">SUN</span>
+                        <div style="font-size: 2.2rem;">🧘</div>
+                        <strong style="font-size: 0.85rem;">Recovery</strong>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3-STEP GUIDE SECTION -->
-        <section class="guide-section">
-            <div class="section-header">
-                <h2>How It Works in 3 Simple Steps</h2>
-                <p>No complicated tracking. Just clear, synchronized weekly schedules designed for student routines.</p>
+        <!-- REAL STAT TICKER -->
+        <div class="marquee-container">
+            <div class="marquee-content">
+                ⚡ 4 FITNESS GOALS &nbsp;•&nbsp; 3 GEAR TIERS &nbsp;•&nbsp; 5 CUISINES &nbsp;•&nbsp; 3 BUDGET TIERS &nbsp;•&nbsp; 3 COOKING SKILL LEVELS &nbsp;•&nbsp; 7 DAYS FULLY SYNCHRONIZED &nbsp;•&nbsp; 100% STUDENT-FOCUSED &nbsp;•&nbsp; 4 FITNESS GOALS &nbsp;•&nbsp; 3 GEAR TIERS &nbsp;•&nbsp; 5 CUISINES &nbsp;•&nbsp; 3 BUDGET TIERS &nbsp;•&nbsp; 3 COOKING SKILL LEVELS &nbsp;•&nbsp; 7 DAYS FULLY SYNCHRONIZED
             </div>
-            <div class="steps-container">
-                <div class="step-box">
-                    <div class="step-number">1</div>
-                    <h4>Enter Campus Bio-Data</h4>
-                    <p>Provide your age, weight (kg/lbs), height, fitness target, cooking equipment, and weekly budget tier in seconds.</p>
+        </div>
+
+        <!-- DORM ROOM BAND -->
+        <section style="padding: 70px 40px; max-width: 1140px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 35px;">
+                <span class="tag-pill">STUDENT REALITY CHECK</span>
+                <h2 style="font-size: 2.3rem; margin-top: 10px;">Built for dorm rooms, not gym floors.</h2>
+                <p style="color: var(--text-soft); max-width: 680px; margin: 0 auto;">Everything engineered around college constraints so you stay consistent through midterms and finals.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                <div class="panel-card">
+                    <div style="font-size: 2.4rem; margin-bottom: 12px;">🏠</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 8px;">No Gym Required</h3>
+                    <p style="color: var(--text-soft); font-size: 0.95rem; line-height: 1.6;">Only have 2m² of carpet next to your desk? Get bodyweight and dumbbell routines with calculated tempo.</p>
                 </div>
-                <div class="step-box">
-                    <div class="step-number">2</div>
-                    <h4>AI Synchronizes Mon–Sun</h4>
-                    <p>Groq's high-speed neural engine aligns your daily workouts directly with high-protein student meals for optimal muscle recovery and focus.</p>
+                <div class="panel-card">
+                    <div style="font-size: 2.4rem; margin-bottom: 12px;">💰</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Budget Respected</h3>
+                    <p style="color: var(--text-soft); font-size: 0.95rem; line-height: 1.6;">Get weekly grocery shopping lists with quantities and localized prices (₹, $, €, £) mapped to high-protein staples.</p>
                 </div>
-                <div class="step-box">
-                    <div class="step-number">3</div>
-                    <h4>Shop, Prep & Succeed</h4>
-                    <p>Use the integrated shopping checklist, meal prep tips, and save your plan as Markdown to crush your fitness goals during semester.</p>
+                <div class="panel-card">
+                    <div style="font-size: 2.4rem; margin-bottom: 12px;">📚</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Exam-Week Aware</h3>
+                    <p style="color: var(--text-soft); font-size: 0.95rem; line-height: 1.6;">"Exam Stress Relief" is a first-class fitness goal that balances nervous system fatigue with brain-power nutrition.</p>
                 </div>
             </div>
         </section>
 
-        <!-- COMPARISON SECTION -->
-        <section class="comparison-section">
-            <div class="section-header">
-                <h2>Why Students Choose StudentFit AI</h2>
-                <p>See how StudentFit AI outperforms generic fitness and calorie tracker apps.</p>
+        <!-- TESTIMONIALS -->
+        <section style="padding: 40px 40px 80px 40px; max-width: 1140px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <span class="tag-pill">CAMPUS VOICES</span>
+                <h2 style="font-size: 2.1rem; margin-top: 10px;">Tested across semester schedules.</h2>
             </div>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Feature</th>
-                        <th>Generic Fitness Apps</th>
-                        <th>StudentFit AI ⚡</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Dorm Room Equipment Adaptability</strong></td>
-                        <td class="cross-badge">❌ Requires full commercial gym</td>
-                        <td class="check-badge">✅ Adapts to Dorm Floor, Dumbbells, or Gym</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Student Budget & Local Currency</strong></td>
-                        <td class="cross-badge">❌ Expensive generic meal suggestions</td>
-                        <td class="check-badge">✅ Strict student budget in INR, USD, EUR, etc.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Cooking Facility Constraints</strong></td>
-                        <td class="cross-badge">❌ Assumes full chef kitchen</td>
-                        <td class="check-badge">✅ Microwave-friendly & Basic Stove modes</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Cultural Cuisine Awareness</strong></td>
-                        <td class="cross-badge">❌ Western-only food databases</td>
-                        <td class="check-badge">✅ Indian, Mediterranean, Asian, Vegan, Global</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Weekly Grocery List Generator</strong></td>
-                        <td class="cross-badge">❌ Paywalled premium feature</td>
-                        <td class="check-badge">✅ Free 1-Person exact shopping checklist</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                <div class="paper-card">
+                    <div style="font-size: 1.1rem; margin-bottom: 10px;">⭐️⭐️⭐️⭐️⭐️</div>
+                    <p style="font-size: 0.95rem; font-style: italic; margin-bottom: 16px;">
+                        "Other workout apps kept giving me salmon and asparagus recipes that cost half my weekly budget. StudentFit gave me eggs, dal, and oats that cost almost nothing and hit 130g protein."
+                    </p>
+                    <strong style="display: block; font-family: 'Space Mono', monospace; font-size: 0.82rem; color: var(--coral) !important;">3RD YEAR COMPUTER SCIENCE</strong>
+                </div>
+                <div class="paper-card">
+                    <div style="font-size: 1.1rem; margin-bottom: 10px;">⭐️⭐️⭐️⭐️⭐️</div>
+                    <p style="font-size: 0.95rem; font-style: italic; margin-bottom: 16px;">
+                        "During midterm anatomy blocks, I switched to Exam Stress Relief. 20-minute mobility sessions and brain-boosting meals kept me energized without burnout."
+                    </p>
+                    <strong style="display: block; font-family: 'Space Mono', monospace; font-size: 0.82rem; color: var(--coral) !important;">2ND YEAR PRE-MED</strong>
+                </div>
+                <div class="paper-card">
+                    <div style="font-size: 1.1rem; margin-bottom: 10px;">⭐️⭐️⭐️⭐️⭐️</div>
+                    <p style="font-size: 0.95rem; font-style: italic; margin-bottom: 16px;">
+                        "I have zero kitchen skills besides a microwave. The Microwave Only setting gave me high-protein oatmeal, steamed lentils, and paneer wraps with zero cooking hassle."
+                    </p>
+                    <strong style="display: block; font-family: 'Space Mono', monospace; font-size: 0.82rem; color: var(--coral) !important;">1ST YEAR ARCHITECTURE</strong>
+                </div>
+            </div>
         </section>
     </div>
 
     <!-- =========================================================================
-         PAGE 2: AI PLANNER STUDIO (ENTRY WIZARD -> SIDEBAR DASHBOARD)
+         PAGE 2: HOW IT WORKS
          ========================================================================= -->
-    <div class="page-view" id="page-studio">
+    <div class="page-view" id="page-how">
+        <section style="padding: 60px 40px; max-width: 1000px; margin: 0 auto;">
+            <div class="eyebrow-caveat">step by step logic ~</div>
+            <h1 style="font-size: 2.8rem; margin-bottom: 12px;">How StudentFit AI Works</h1>
+            <p style="color: var(--text-soft); font-size: 1.1rem; line-height: 1.6; margin-bottom: 35px;">
+                Every axis calculates exercises, meals, and weekly grocery quantities based on your simultaneous constraints.
+            </p>
+
+            <div class="panel-card" style="margin-bottom: 24px;">
+                <span class="tag-pill">STEP 1</span>
+                <h3 style="margin: 8px 0; font-size: 1.4rem;">Campus Bio-Data</h3>
+                <p style="color: var(--text-soft); font-size: 0.95rem;">Gender (Male/Female/Other), Age (16-40), Weight (kg/lbs), Height (cm/ft).</p>
+            </div>
+            <div class="panel-card" style="margin-bottom: 24px;">
+                <span class="tag-pill" style="border-color: var(--coral); color: var(--coral);">STEP 2</span>
+                <h3 style="margin: 8px 0; font-size: 1.4rem;">Goals & Available Gear</h3>
+                <p style="color: var(--text-soft); font-size: 0.95rem;">4 Goals (Build Muscle / Lose Weight / Get Shredded / Exam Stress Relief) x 3 Gear Tiers (Full Gym / Dumbbells / Dorm Floor).</p>
+            </div>
+            <div class="panel-card" style="margin-bottom: 24px;">
+                <span class="tag-pill" style="border-color: var(--lilac); color: var(--lilac);">STEP 3</span>
+                <h3 style="margin: 8px 0; font-size: 1.4rem;">Kitchen Setup, Cuisine & Local Currency</h3>
+                <p style="color: var(--text-soft); font-size: 0.95rem;">5 Cuisines (Indian/Global/Mediterranean/Asian/Vegan) x 3 Budget Tiers x 3 Cooking Skills (Microwave/Basic Stove/Full Chef).</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn-primary-lg" onclick="switchPage('generator')">⚡ Launch AI Generator</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- =========================================================================
+         PAGE 3: FEATURES
+         ========================================================================= -->
+    <div class="page-view" id="page-features">
+        <section style="padding: 60px 40px; max-width: 1140px; margin: 0 auto;">
+            <div class="eyebrow-caveat">complete feature breakdown ~</div>
+            <h1 style="font-size: 2.8rem; margin-bottom: 12px;">Six Core Pillars of StudentFit AI</h1>
+            <p style="color: var(--text-soft); font-size: 1.1rem; line-height: 1.6; margin-bottom: 35px;">
+                Hover or tap each card to flip and discover how every dimension adapts simultaneously to campus life.
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+                <div class="flip-card-container">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div style="font-size: 2.4rem; margin-bottom: 10px;">🏃‍♂️</div>
+                            <h3>Bio-Data Personalization</h3>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>Adaptive Calorie Math</h4>
+                            <p style="font-size: 0.9rem; color: #fff;">Calculates baseline metabolic rates according to student age, gender, and metrics in kg/lbs.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card-container">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div style="font-size: 2.4rem; margin-bottom: 10px;">🎯</div>
+                            <h3>Goal-Driven Programming</h3>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>Targeted Splits</h4>
+                            <p style="font-size: 0.9rem; color: #fff;">Switches workout volume between muscle bulking, fat loss, and exam stress relief.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card-container">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div style="font-size: 2.4rem; margin-bottom: 10px;">🏋️</div>
+                            <h3>Gear-Adaptive Workouts</h3>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>Space & Equipment Fit</h4>
+                            <p style="font-size: 0.9rem; color: #fff;">Substitutes exercises whether you have gym access, light dumbbells, or dorm floor space.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card-container">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div style="font-size: 2.4rem; margin-bottom: 10px;">🥗</div>
+                            <h3>Cuisine-Flexible Meals</h3>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>Cultural Respect</h4>
+                            <p style="font-size: 0.9rem; color: #fff;">Builds recipes around Indian, Mediterranean, Asian, Vegan, and Global staples.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card-container">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div style="font-size: 2.4rem; margin-bottom: 10px;">🛒</div>
+                            <h3>Budget-Tiered Groceries</h3>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>1-Person Shopping List</h4>
+                            <p style="font-size: 0.9rem; color: #fff;">Weekly shopping list with exact quantities and realistic costs in INR, USD, EUR, GBP, etc.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card-container">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div style="font-size: 2.4rem; margin-bottom: 10px;">🍳</div>
+                            <h3>Cooking-Skill Recipes</h3>
+                            <p style="color: var(--text-soft); font-size: 0.85rem;">Hover to reveal</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>Appliance Matching</h4>
+                            <p style="font-size: 0.9rem; color: #fff;">Meal prep tailored to your exact appliances: Microwave Only, Basic Stove, or Full Chef.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- =========================================================================
+         PAGE 4: PLANS
+         ========================================================================= -->
+    <div class="page-view" id="page-plans">
+        <section style="padding: 60px 40px; max-width: 1140px; margin: 0 auto;">
+            <div class="eyebrow-caveat">transparent tiers ~</div>
+            <h1 style="font-size: 2.8rem; margin-bottom: 12px;">Student Plans & Tiers</h1>
+            <p style="color: var(--text-soft); font-size: 1.1rem; line-height: 1.6; margin-bottom: 35px;">
+                Named after our budget philosophy. (Note: Pricing below is illustrative and conceptual — the core AI generator is 100% free for all students).
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                <div class="panel-card">
+                    <span class="mono-label">TIER 1</span>
+                    <h3 style="font-size: 1.5rem; margin: 8px 0;">Cheap Tier</h3>
+                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$0 <span style="font-size: 0.9rem; color: var(--text-soft);">/ forever</span></div>
+                    <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Essential 7-day synchronization for students on tight hostel budgets.</p>
+                    <ul style="list-style: none; padding-left: 0; color: var(--text-soft); font-size: 0.9rem; line-height: 1.8;">
+                        <li>✅ 7-Day Mon–Sun Plan Generation</li>
+                        <li>✅ Dorm & Bodyweight Exercises</li>
+                        <li>✅ 1-Person Weekly Grocery Checklist</li>
+                        <li>✅ Local Currency Conversions</li>
+                        <li>✅ PDF Export</li>
+                    </ul>
+                </div>
+                <div class="panel-card" style="border: 2px solid var(--highlighter); background: var(--ink3);">
+                    <span class="mono-label" style="color: var(--highlighter);">TIER 2 • MOST POPULAR</span>
+                    <h3 style="font-size: 1.5rem; margin: 8px 0; color: var(--highlighter);">Moderate Tier</h3>
+                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$3 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span></div>
+                    <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Advanced exam block optimization with multiple cuisine swaps.</p>
+                    <ul style="list-style: none; padding-left: 0; color: #fff; font-size: 0.9rem; line-height: 1.8;">
+                        <li>✅ Everything in Cheap Tier</li>
+                        <li>✅ Exam Stress Relief Auto-Tuning</li>
+                        <li>✅ Multi-Cuisine Meal Swaps</li>
+                        <li>✅ High-Protein Bulk Cheatsheets</li>
+                    </ul>
+                </div>
+                <div class="panel-card">
+                    <span class="mono-label" style="color: var(--coral);">TIER 3</span>
+                    <h3 style="font-size: 1.5rem; margin: 8px 0;">Premium Tier</h3>
+                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$8 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span></div>
+                    <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Designed for dorm flatmates pooling shared groceries and recipes.</p>
+                    <ul style="list-style: none; padding-left: 0; color: var(--text-soft); font-size: 0.9rem; line-height: 1.8;">
+                        <li>✅ Everything in Moderate Tier</li>
+                        <li>✅ Shared Flat Grocery Pooling</li>
+                        <li>✅ Roommate Synchronized Meal Prep</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- =========================================================================
+         PAGE 5: STORY
+         ========================================================================= -->
+    <div class="page-view" id="page-story">
+        <section style="padding: 60px 40px; max-width: 900px; margin: 0 auto;">
+            <div class="eyebrow-caveat">our mission & philosophy ~</div>
+            <h1 style="font-size: 2.8rem; margin-bottom: 12px;">Built for Students, Not Gym Culture</h1>
+            <div class="panel-card" style="margin: 25px 0 35px 0; border-left: 4px solid var(--highlighter);">
+                <p style="font-size: 1.1rem; line-height: 1.7; color: #fff; margin-bottom: 12px;">
+                    The fitness industry is designed for working adults with fully equipped kitchens, cars for weekly supermarket runs, disposable income for specialty supplements, and predictable 9-to-5 schedules.
+                </p>
+                <p style="font-size: 1rem; line-height: 1.7; color: var(--text-soft);">
+                    When students try to follow these plans, they hit walls: dorm floors with zero equipment, tight budgets that can't afford expensive recipes, microwave-only limits, and exam weeks where high-intensity training leads to burnout.
+                </p>
+            </div>
+
+            <h3 style="margin-bottom: 20px;">Who StudentFit AI Is Built For</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="panel-card">
+                    <h4>🏠 Dorm & Hostel Dwellers</h4>
+                    <p style="color: var(--text-soft); font-size: 0.9rem; margin-top: 6px;">Workouts adapted to small rooms and campus walking.</p>
+                </div>
+                <div class="panel-card">
+                    <h4>💵 Budget-Conscious Students</h4>
+                    <p style="color: var(--text-soft); font-size: 0.9rem; margin-top: 6px;">Prioritizes cheap high-protein staples: eggs, dal, oats, tofu.</p>
+                </div>
+                <div class="panel-card">
+                    <h4>🧠 Exam-Week Survivors</h4>
+                    <p style="color: var(--text-soft); font-size: 0.9rem; margin-top: 6px;">Active recovery and brain focus during midterms & finals.</p>
+                </div>
+                <div class="panel-card">
+                    <h4>🍳 First-Time Cooks</h4>
+                    <p style="color: var(--text-soft); font-size: 0.9rem; margin-top: 6px;">Fast batch meal prep taking under 20 minutes.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- =========================================================================
+         PAGE 6: GENERATOR STUDIO (ENTRY WIZARD -> SIDEBAR DASHBOARD)
+         ========================================================================= -->
+    <div class="page-view" id="page-generator">
         <!-- 1. ENTRY SETUP WIZARD (FIRST TIME VIEW) -->
         <div id="studio-entry-view" style="max-width: 900px; margin: 40px auto 80px auto; padding: 0 20px;">
-            <div class="card-3d" style="background: rgba(13, 10, 32, 0.85); border: 1px solid rgba(0, 229, 255, 0.35); box-shadow: 0 20px 60px rgba(0,0,0,0.6); padding: 40px;">
+            <div class="panel-card" style="background: var(--ink2); border: 1px solid var(--coral); box-shadow: 0 20px 60px rgba(0,0,0,0.6); padding: 40px;">
                 <div style="text-align: center; margin-bottom: 30px;">
-                    <div class="pill-badge">⚡ Step 1 of 1 — Personalize Your Week</div>
+                    <div class="tag-pill">⚡ Step 1 of 1 — Personalize Your Week</div>
                     <h2 style="font-size: 2.2rem; font-weight: 800; color: #fff; margin: 10px 0;">Student Fit Profile Setup</h2>
-                    <p style="color: var(--text-secondary); font-size: 1rem;">Configure your campus fitness constraints once. Your customized 7-day schedule & budget grocery list will generate instantly.</p>
+                    <p style="color: var(--text-soft); font-size: 1rem;">Configure your campus fitness constraints once. Your customized 7-day schedule & budget grocery list will generate instantly.</p>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                     <!-- BIO DATA -->
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 20px;">
-                        <h4 style="color: var(--neon-cyan); margin-bottom: 14px; font-size: 1.05rem;">🏃‍♂️ Campus Bio-Data</h4>
+                    <div style="background: rgba(20, 19, 43, 0.6); border: 1px solid var(--line); border-radius: 14px; padding: 20px;">
+                        <h4 style="color: var(--highlighter); margin-bottom: 14px; font-size: 1.05rem;">🏃‍♂️ Campus Bio-Data</h4>
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Gender</label>
@@ -1006,8 +805,8 @@ HTML_TEMPLATE = """
                     </div>
 
                     <!-- GOALS & GEAR -->
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 20px;">
-                        <h4 style="color: var(--neon-gold); margin-bottom: 14px; font-size: 1.05rem;">🎯 Goals & Gear</h4>
+                    <div style="background: rgba(20, 19, 43, 0.6); border: 1px solid var(--line); border-radius: 14px; padding: 20px;">
+                        <h4 style="color: var(--coral); margin-bottom: 14px; font-size: 1.05rem;">🎯 Goals & Gear</h4>
                         <div class="form-group">
                             <label>Primary Fitness Target</label>
                             <select id="entry_goal" onchange="syncToSidebar('goal', this.value)">
@@ -1028,8 +827,8 @@ HTML_TEMPLATE = """
                     </div>
                 </div>
 
-                <div style="margin-top: 24px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 20px;">
-                    <h4 style="color: var(--neon-pink); margin-bottom: 14px; font-size: 1.05rem;">🥑 Kitchen, Cuisine & Local Currency</h4>
+                <div style="margin-top: 24px; background: rgba(20, 19, 43, 0.6); border: 1px solid var(--line); border-radius: 14px; padding: 20px;">
+                    <h4 style="color: var(--lilac); margin-bottom: 14px; font-size: 1.05rem;">🥑 Kitchen, Cuisine & Local Currency</h4>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
                         <div class="form-group">
                             <label>Cuisine Preference</label>
@@ -1080,17 +879,16 @@ HTML_TEMPLATE = """
             </div>
         </div>
 
-        <!-- 2. STUDIO DASHBOARD VIEW (ACTIVATED AFTER GENERATING, WITH EDITABLE SIDEBAR) -->
+        <!-- 2. STUDIO DASHBOARD VIEW -->
         <div id="studio-dashboard-view" class="studio-container" style="display: none;">
-            <!-- LIVE EDITABLE SIDEBAR -->
             <aside class="studio-sidebar">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h2>⚡ Studio Controls</h2>
-                    <button onclick="showWizardEntry()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: var(--neon-cyan); border-radius: 6px; padding: 4px 8px; font-size: 0.75rem; cursor: pointer;">✏️ Full View</button>
+                    <h2 style="font-size: 1.25rem;">⚡ Studio Controls</h2>
+                    <button onclick="showWizardEntry()" style="background: rgba(246,241,227,0.08); border: 1px solid var(--line); color: var(--highlighter); border-radius: 6px; padding: 4px 8px; font-size: 0.75rem; cursor: pointer;">✏️ Full View</button>
                 </div>
 
-                <h3>🏃‍♂️ Bio-Data</h3>
-                <div class="form-row">
+                <span class="mono-label">🏃‍♂️ BIO-DATA</span>
+                <div class="form-row" style="margin-top: 8px;">
                     <div class="form-group">
                         <label>Gender</label>
                         <select id="gender">
@@ -1133,8 +931,8 @@ HTML_TEMPLATE = """
                     </div>
                 </div>
 
-                <h3>🎯 Goals & Gear</h3>
-                <div class="form-group">
+                <span class="mono-label" style="display: block; margin-top: 14px;">🎯 GOALS & GEAR</span>
+                <div class="form-group" style="margin-top: 8px;">
                     <label>Fitness Target</label>
                     <select id="goal">
                         <option value="Build Muscle" selected>Build Muscle</option>
@@ -1153,8 +951,8 @@ HTML_TEMPLATE = """
                     </select>
                 </div>
 
-                <h3>🥑 Kitchen & Budget</h3>
-                <div class="form-group">
+                <span class="mono-label" style="display: block; margin-top: 14px;">🥑 KITCHEN & BUDGET</span>
+                <div class="form-group" style="margin-top: 8px;">
                     <label>Cuisine Preference</label>
                     <select id="cuisine">
                         <option value="Indian" selected>Indian</option>
@@ -1202,159 +1000,29 @@ HTML_TEMPLATE = """
 
             <!-- STUDIO WORKSPACE -->
             <main class="studio-main">
-                <div class="studio-toolbar">
-                    <div class="studio-title-block">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 14px;">
+                    <div>
                         <h1>AI Planner Studio ⚡</h1>
-                        <p>Synchronized Monday–Sunday Workout & Meal Schedules</p>
+                        <p style="color: var(--text-soft); font-size: 0.95rem;">Synchronized Monday–Sunday Workout & Meal Schedules</p>
                     </div>
-                    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                        <div class="filter-tabs">
-                            <button class="tab-btn active" onclick="filterView('all', this)">All</button>
-                            <button class="tab-btn" onclick="filterView('workout', this)">🏋️ Workouts</button>
-                            <button class="tab-btn" onclick="filterView('meal', this)">🥗 Meals</button>
-                        </div>
-                        <button id="downloadBtn" class="action-btn" style="display: none;" onclick="downloadPDF()">📥 Save Plan (PDF)</button>
-                    </div>
+                    <button id="downloadBtn" class="nav-cta" style="display: none;" onclick="downloadPDF()">📥 Save Plan (PDF)</button>
                 </div>
 
                 <div id="spinner" class="spinner-container">
                     <div class="spinner"></div>
-                    <h3 style="color: var(--neon-cyan); margin-bottom: 6px;">🗓️ AI Neural Engine is Synchronizing Your Week...</h3>
-                    <p style="color: var(--text-muted);">Crafting campus workouts, macro-dense meals, and localized grocery lists...</p>
-                </div>
-
-                <div id="placeholder" class="info-placeholder">
-                    👈 Customize your student bio-data, available gear, and cuisine in the live sidebar, then click <strong>"RE-GENERATE PLAN"</strong>.
+                    <h3 style="color: var(--highlighter); margin-bottom: 6px;">🗓️ AI Neural Engine is Synchronizing Your Week...</h3>
+                    <p style="color: var(--text-soft);">Tailoring exercises, student meals, and localized grocery budgets...</p>
                 </div>
 
                 <div id="resultsArea" class="studio-grid" style="display: none;">
                     <div id="daysContainer"></div>
-                    <div class="grocery-card" id="groceryCard"></div>
+                    <div class="paper-card" id="groceryCard" style="height: fit-content; position: sticky; top: 90px;"></div>
                 </div>
             </main>
         </div>
     </div>
 
-    <!-- =========================================================================
-         PAGE 3: STUDENT MACRO & NUTRITION HUB
-         ========================================================================= -->
-    <div class="page-view" id="page-macros">
-        <div class="hub-container">
-            <div class="section-header">
-                <h2>Student BMR & Macro Calculator</h2>
-                <p>Calculate your daily maintenance calories and optimal macronutrient split for study energy and muscle growth.</p>
-            </div>
-
-            <div class="macro-calc-grid">
-                <!-- FORM CARD -->
-                <div class="calc-form-card">
-                    <h3 style="color: var(--neon-gold); margin-bottom: 18px;">Personal Metrics</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Gender</label>
-                            <select id="m_gender">
-                                <option value="Male" selected>Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Age</label>
-                            <input type="number" id="m_age" value="20">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group" style="flex: 2;">
-                            <label>Weight</label>
-                            <input type="number" id="m_weight" value="70">
-                        </div>
-                        <div class="form-group" style="flex: 1.2;">
-                            <label>Unit</label>
-                            <select id="m_weight_unit">
-                                <option value="kg" selected>kg</option>
-                                <option value="lbs">lbs</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group" style="flex: 2;">
-                            <label>Height</label>
-                            <input type="number" id="m_height" value="170">
-                        </div>
-                        <div class="form-group" style="flex: 1.2;">
-                            <label>Unit</label>
-                            <select id="m_height_unit">
-                                <option value="cm" selected>cm</option>
-                                <option value="ft/in">ft/in</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Target Goal</label>
-                        <select id="m_goal">
-                            <option value="Build Muscle" selected>Build Muscle (Surplus +350 kcal)</option>
-                            <option value="Lose Weight">Lose Weight (Deficit -400 kcal)</option>
-                            <option value="Exam Stress Relief">Maintain & Energy</option>
-                        </select>
-                    </div>
-                    <button class="btn-generate" onclick="calculateStudentMacros()">⚡ Calculate Macros</button>
-                </div>
-
-                <!-- RESULT CARD -->
-                <div class="calc-result-card">
-                    <h3 style="color: #fff; font-size: 1.4rem; margin-bottom: 6px;">Daily Target</h3>
-                    <div style="font-size: 3rem; font-weight: 800; color: var(--neon-cyan);" id="res_calories">2,400 <span style="font-size: 1.2rem; color: #fff;">kcal/day</span></div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;" id="res_meta">BMR: 1,650 kcal | TDEE: 2,050 kcal</p>
-
-                    <div class="macro-metrics-row">
-                        <div class="macro-metric-box">
-                            <div class="val" id="res_protein" style="color: var(--neon-pink);">140g</div>
-                            <div class="lbl">Protein</div>
-                        </div>
-                        <div class="macro-metric-box">
-                            <div class="val" id="res_carbs" style="color: var(--neon-gold);">290g</div>
-                            <div class="lbl">Carbs</div>
-                        </div>
-                        <div class="macro-metric-box">
-                            <div class="val" id="res_fats" style="color: var(--neon-cyan);">65g</div>
-                            <div class="lbl">Fats</div>
-                        </div>
-                    </div>
-
-                    <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between;">
-                        <span>Macro Ratio</span>
-                        <span id="res_water">💧 Water Target: 2.8 Liters/day</span>
-                    </div>
-                    <div class="macro-bar-container">
-                        <div class="macro-bar-protein" id="bar_p" style="width: 25%;"></div>
-                        <div class="macro-bar-carbs" id="bar_c" style="width: 50%;"></div>
-                        <div class="macro-bar-fats" id="bar_f" style="width: 25%;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- NUTRITION TIPS -->
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <h4>🥚 #1 Cheap Protein: Eggs & Soya</h4>
-                    <p>Eggs, Paneer, Tofu, and Soya chunks provide over 20g of high-bioavailability protein for less than ₹30 / $0.50 per serving.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>🍲 Batch Cook Starches on Sunday</h4>
-                    <p>Cook 3 days of brown rice or boil 500g chickpeas in one pot. Store in containers to save 45 minutes of daily study time.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>🧠 Study Focus & Hydration</h4>
-                    <p>Dehydration drops cognitive performance by 15%. Keep a 1L water bottle at your desk and aim for 3 refills during exam weeks.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>🥜 Smart Healthy Fats</h4>
-                    <p>Peanut butter and whole oats provide sustained slow-release energy for long university lecture schedules.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- JAVASCRIPT FOR MULTI-PAGE & AI STUDIO -->
+    <!-- JAVASCRIPT -->
     <script>
         let currentRawPlan = "";
 
@@ -1370,7 +1038,6 @@ HTML_TEMPLATE = """
         }
 
         function submitEntryAndGenerate() {
-            // Synchronize all fields from entry to sidebar
             syncToSidebar('gender', document.getElementById('entry_gender').value);
             syncToSidebar('age', document.getElementById('entry_age').value);
             syncToSidebar('weight', document.getElementById('entry_weight').value);
@@ -1384,11 +1051,9 @@ HTML_TEMPLATE = """
             syncToSidebar('currency', document.getElementById('entry_currency').value);
             syncToSidebar('cookingSkill', document.getElementById('entry_cookingSkill').value);
 
-            // Hide entry view and show studio dashboard view
             document.getElementById('studio-entry-view').style.display = 'none';
             document.getElementById('studio-dashboard-view').style.display = 'flex';
             
-            // Trigger generation
             generatePlan();
         }
 
@@ -1408,14 +1073,12 @@ HTML_TEMPLATE = """
         async function generatePlan() {
             const btn = document.getElementById('generateBtn');
             const spinner = document.getElementById('spinner');
-            const placeholder = document.getElementById('placeholder');
             const resultsArea = document.getElementById('resultsArea');
             const daysContainer = document.getElementById('daysContainer');
             const groceryCard = document.getElementById('groceryCard');
             const downloadBtn = document.getElementById('downloadBtn');
 
             btn.disabled = true;
-            placeholder.style.display = 'none';
             resultsArea.style.display = 'none';
             downloadBtn.style.display = 'none';
             spinner.style.display = 'block';
@@ -1446,26 +1109,26 @@ HTML_TEMPLATE = """
 
                 if (!response.ok || data.error) {
                     alert(data.error || 'Failed to generate schedule.');
-                    placeholder.style.display = 'block';
                 } else {
                     currentRawPlan = data.raw || "";
                     daysContainer.innerHTML = '';
                     
                     data.days.forEach(day => {
                         const card = document.createElement('div');
-                        card.className = 'day-card';
+                        card.className = 'paper-card';
+                        card.style.marginBottom = '24px';
                         card.innerHTML = `
-                            <div class="day-header-row">
-                                <div class="day-title">🗓️ ${day.day}</div>
+                            <div style="border-bottom: 2px solid rgba(20,19,43,0.1); padding-bottom: 8px; margin-bottom: 14px;">
+                                <h3 style="margin: 0; font-size: 1.4rem; color: #14132B !important;">🗓️ ${day.day.toUpperCase()}</h3>
                             </div>
-                            <div class="day-columns">
-                                <div class="workout-box">
-                                    <span class="box-header">🏋️ WORKOUT ROUTINE</span>
-                                    <div class="markdown-content">${marked.parse(day.workout)}</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div style="background: rgba(20, 19, 43, 0.05); padding: 14px; border-radius: 12px;">
+                                    <strong style="color: var(--coral) !important; display: block; margin-bottom: 6px;">🏋️ WORKOUT ROUTINE</strong>
+                                    <div>${marked.parse(day.workout)}</div>
                                 </div>
-                                <div class="meal-box">
-                                    <span class="box-header">🥗 SYNCHRONIZED MEALS</span>
-                                    <div class="markdown-content">${marked.parse(day.meal)}</div>
+                                <div style="background: rgba(20, 19, 43, 0.05); padding: 14px; border-radius: 12px;">
+                                    <strong style="color: #14132B !important; display: block; margin-bottom: 6px;">🥗 SYNCHRONIZED MEALS</strong>
+                                    <div>${marked.parse(day.meal)}</div>
                                 </div>
                             </div>
                         `;
@@ -1474,33 +1137,13 @@ HTML_TEMPLATE = """
 
                     groceryCard.innerHTML = marked.parse(data.grocery);
                     resultsArea.style.display = 'grid';
-                    downloadBtn.style.display = 'inline-flex';
+                    downloadBtn.style.display = 'inline-block';
                 }
             } catch (err) {
                 alert('Connection error: ' + err.message);
-                placeholder.style.display = 'block';
             } finally {
                 spinner.style.display = 'none';
                 btn.disabled = false;
-            }
-        }
-
-        function filterView(type, btn) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const workoutBoxes = document.querySelectorAll('.workout-box');
-            const mealBoxes = document.querySelectorAll('.meal-box');
-
-            if (type === 'workout') {
-                workoutBoxes.forEach(b => b.style.display = 'block');
-                mealBoxes.forEach(b => b.style.display = 'none');
-            } else if (type === 'meal') {
-                workoutBoxes.forEach(b => b.style.display = 'none');
-                mealBoxes.forEach(b => b.style.display = 'block');
-            } else {
-                workoutBoxes.forEach(b => b.style.display = 'block');
-                mealBoxes.forEach(b => b.style.display = 'block');
             }
         }
 
@@ -1531,45 +1174,6 @@ HTML_TEMPLATE = """
                 </div>
             `;
 
-            // Adjust styles for clean printing on white background
-            element.querySelectorAll('.day-card').forEach(c => {
-                c.style.background = '#f8fafc';
-                c.style.border = '1px solid #cbd5e1';
-                c.style.color = '#1e293b';
-                c.style.marginBottom = '16px';
-                c.style.padding = '14px';
-                c.style.borderRadius = '8px';
-            });
-            element.querySelectorAll('.day-title').forEach(t => {
-                t.style.color = '#ff416c';
-                t.style.fontSize = '15px';
-                t.style.fontWeight = 'bold';
-            });
-            element.querySelectorAll('.box-header, .col-header').forEach(h => {
-                h.style.color = '#0284c7';
-                h.style.fontWeight = 'bold';
-                h.style.fontSize = '13px';
-            });
-            element.querySelectorAll('.workout-box, .meal-box, .col-box').forEach(b => {
-                b.style.background = '#ffffff';
-                b.style.border = '1px solid #e2e8f0';
-                b.style.padding = '10px 12px';
-                b.style.borderRadius = '6px';
-                b.style.marginBottom = '8px';
-            });
-            element.querySelectorAll('li, p, div').forEach(p => {
-                p.style.color = '#334155';
-            });
-            element.querySelectorAll('strong').forEach(s => {
-                s.style.color = '#0f172a';
-            });
-            element.querySelectorAll('h4').forEach(h => {
-                h.style.color = '#b45309';
-                h.style.borderBottom = '1px solid #e2e8f0';
-                h.style.paddingBottom = '4px';
-                h.style.marginTop = '14px';
-            });
-
             const opt = {
                 margin: [10, 10, 10, 10],
                 filename: 'StudentFit_Weekly_Schedule.pdf',
@@ -1579,39 +1183,6 @@ HTML_TEMPLATE = """
             };
 
             html2pdf().set(opt).from(element).save();
-        }
-
-        async function calculateStudentMacros() {
-            const age = document.getElementById('m_age').value;
-            const gender = document.getElementById('m_gender').value;
-            const weight = document.getElementById('m_weight').value;
-            const weight_unit = document.getElementById('m_weight_unit').value;
-            const height = document.getElementById('m_height').value;
-            const height_unit = document.getElementById('m_height_unit').value;
-            const goal = document.getElementById('m_goal').value;
-
-            try {
-                const res = await fetch('/api/macros', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ age, gender, weight, weight_unit, height, height_unit, goal })
-                });
-                const data = await res.json();
-
-                document.getElementById('res_calories').innerHTML = `${data.target_calories.toLocaleString()} <span style="font-size: 1.2rem; color: #fff;">kcal/day</span>`;
-                document.getElementById('res_meta').innerText = `BMR: ${data.bmr} kcal | TDEE: ${data.tdee} kcal`;
-                document.getElementById('res_protein').innerText = `${data.protein_g}g`;
-                document.getElementById('res_carbs').innerText = `${data.carbs_g}g`;
-                document.getElementById('res_fats').innerText = `${data.fats_g}g`;
-                document.getElementById('res_water').innerText = `💧 Water Target: ${data.water_liters} Liters/day`;
-
-                const totalG = data.protein_g + data.carbs_g + data.fats_g;
-                document.getElementById('bar_p').style.width = ((data.protein_g / totalG) * 100) + '%';
-                document.getElementById('bar_c').style.width = ((data.carbs_g / totalG) * 100) + '%';
-                document.getElementById('bar_f').style.width = ((data.fats_g / totalG) * 100) + '%';
-            } catch (e) {
-                alert('Macro computation error: ' + e.message);
-            }
         }
     </script>
 </body>
