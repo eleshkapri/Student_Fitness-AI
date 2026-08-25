@@ -482,18 +482,16 @@ HTML_TEMPLATE = """
             padding: 16px 12px;
             position: absolute;
             box-shadow: 0 12px 28px rgba(0,0,0,0.45);
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
             text-align: center;
             border: 1px solid rgba(0,0,0,0.08);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-        }
-        .deck-card:hover {
-            transform: translateY(-24px) scale(1.1) !important;
-            z-index: 50 !important;
-            box-shadow: 0 20px 45px rgba(228, 255, 91, 0.4);
-            border-color: var(--coral);
+            cursor: pointer;
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
         }
         .deck-card-1 { transform: translateX(-210px) rotate(-18deg); z-index: 1; }
         .deck-card-2 { transform: translateX(-140px) rotate(-12deg); z-index: 2; }
@@ -502,6 +500,20 @@ HTML_TEMPLATE = """
         .deck-card-5 { transform: translateX(70px) rotate(6deg); z-index: 5; }
         .deck-card-6 { transform: translateX(140px) rotate(12deg); z-index: 6; }
         .deck-card-7 { transform: translateX(210px) rotate(18deg); z-index: 7; }
+
+        .deck-card:hover {
+            z-index: 50 !important;
+            box-shadow: 0 22px 48px rgba(228, 255, 91, 0.5);
+            border-color: var(--coral) !important;
+        }
+
+        .deck-card-1:hover { transform: translateX(-210px) translateY(-26px) rotate(-18deg) scale(1.08) !important; }
+        .deck-card-2:hover { transform: translateX(-140px) translateY(-26px) rotate(-12deg) scale(1.08) !important; }
+        .deck-card-3:hover { transform: translateX(-70px) translateY(-26px) rotate(-6deg) scale(1.08) !important; }
+        .deck-card-4:hover { transform: translateX(0px) translateY(-26px) rotate(0deg) scale(1.08) !important; }
+        .deck-card-5:hover { transform: translateX(70px) translateY(-26px) rotate(6deg) scale(1.08) !important; }
+        .deck-card-6:hover { transform: translateX(140px) translateY(-26px) rotate(12deg) scale(1.08) !important; }
+        .deck-card-7:hover { transform: translateX(210px) translateY(-26px) rotate(18deg) scale(1.08) !important; }
 
         /* MARQUEE */
         .marquee-container {
