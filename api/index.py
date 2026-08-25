@@ -1097,13 +1097,15 @@ HTML_TEMPLATE = """
                         <h4 style="color: var(--coral); margin-bottom: 14px; font-size: 1.05rem;">🎯 Goals & Gear</h4>
                         <div class="form-group">
                             <label>Primary Fitness Target</label>
-                            <select id="entry_goal" autocomplete="off" onchange="syncToSidebar('goal', this.value)">
+                            <select id="entry_goal" autocomplete="off" onchange="handleGoalChange('entry', this.value)">
                                 <option value="" disabled selected hidden>Select Fitness Goal</option>
                                 <option value="Build Muscle">💪 Build Muscle & Bulk</option>
                                 <option value="Lose Weight">🔥 Lose Fat & Lean Out</option>
                                 <option value="Get Shredded">⚡ Athletic Tone & Shred</option>
                                 <option value="Exam Stress Relief">🧘 Exam Stress Relief & Focus</option>
+                                <option value="Custom">✍️ Custom / Type Your Own Goal...</option>
                             </select>
+                            <input type="text" id="entry_custom_goal" placeholder="e.g. Marathon Prep, Fix Posture, Jump Higher..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="display: none; margin-top: 8px; border-color: var(--highlighter);" oninput="syncToSidebar('custom_goal', this.value)">
                         </div>
                         <div class="form-group">
                             <label>Available Equipment</label>
@@ -1232,13 +1234,15 @@ HTML_TEMPLATE = """
                 <span class="mono-label" style="display: block; margin-top: 14px;">🎯 GOALS & GEAR</span>
                 <div class="form-group" style="margin-top: 8px;">
                     <label>Fitness Target</label>
-                    <select id="goal" autocomplete="off">
+                    <select id="goal" autocomplete="off" onchange="handleGoalChange('sidebar', this.value)">
                         <option value="" disabled selected hidden>Select Fitness Goal</option>
                         <option value="Build Muscle">Build Muscle</option>
                         <option value="Lose Weight">Lose Weight</option>
                         <option value="Get Shredded">Get Shredded</option>
                         <option value="Exam Stress Relief">Exam Stress Relief</option>
+                        <option value="Custom">✍️ Custom Goal...</option>
                     </select>
+                    <input type="text" id="custom_goal" placeholder="Describe your custom goal..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="display: none; margin-top: 8px; border-color: var(--highlighter);">
                 </div>
 
                 <div class="form-group">
@@ -1349,6 +1353,36 @@ HTML_TEMPLATE = """
             }
         }
 
+        function handleGoalChange(source, val) {
+            const entryCustom = document.getElementById('entry_custom_goal');
+            const sidebarCustom = document.getElementById('custom_goal');
+
+            if (source === 'entry') {
+                syncToSidebar('goal', val);
+                if (val === 'Custom') {
+                    if (entryCustom) {
+                        entryCustom.style.display = 'block';
+                        entryCustom.focus();
+                    }
+                    if (sidebarCustom) sidebarCustom.style.display = 'block';
+                } else {
+                    if (entryCustom) entryCustom.style.display = 'none';
+                    if (sidebarCustom) sidebarCustom.style.display = 'none';
+                }
+            } else {
+                if (val === 'Custom') {
+                    if (sidebarCustom) {
+                        sidebarCustom.style.display = 'block';
+                        sidebarCustom.focus();
+                    }
+                    if (entryCustom) entryCustom.style.display = 'block';
+                } else {
+                    if (sidebarCustom) sidebarCustom.style.display = 'none';
+                    if (entryCustom) entryCustom.style.display = 'none';
+                }
+            }
+        }
+
         function syncToSidebar(id, val) {
             const sidebarElem = document.getElementById(id);
             if (sidebarElem) sidebarElem.value = val;
@@ -1367,12 +1401,23 @@ HTML_TEMPLATE = """
             const weightUnit = document.getElementById('entry_weightUnit').value;
             const height = document.getElementById('entry_height').value;
             const heightUnit = document.getElementById('entry_heightUnit').value;
-            const goal = document.getElementById('entry_goal').value;
+            let goal = document.getElementById('entry_goal').value;
             const equipment = document.getElementById('entry_equipment').value;
             const cuisine = document.getElementById('entry_cuisine').value;
             const budget = document.getElementById('entry_budget').value;
             const currency = document.getElementById('entry_currency').value;
             const cookingSkill = document.getElementById('entry_cookingSkill').value;
+
+            if (goal === 'Custom') {
+                const customGoalVal = (document.getElementById('entry_custom_goal').value || '').trim();
+                if (!customGoalVal) {
+                    alert('⚠️ Please type your custom fitness target in the box!');
+                    document.getElementById('entry_custom_goal').focus();
+                    return;
+                }
+                goal = customGoalVal;
+                syncToSidebar('custom_goal', customGoalVal);
+            }
 
             if (!gender || !age || !weight || !height || !goal || !equipment || !cuisine || !budget || !currency || !cookingSkill) {
                 alert('⚠️ Please fill in all information fields (Age, Weight, Height, Goal, Equipment, Cuisine, etc.) to generate your personalized plan!');
@@ -1385,7 +1430,6 @@ HTML_TEMPLATE = """
             syncToSidebar('weightUnit', weightUnit);
             syncToSidebar('height', height);
             syncToSidebar('heightUnit', heightUnit);
-            syncToSidebar('goal', goal);
             syncToSidebar('equipment', equipment);
             syncToSidebar('cuisine', cuisine);
             syncToSidebar('budget', budget);
@@ -1418,12 +1462,22 @@ HTML_TEMPLATE = """
             const weightUnit = document.getElementById('weightUnit').value;
             const height = document.getElementById('height').value;
             const heightUnit = document.getElementById('heightUnit').value;
-            const goal = document.getElementById('goal').value;
+            let goal = document.getElementById('goal').value;
             const equipment = document.getElementById('equipment').value;
             const cuisine = document.getElementById('cuisine').value;
             const budget = document.getElementById('budget').value;
             const currency = document.getElementById('currency').value;
             const cookingSkill = document.getElementById('cookingSkill').value;
+
+            if (goal === 'Custom') {
+                const customGoalVal = (document.getElementById('custom_goal').value || '').trim();
+                if (!customGoalVal) {
+                    alert('⚠️ Please type your custom fitness target!');
+                    document.getElementById('custom_goal').focus();
+                    return;
+                }
+                goal = customGoalVal;
+            }
 
             if (!gender || !age || !weight || !height || !goal || !equipment || !cuisine || !budget || !currency || !cookingSkill) {
                 alert('⚠️ Please provide all information in the sidebar controls to generate your plan.');

@@ -54,7 +54,13 @@ def render():
             height_unit = st.selectbox("Unit", ["cm", "ft/in"], index=0, key="h_unit")
 
         st.markdown('<br><span class="mono-label">🎯 GOALS & GEAR</span>', unsafe_allow_html=True)
-        goal = st.selectbox("Fitness Goal", ["Build Muscle", "Lose Weight", "Get Shredded", "Exam Stress Relief"], index=None, placeholder="Select Fitness Goal")
+        goal_options = ["Build Muscle", "Lose Weight", "Get Shredded", "Exam Stress Relief", "✍️ Custom / Type your own..."]
+        goal = st.selectbox("Fitness Goal", goal_options, index=None, placeholder="Select Fitness Goal")
+        
+        custom_goal_text = ""
+        if goal == "✍️ Custom / Type your own...":
+            custom_goal_text = st.text_input("Describe your custom fitness goal:", placeholder="e.g. Marathon Prep, Vertical Jump, Fix Posture...")
+
         equipment = st.selectbox("Available Gear", ["Full Gym", "Dumbbells Only", "No Equipment (Dorm)"], index=None, placeholder="Select Available Gear")
 
         st.markdown('<br><span class="mono-label">🥑 KITCHEN & BUDGET</span>', unsafe_allow_html=True)
@@ -81,13 +87,14 @@ def render():
     """, unsafe_allow_html=True)
 
     if generate_btn:
-        if not all([gender, age, weight, height, goal, equipment, cuisine, budget, currency, cooking_skill]):
+        effective_goal = custom_goal_text.strip() if goal == "✍️ Custom / Type your own..." else goal
+        if not all([gender, age, weight, height, effective_goal, equipment, cuisine, budget, currency, cooking_skill]):
             st.warning("⚠️ Please fill in all information fields (Age, Weight, Height, Goal, Equipment, Cuisine, etc.) to generate your personalized plan!")
         else:
             user_profile = {
                 "age": age, "weight": weight, "weight_unit": weight_unit,
                 "height": height, "height_unit": height_unit, "gender": gender, 
-                "goal": goal, "equipment": equipment, "cuisine": cuisine, 
+                "goal": effective_goal, "equipment": equipment, "cuisine": cuisine, 
                 "diet_type": "Standard", "budget": budget, "currency": currency,
                 "cooking_skill": cooking_skill
             }
