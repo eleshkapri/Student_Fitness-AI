@@ -2,17 +2,17 @@
 
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![AI](https://img.shields.io/badge/AI-Llama%203%20(Groq)-orange?style=for-the-badge)
+![AI](https://img.shields.io/badge/AI-Groq%20Cloud-orange?style=for-the-badge)
 
 **Student Fitness AI** is a hyper-personalized fitness and nutrition planner designed specifically for university students. 
 
-Unlike generic fitness apps, Student Fitness understands the unique constraints of student life: **tight budgets, limited dorm room space, and specific cultural food preferences.** It uses the power of **Llama 3 (via Groq)** to generate full 7-day schedules instantly.
+Unlike generic fitness apps, Student Fitness understands the unique constraints of student life: **tight budgets, limited dorm room space, and specific cultural food preferences.** It uses the high-speed inference power of **Groq Cloud AI** to generate full 7-day schedules instantly.
 
 ---
 
 ## 🚀 Key Features
 
-* **⚡ AI-Powered Personalization:** Generates unique Monday-Sunday plans using **Groq (Llama 3)** for lightning-fast responses.
+* **⚡ AI-Powered Personalization:** Generates unique Monday-Sunday plans using **Groq AI (GPT-OSS / Compound / Qwen / Llama)** with automated model failover.
 * **🏋️ Dorm-Friendly Workouts:** Tailors exercises to your available gear—whether you have a full university gym or just a dorm room floor.
 * **🥗 Culture-Aware Nutrition:** Creates meal plans that respect your culinary background (e.g., Indian, Mexican, Asian) while keeping costs low.
 * **🛒 Smart Grocery List:** Auto-calculates exact quantities (e.g., "1kg Rice", "1 Dozen Eggs") for a weekly student budget.

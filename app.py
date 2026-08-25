@@ -120,30 +120,31 @@ def parse_ai_response(text):
     
     for block in blocks:
         block = block.strip()
-        if block.startswith("Day:"):
+        if re.search(r"(?:Day|Day\s*\d+):", block, re.IGNORECASE):
             # Parse Day Block
             try:
                 # Extract Day Name
-                day_line = re.search(r"Day:\s*(.*)", block).group(1)
+                day_match = re.search(r"(?:Day|Day\s*\d+):\s*([^\n\r*#]+)", block, re.IGNORECASE)
+                day_line = day_match.group(1).strip() if day_match else "Daily Routine"
                 
                 # Extract Workout (between Workout: and Meal:)
-                workout_match = re.search(r"Workout:\s*(.*?)(?=Meal:)", block, re.DOTALL)
-                workout_text = workout_match.group(1).strip() if workout_match else "Rest"
+                workout_match = re.search(r"(?:\*{0,2}Workout\*{0,2}):\s*(.*?)(?=(?:\*{0,2}Meal\*{0,2}):)", block, re.DOTALL | re.IGNORECASE)
+                workout_text = workout_match.group(1).strip() if workout_match else "Rest day / Active recovery"
                 
                 # Extract Meal (from Meal: to end)
-                meal_match = re.search(r"Meal:\s*(.*)", block, re.DOTALL)
-                meal_text = meal_match.group(1).strip() if meal_match else "Standard Diet"
+                meal_match = re.search(r"(?:\*{0,2}Meal\*{0,2}):\s*(.*)", block, re.DOTALL | re.IGNORECASE)
+                meal_text = meal_match.group(1).strip() if meal_match else "Standard Student Diet"
                 
                 days.append({
                     "day": day_line,
                     "workout": workout_text,
                     "meal": meal_text
                 })
-            except:
+            except Exception:
                 continue
                 
-        elif block.startswith("GROCERY"):
-            grocery_section = block.replace("GROCERY", "").strip()
+        elif "GROCERY" in block.upper():
+            grocery_section = re.sub(r"^.*?GROCERY", "", block, flags=re.IGNORECASE | re.DOTALL).strip()
             
     return days, grocery_section
 
@@ -169,56 +170,82 @@ def generate_plan_mock(profile):
     * Approx. $15 - $20 USD (Global Standard)
     """
 
-def generate_plan_real(profile, api_key):
-    try:
-        client = Groq(api_key=api_key)
-        
-        # --- PROMPT DESIGNED FOR PARSING ---
-        prompt = f"""
-        Act as a fitness coach for a student.
-        Profile: {profile['age']}y/o, {profile['gender']}, {profile['weight']}kg.
-        Goal: {profile['goal']}. Equipment: {profile['equipment']}.
-        Diet: {profile['diet_type']} ({profile['cuisine']}), Budget: {profile['budget']}.
-        Cooking: {profile['cooking_skill']}.
+def generate_plan_real(profile, api_key, chosen_model="Auto (Fallback)"):
+    client = Groq(api_key=api_key)
+    
+    # --- PROMPT DESIGNED FOR PARSING ---
+    prompt = f"""
+    Act as an expert fitness and nutrition coach for a university student.
+    Profile: {profile['age']}y/o, {profile['gender']}, {profile['weight']}kg, height: {profile['height']}cm.
+    Goal: {profile['goal']}. Equipment: {profile['equipment']}.
+    Diet: {profile['diet_type']} ({profile['cuisine']}), Budget: {profile['budget']}.
+    Cooking: {profile['cooking_skill']}.
 
-        TASK: Create a 7-day plan (Monday-Sunday).
-        
-        STRICT OUTPUT FORMAT (Do not deviate):
-        For each day, output a block separated by "|||".
-        Inside each block, use "Day:", "Workout:", and "Meal:" labels exactly.
-        
-        Example format:
-        Day: Monday
-        Workout:
-        * **Focus:** Chest
-        * **Exercise:** Pushups (3x12)
-        Meal:
-        * **Breakfast:** Oats
-        * **Lunch:** Rice
-        |||
-        Day: Tuesday
-        ...
-        |||
-        GROCERY
-        #### 🛒 Shopping List (1 Person)
-        * [Quantity] [Item]
-        #### 💡 Tips
-        * [Tip]
-        #### 💰 Estimated Budget
-        * Estimate the weekly cost in the currency relevant to the Cuisine selected (e.g., INR for Indian, USD for Global/US, EUR for Mediterranean). 
-        * Also provide a rough USD conversion.
+    TASK: Create a 7-day plan (Monday-Sunday).
+    
+    STRICT OUTPUT FORMAT (Do not deviate):
+    For each day, output a block separated by "|||".
+    Inside each block, use "Day:", "Workout:", and "Meal:" labels exactly.
+    
+    Example format:
+    Day: Monday
+    Workout:
+    * **Focus:** Chest
+    * **Exercise:** Pushups (3x12)
+    Meal:
+    * **Breakfast:** Oats
+    * **Lunch:** Rice
+    |||
+    Day: Tuesday
+    ...
+    |||
+    GROCERY
+    #### 🛒 Shopping List (1 Person)
+    * [Quantity] [Item]
+    #### 💡 Tips
+    * [Tip]
+    #### 💰 Estimated Budget
+    * Estimate the weekly cost in the currency relevant to the Cuisine selected (e.g., INR for Indian, USD for Global/US, EUR for Mediterranean). 
+    * Also provide a rough USD conversion.
 
-        Begin immediately.
-        """
-        
-        response = client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model="llama-3.3-70b-versatile",
-            temperature=0.5,
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        return f"Error: {e}"
+    Begin immediately.
+    """
+    
+    candidate_models = [
+        "openai/gpt-oss-20b",
+        "openai/gpt-oss-120b",
+        "groq/compound-mini",
+        "groq/compound",
+        "qwen/qwen3.6-27b",
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant"
+    ]
+    
+    if chosen_model != "Auto (openai/gpt-oss-20b)" and chosen_model in candidate_models:
+        # Put the chosen model first
+        models_to_try = [chosen_model] + [m for m in candidate_models if m != chosen_model]
+    else:
+        models_to_try = candidate_models
+    
+    last_error = None
+    for model_name in models_to_try:
+        try:
+            response = client.chat.completions.create(
+                messages=[{"role": "user", "content": prompt}],
+                model=model_name,
+                temperature=0.5,
+                max_tokens=4096,
+            )
+            content = response.choices[0].message.content
+            if content and len(content.strip()) > 0:
+                # Clean any reasoning/thinking tags if model outputs them
+                content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
+                return content, model_name
+        except Exception as e:
+            last_error = e
+            continue
+            
+    return f"Error: {last_error}", None
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -231,6 +258,21 @@ with st.sidebar:
     else:
         api_key = st.text_input("Groq API Key", type="password")
         use_simulation = st.checkbox("Demo Mode", value=True if not api_key else False)
+
+    model_option = st.selectbox(
+        "🤖 AI Model",
+        [
+            "openai/gpt-oss-20b",
+            "Auto (Best Available)",
+            "openai/gpt-oss-120b",
+            "groq/compound-mini",
+            "groq/compound",
+            "qwen/qwen3.6-27b",
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant"
+        ],
+        index=0
+    )
 
     st.markdown("---")
     
@@ -281,69 +323,59 @@ if generate_btn:
     with st.spinner('🗓️ Synchronizing your week (Mon-Sun)...'):
         if use_simulation or not api_key:
             full_response = generate_plan_mock(user_profile)
-            source = "Simulation"
+            source = "Simulation (Demo Mode)"
         else:
-            full_response = generate_plan_real(user_profile, api_key)
-            source = "Llama 3 (Groq)"
+            full_response, used_model = generate_plan_real(user_profile, api_key, model_option)
+            source = f"Groq ({used_model})" if used_model else "Groq"
 
-    # PARSE THE RESPONSE
-    day_plans, grocery_text = parse_ai_response(full_response)
-    
-    # LAYOUT: LEFT (Schedule) | RIGHT (Grocery)
-    main_col, side_col = st.columns([2.5, 1])
-    
-    with main_col:
-        # Loop through each day and create a row
+    if full_response.startswith("Error:"):
+        st.error(f"❌ AI Generation Failed: {full_response}")
+    else:
+        # PARSE THE RESPONSE
+        day_plans, grocery_text = parse_ai_response(full_response)
+        
         if not day_plans:
-            st.error("AI output format error. Please try again.")
-            # st.write(full_response) # Debug
-        
-        for plan in day_plans:
-            # Create a Card Container for the day
-            st.markdown(f"""
-            <div class="day-card">
-                <h3>🗓️ {plan['day']}</h3>
-            </div>
-            """, unsafe_allow_html=True)
+            st.error("⚠️ AI output format could not be parsed. Please try generating again or switch models.")
+            with st.expander("🔍 View Raw AI Output"):
+                st.code(full_response)
+        else:
+            # LAYOUT: LEFT (Schedule) | RIGHT (Grocery)
+            main_col, side_col = st.columns([2.5, 1])
             
-            # Create 2 columns INSIDE the day row
-            c1, c2 = st.columns(2)
-            
-            with c1:
-                st.markdown('<span class="col-header">🏋️ WORKOUT</span>', unsafe_allow_html=True)
-                st.markdown(plan['workout'])
-                
-            with c2:
-                st.markdown('<span class="col-header">🥗 MEALS</span>', unsafe_allow_html=True)
-                st.markdown(plan['meal'])
-            
-            st.markdown("---") # Visual separator between days
+            with main_col:
+                for plan in day_plans:
+                    # Create a Card Container for the day
+                    st.markdown(f"""
+                    <div class="day-card">
+                        <h3>🗓️ {plan['day']}</h3>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Create 2 columns INSIDE the day row
+                    c1, c2 = st.columns(2)
+                    
+                    with c1:
+                        st.markdown('<span class="col-header">🏋️ WORKOUT</span>', unsafe_allow_html=True)
+                        st.markdown(plan['workout'])
+                        
+                    with c2:
+                        st.markdown('<span class="col-header">🥗 MEALS</span>', unsafe_allow_html=True)
+                        st.markdown(plan['meal'])
+                    
+                    st.markdown("---") # Visual separator between days
 
-    with side_col:
-        # --- FIX: FORMAT THE GROCERY LIST AS HTML ---
-        # The AI gives Markdown (* Item), but inside a custom DIV, Markdown breaks.
-        # We manually convert the text to HTML for perfect rendering.
-        
-        # 1. Convert Headers (#### Text -> html h4)
-        formatted_grocery = re.sub(r'####\s*(.*)', r'<h4 style="color: #FFD700; border-bottom: 1px solid #FFD700; padding-bottom: 5px; margin-top: 15px;">\1</h4>', grocery_text)
-        
-        # 2. Convert Bold Text (**text** -> strong)
-        formatted_grocery = re.sub(r'\*\*(.*?)\*\*', r'<strong style="color: white;">\1</strong>', formatted_grocery)
-        
-        # 3. Convert List Items (* Item -> div with dot)
-        # We replace the newline+asterisk pattern with a styled div
-        formatted_grocery = re.sub(r'\n\*\s*(.*)', r'<div style="margin-bottom: 5px; color: #e0e0e0;">• \1</div>', formatted_grocery)
-        
-        # 4. Handle first item if it doesn't have a newline before it
-        formatted_grocery = re.sub(r'^\*\s*(.*)', r'<div style="margin-bottom: 5px; color: #e0e0e0;">• \1</div>', formatted_grocery)
+            with side_col:
+                # Format Grocery List as HTML
+                formatted_grocery = re.sub(r'####\s*(.*)', r'<h4 style="color: #FFD700; border-bottom: 1px solid #FFD700; padding-bottom: 5px; margin-top: 15px;">\1</h4>', grocery_text)
+                formatted_grocery = re.sub(r'\*\*(.*?)\*\*', r'<strong style="color: white;">\1</strong>', formatted_grocery)
+                formatted_grocery = re.sub(r'\n\*\s*(.*)', r'<div style="margin-bottom: 5px; color: #e0e0e0;">• \1</div>', formatted_grocery)
+                formatted_grocery = re.sub(r'^\*\s*(.*)', r'<div style="margin-bottom: 5px; color: #e0e0e0;">• \1</div>', formatted_grocery)
+                formatted_grocery = formatted_grocery.replace("\n", "")
 
-        # 5. Clean up remaining newlines
-        formatted_grocery = formatted_grocery.replace("\n", "")
+                st.markdown(f"""
+                <div class="grocery-card">
+                    {formatted_grocery}
+                </div>
+                """, unsafe_allow_html=True)
 
-        st.markdown(f"""
-        <div class="grocery-card">
-            {formatted_grocery}
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.success(f"Generated successfully using {source}")
+            st.success(f"✅ Generated successfully using {source}")
