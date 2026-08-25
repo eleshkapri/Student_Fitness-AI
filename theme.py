@@ -358,49 +358,49 @@ def apply_theme(active_page: str = "Home"):
         with col_logo:
             st.markdown("""
             <div class="navbar-anchor" style="font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.3rem; color: #fff; padding-top: 7px; display: flex; align-items: center; gap: 6px;">
-                ⚡ <span style="background: linear-gradient(90deg, #ffffff, #E4FF5B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">StudentFit AI</span>
+                <span style="background: linear-gradient(90deg, #ffffff, #E4FF5B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">StudentFit AI</span>
             </div>
             """, unsafe_allow_html=True)
 
         with col_h:
             st.markdown(f'<div class="{"nav-link-active" if active_page == "Home" else "nav-link-btn"}">', unsafe_allow_html=True)
-            if st.button("🏠 Home", key="nav_btn_home", use_container_width=True):
+            if st.button("Home", key="nav_btn_home", use_container_width=True):
                 st.switch_page("pages/home.py")
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col_hw:
             st.markdown(f'<div class="{"nav-link-active" if active_page == "How it Works" else "nav-link-btn"}">', unsafe_allow_html=True)
-            if st.button("📖 How it Works", key="nav_btn_how", use_container_width=True):
+            if st.button("How it Works", key="nav_btn_how", use_container_width=True):
                 st.switch_page("pages/how_it_works.py")
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col_f:
             st.markdown(f'<div class="{"nav-link-active" if active_page == "Features" else "nav-link-btn"}">', unsafe_allow_html=True)
-            if st.button("✨ Features", key="nav_btn_feat", use_container_width=True):
+            if st.button("Features", key="nav_btn_feat", use_container_width=True):
                 st.switch_page("pages/features.py")
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col_p:
             st.markdown(f'<div class="{"nav-link-active" if active_page == "Plans" else "nav-link-btn"}">', unsafe_allow_html=True)
-            if st.button("🏷️ Plans", key="nav_btn_plans", use_container_width=True):
+            if st.button("Plans", key="nav_btn_plans", use_container_width=True):
                 st.switch_page("pages/plans.py")
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col_s:
             st.markdown(f'<div class="{"nav-link-active" if active_page == "Story" else "nav-link-btn"}">', unsafe_allow_html=True)
-            if st.button("💡 Story", key="nav_btn_story", use_container_width=True):
+            if st.button("Story", key="nav_btn_story", use_container_width=True):
                 st.switch_page("pages/story.py")
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col_g:
             st.markdown(f'<div class="{"nav-link-active" if active_page == "AI Generator" else "nav-link-btn"}">', unsafe_allow_html=True)
-            if st.button("⚡ Generator", key="nav_btn_gen", use_container_width=True):
+            if st.button("Generator", key="nav_btn_gen", use_container_width=True):
                 st.switch_page("pages/generator.py")
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col_cta:
             st.markdown('<div class="nav-cta-btn">', unsafe_allow_html=True)
-            if st.button("🚀 Plan Week", key="nav_btn_cta", use_container_width=True):
+            if st.button("Plan Week", key="nav_btn_cta", use_container_width=True):
                 st.switch_page("pages/generator.py")
             st.markdown('</div>', unsafe_allow_html=True)
 
