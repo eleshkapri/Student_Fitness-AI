@@ -23,10 +23,11 @@ Most commercial fitness apps assume you have a fully equipped kitchen, a car for
 
 **StudentFit AI was built between lectures and leftovers.** It plans around the real variables of college life:
 - **Dorm-Room Space & Gear:** Whether you have full university gym access, a pair of dumbbells, or just a 6x4 ft dorm room floor.
-- **Realistic Student Budgets:** Cheap, Moderate, and Premium tiers with localized currencies (`INR ₹`, `USD $`, `EUR €`, `GBP £`, `CAD $`, `AUD $`, `AED د.إ`).
-- **Campus Cooking Constraints:** Meal prep for Microwave/Kettle Only, Single Induction/Basic Stove, or Full Kitchen Chef.
+- **Global Region & Currency Selector:** Auto-synchronizes local currency (`INR ₹`, `USD $`, `EUR €`, `GBP £`, `CAD $`, `AUD $`, `JPY ¥`), cuisine defaults, and metric/imperial units.
+- **Campus Cooking Constraints:** Meal prep tailored for Microwave/Kettle Only, Single Induction/Basic Stove, or Full Kitchen Chef.
 - **Exam Week Stress Relief:** First-class wellness focus, cognitive fuel, and active recovery routines tailored to exam season.
-- **Custom Fitness Targets:** Type in any goal (*e.g. Marathon Prep, Vertical Jump, Posture Correction*).
+- **Custom Fitness Targets:** Type in any write-in goal (*e.g. Marathon Prep, Vertical Jump, Posture Correction*).
+- **Persistent State:** Saves your chosen active tab and region in `localStorage` & URL hash so reloading never loses your progress.
 
 ---
 
@@ -34,15 +35,16 @@ Most commercial fitness apps assume you have a fully equipped kitchen, a car for
 
 | Feature | Description |
 | :--- | :--- |
-| **⚡ 6-Page Unified Suite** | Seamless navigation across **Home**, **How it Works**, **Features**, **Plans**, **Our Story**, and **AI Planner Studio**. |
+| **⚡ 7-Page Unified Suite** | Seamless navigation across **Home**, **How it Works**, **Features**, **Macro Hub**, **Plans**, **Our Story**, and **AI Planner Studio**. |
+| **🌍 Global Region Selector** | Sleek navbar dropdown syncing currency, cuisine defaults, metric/imperial units, and plan tier pricing. |
 | **🎯 Custom Target Input** | Preset goals (*Build Muscle, Lose Fat, Athletic Tone, Exam Relief*) plus custom write-in goals with instant AI synchronization. |
 | **🏃‍♂️ Campus Bio-Data** | Calculates BMR, TDEE, target calories, and macro splits (Protein, Carbs, Fats, Water) in metric and imperial. |
 | **🥗 Synchronized Meal Plans** | High-protein recipes respecting cultural palettes (Indian, Global, Mediterranean, Asian, Vegan) with realistic batch prep. |
 | **🛒 1-Person Grocery List** | Itemized shopping checklist with realistic estimated costs in your local currency. |
 | **📄 Formatted PDF Export** | Client-side and server-side, print-ready A4 PDF download of your complete 7-day schedule and grocery checklist. |
 | **🔘 Collapsible Studio Sidebar** | Toggle between clean full-screen schedule reading (`✕ Close`) and live parameter tuning (`⚡ Show Controls ▸`). |
-| **🌌 3D Interactive Atmosphere** | 3D particle constellation starfield with touch/mouse parallax & auto-orbit drift, perspective Cybergrid horizon, and volumetric atmosphere blobs. |
-| **📱 Mobile-First Responsive** | 2-tier sticky mobile header with horizontal auto-centering pill scroll and touch tap-to-flip cards. |
+| **📱 Mobile-First Responsive** | 2-tier sticky mobile header with horizontal auto-centering pill scroll, touch swipe day cards, and hardware-accelerated 60fps animations. |
+| **🛡️ Hardened Security** | Strict Content Security Policy (CSP), Permissions-Policy, 100KB DoS payload limits, and OOP sanitization. |
 
 ---
 
