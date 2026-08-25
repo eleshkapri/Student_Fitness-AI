@@ -863,7 +863,7 @@ HTML_TEMPLATE = r"""
     <!-- TOP NAVIGATION BAR -->
     <nav class="navbar">
         <div class="navbar-inner">
-            <div class="navbar-top-row">
+            <div class="navbar-top-row" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <a class="brand-logo" onclick="switchPage('home')">
                     <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -872,6 +872,22 @@ HTML_TEMPLATE = r"""
                     </span>
                     StudentFit <span>AI</span>
                 </a>
+
+                <!-- NAVBAR REGION & CURRENCY SELECTOR -->
+                <div class="nav-region-badge" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(36, 33, 85, 0.75); border: 1px solid var(--line); border-radius: 20px; padding: 4px 10px; backdrop-filter: blur(8px);">
+                    <span style="font-size: 0.95rem; line-height: 1;">🌐</span>
+                    <select id="nav-region-select" onchange="changeGlobalRegion(this.value)" style="background: transparent; color: #fff; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; outline: none; padding: 0; font-family: 'Space Grotesk', sans-serif;">
+                        <option value="US">🇺🇸 USD ($)</option>
+                        <option value="IN">🇮🇳 INR (₹)</option>
+                        <option value="GB">🇬🇧 GBP (£)</option>
+                        <option value="EU">🇪🇺 EUR (€)</option>
+                        <option value="CA">🇨🇦 CAD ($)</option>
+                        <option value="AU">🇦🇺 AUD ($)</option>
+                        <option value="JP">🇯🇵 JPY (¥)</option>
+                        <option value="SG">🇸🇬 SGD ($)</option>
+                        <option value="AE">🇦🇪 AED (د.إ)</option>
+                    </select>
+                </div>
             </div>
             <ul class="nav-links">
                 <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
@@ -907,7 +923,25 @@ HTML_TEMPLATE = r"""
         <section style="padding: 60px 40px 40px 40px; max-width: 1200px; margin: 0 auto;">
             <div class="hero-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
                 <div>
-                    <div class="eyebrow-caveat">built between lectures & leftovers ~</div>
+                    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div class="eyebrow-caveat" style="margin-bottom: 0;">built between lectures & leftovers ~</div>
+                        <!-- HERO REGION PICKER BADGE -->
+                        <div class="hero-region-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(36, 33, 85, 0.85); border: 1px solid rgba(228, 255, 91, 0.35); border-radius: 20px; padding: 4px 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);">
+                            <span style="font-size: 1rem; line-height: 1;">📍</span>
+                            <span style="font-size: 0.82rem; color: var(--text-soft); font-weight: 500;">Region & Currency:</span>
+                            <select id="global-region-select" onchange="changeGlobalRegion(this.value)" style="background: transparent; color: var(--highlighter); border: none; font-size: 0.85rem; font-weight: 700; cursor: pointer; outline: none; padding: 0; font-family: 'Space Grotesk', sans-serif;">
+                                <option value="US">🇺🇸 United States (USD $)</option>
+                                <option value="IN">🇮🇳 India (INR ₹)</option>
+                                <option value="GB">🇬🇧 United Kingdom (GBP £)</option>
+                                <option value="EU">🇪🇺 Europe (EUR €)</option>
+                                <option value="CA">🇨🇦 Canada (CAD $)</option>
+                                <option value="AU">🇦🇺 Australia (AUD $)</option>
+                                <option value="JP">🇯🇵 Japan (JPY ¥)</option>
+                                <option value="SG">🇸🇬 Singapore (SGD $)</option>
+                                <option value="AE">🇦🇪 UAE / Middle East (AED د.إ)</option>
+                            </select>
+                        </div>
+                    </div>
                     <h1 style="font-size: 3.2rem; line-height: 1.15; margin-bottom: 18px;">Fitness that syncs to your <span style="color: var(--highlighter);">syllabus.</span></h1>
                     <p style="font-size: 1.1rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 28px;">
                         Most fitness apps assume a full kitchen, a car, and endless free time. <strong>StudentFit AI</strong> plans around what students actually have: dorm-room gear, a real grocery budget, cooking skill, and an exam schedule that can't be ignored.
@@ -1179,7 +1213,7 @@ HTML_TEMPLATE = r"""
                 <div class="panel-card" style="border: 2px solid var(--highlighter); background: var(--ink3);">
                     <span class="mono-label" style="color: var(--highlighter);">TIER 2 • MOST POPULAR</span>
                     <h3 style="font-size: 1.5rem; margin: 8px 0; color: var(--highlighter);">Moderate Tier</h3>
-                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$3 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span></div>
+                    <div id="tier-mod-price" style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$3 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span></div>
                     <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Advanced exam block optimization with multiple cuisine swaps.</p>
                     <ul style="list-style: none; padding-left: 0; color: #fff; font-size: 0.9rem; line-height: 1.8;">
                         <li>✅ Everything in Cheap Tier</li>
@@ -1191,7 +1225,7 @@ HTML_TEMPLATE = r"""
                 <div class="panel-card">
                     <span class="mono-label" style="color: var(--coral);">TIER 3</span>
                     <h3 style="font-size: 1.5rem; margin: 8px 0;">Premium Tier</h3>
-                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$8 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span></div>
+                    <div id="tier-prem-price" style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$8 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span></div>
                     <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Designed for dorm flatmates pooling shared groceries and recipes.</p>
                     <ul style="list-style: none; padding-left: 0; color: var(--text-soft); font-size: 0.9rem; line-height: 1.8;">
                         <li>✅ Everything in Moderate Tier</li>
@@ -1506,6 +1540,8 @@ HTML_TEMPLATE = r"""
                                 <option value="GBP (£)">GBP (£) - Pound</option>
                                 <option value="CAD ($)">CAD ($) - Dollar</option>
                                 <option value="AUD ($)">AUD ($) - Dollar</option>
+                                <option value="JPY (¥)">JPY (¥) - Yen</option>
+                                <option value="SGD ($)">SGD ($) - Dollar</option>
                                 <option value="AED (د.إ)">AED (د.إ) - Dirham</option>
                             </select>
                         </div>
@@ -1642,6 +1678,8 @@ HTML_TEMPLATE = r"""
                             <option value="GBP (£)">GBP (£)</option>
                             <option value="CAD ($)">CAD ($)</option>
                             <option value="AUD ($)">AUD ($)</option>
+                            <option value="JPY (¥)">JPY (¥)</option>
+                            <option value="SGD ($)">SGD ($)</option>
                             <option value="AED (د.إ)">AED (د.إ)</option>
                         </select>
                     </div>
@@ -1728,6 +1766,152 @@ HTML_TEMPLATE = r"""
                     if (openBtn) openBtn.style.display = 'inline-flex';
                 }
             }
+        }
+
+        // --- REGION & CURRENCY SYNCHRONIZATION ENGINE ---
+        const REGION_DATA = {
+            'US': {
+                currency: 'USD ($)',
+                symbol: '$',
+                modPrice: '$3',
+                premPrice: '$8',
+                modPeriod: '/ semester (concept)',
+                premPeriod: '/ room (concept)',
+                cuisine: 'American'
+            },
+            'IN': {
+                currency: 'INR (₹)',
+                symbol: '₹',
+                modPrice: '₹249',
+                premPrice: '₹649',
+                modPeriod: '/ semester (concept)',
+                premPeriod: '/ room (concept)',
+                cuisine: 'Indian'
+            },
+            'GB': {
+                currency: 'GBP (£)',
+                symbol: '£',
+                modPrice: '£2.50',
+                premPrice: '£6.50',
+                modPeriod: '/ semester (concept)',
+                premPeriod: '/ room (concept)',
+                cuisine: 'European / Continental'
+            },
+            'EU': {
+                currency: 'EUR (€)',
+                symbol: '€',
+                modPrice: '€2.99',
+                premPrice: '€7.99',
+                modPeriod: '/ semester (concept)',
+                premPeriod: '/ room (concept)',
+                cuisine: 'Mediterranean'
+            },
+            'CA': {
+                currency: 'CAD ($)',
+                symbol: 'CA$',
+                modPrice: 'CA$3.99',
+                premPrice: 'CA$10.99',
+                modPeriod: '/ semester (concept)',
+                premPeriod: '/ room (concept)',
+                cuisine: 'American'
+            },
+            'AU': {
+                currency: 'AUD ($)',
+                symbol: 'AU$',
+                modPrice: 'AU$4.50',
+                premPrice: 'AU$11.99',
+                modPeriod: '/ semester (concept)',
+                premPeriod: '/ room (concept)',
+                cuisine: 'American'
+            },
+            'JP': {
+                currency: 'JPY (¥)',
+                symbol: '¥',
+                modPrice: '¥450',
+                premPrice: '¥1,200',
+                modPeriod: '/ semester (concept)',
+                premPeriod: '/ room (concept)',
+                cuisine: 'Asian'
+            },
+            'SG': {
+                currency: 'SGD ($)',
+                symbol: 'SG$',
+                modPrice: 'SG$4.00',
+                premPrice: 'SG$10.50',
+                modPeriod: '/ semester (concept)',
+                premPeriod: '/ room (concept)',
+                cuisine: 'Asian'
+            },
+            'AE': {
+                currency: 'AED (د.إ)',
+                symbol: 'AED ',
+                modPrice: 'AED 11',
+                premPrice: 'AED 29',
+                modPeriod: '/ semester (concept)',
+                premPeriod: '/ room (concept)',
+                cuisine: 'Middle Eastern'
+            }
+        };
+
+        function changeGlobalRegion(regionCode) {
+            if (!REGION_DATA[regionCode]) return;
+            const r = REGION_DATA[regionCode];
+
+            // Synchronize dropdown controls
+            const navSelect = document.getElementById('nav-region-select');
+            const heroSelect = document.getElementById('global-region-select');
+            if (navSelect) navSelect.value = regionCode;
+            if (heroSelect) heroSelect.value = regionCode;
+
+            // Update Currency in Generator Wizard & Sidebar
+            const entryCur = document.getElementById('entry_currency');
+            const sideCur = document.getElementById('currency');
+            if (entryCur) entryCur.value = r.currency;
+            if (sideCur) sideCur.value = r.currency;
+
+            // Update Pricing Tiers on Plans page
+            const modEl = document.getElementById('tier-mod-price');
+            const premEl = document.getElementById('tier-prem-price');
+            if (modEl) modEl.innerHTML = `${r.modPrice} <span style="font-size: 0.9rem; color: var(--text-soft);">${r.modPeriod}</span>`;
+            if (premEl) premEl.innerHTML = `${r.premPrice} <span style="font-size: 0.9rem; color: var(--text-soft);">${r.premPeriod}</span>`;
+
+            // Auto-recommend cuisine if not chosen
+            const entryCuisine = document.getElementById('entry_cuisine');
+            const sideCuisine = document.getElementById('cuisine');
+            if (entryCuisine && !entryCuisine.value && r.cuisine) {
+                entryCuisine.value = r.cuisine;
+                if (sideCuisine) sideCuisine.value = r.cuisine;
+            }
+
+            // Save in localStorage
+            try {
+                localStorage.setItem('studentfit_region', regionCode);
+            } catch(e){}
+        }
+
+        function initGlobalRegion() {
+            let saved = null;
+            try {
+                saved = localStorage.getItem('studentfit_region');
+            } catch(e){}
+
+            if (!saved) {
+                try {
+                    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+                    if (tz.includes('Calcutta') || tz.includes('Kolkata') || tz.includes('India')) saved = 'IN';
+                    else if (tz.includes('London') || tz.includes('Belfast') || tz.includes('Europe/London')) saved = 'GB';
+                    else if (tz.includes('Europe') || tz.includes('Paris') || tz.includes('Berlin') || tz.includes('Rome') || tz.includes('Madrid')) saved = 'EU';
+                    else if (tz.includes('Toronto') || tz.includes('Vancouver') || tz.includes('Canada') || tz.includes('Montreal')) saved = 'CA';
+                    else if (tz.includes('Sydney') || tz.includes('Melbourne') || tz.includes('Brisbane') || tz.includes('Australia')) saved = 'AU';
+                    else if (tz.includes('Tokyo') || tz.includes('Japan')) saved = 'JP';
+                    else if (tz.includes('Singapore')) saved = 'SG';
+                    else if (tz.includes('Dubai') || tz.includes('Asia/Dubai')) saved = 'AE';
+                    else saved = 'US';
+                } catch(e) {
+                    saved = 'US';
+                }
+            }
+            changeGlobalRegion(saved);
         }
 
         function handleGoalChange(source, val) {
@@ -2430,8 +2614,10 @@ HTML_TEMPLATE = r"""
             render3D();
         })();
 
-        // Auto-clear validation errors when user types or selects
+        // Auto-clear validation errors and initialize region & currency
         document.addEventListener('DOMContentLoaded', () => {
+            initGlobalRegion();
+
             document.querySelectorAll('input, select').forEach(el => {
                 el.addEventListener('input', () => {
                     el.classList.remove('input-error');
