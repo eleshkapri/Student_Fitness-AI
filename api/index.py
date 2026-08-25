@@ -179,11 +179,11 @@ HTML_TEMPLATE = r"""
 
         /* TOP NAVIGATION BAR */
         .navbar {
-            background: rgba(20, 19, 43, 0.94);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            background: rgba(20, 19, 43, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--line);
-            padding: 10px clamp(16px, 3vw, 36px);
+            padding: 12px 24px;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -191,18 +191,17 @@ HTML_TEMPLATE = r"""
         }
 
         .navbar-inner {
-            max-width: 1320px;
+            max-width: 1180px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            gap: 16px;
         }
 
         .brand-logo {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.35rem;
+            font-size: 1.45rem;
             font-weight: 800;
             display: flex;
             align-items: center;
@@ -210,103 +209,37 @@ HTML_TEMPLATE = r"""
             text-decoration: none;
             color: #fff;
             cursor: pointer;
-            white-space: nowrap;
-            flex-shrink: 0;
         }
 
         .brand-logo span { color: var(--highlighter); }
 
         .nav-links {
             display: flex;
-            gap: 6px;
+            gap: 12px;
             align-items: center;
             list-style: none;
-            margin: 0;
-            padding: 0;
-            flex-wrap: nowrap;
         }
 
         .nav-link {
             color: var(--text-soft);
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.92rem;
             transition: all 0.2s ease;
             cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 10px;
-            white-space: nowrap;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
+            padding: 8px 14px;
+            border-radius: 12px;
         }
 
         .nav-link:hover {
             color: #ffffff;
-            background: rgba(246, 241, 227, 0.09);
+            background: rgba(246, 241, 227, 0.08);
         }
 
         .nav-link.active {
             color: var(--highlighter);
             background: rgba(228, 255, 91, 0.12);
-            border: 1px solid rgba(228, 255, 91, 0.35);
-        }
-
-        #nav-generator {
-            background: rgba(255, 107, 84, 0.14);
-            color: var(--coral);
-            border: 1px solid rgba(255, 107, 84, 0.3);
-        }
-
-        #nav-generator:hover {
-            background: var(--coral);
-            color: #ffffff;
-            border-color: var(--coral);
-            box-shadow: 0 4px 14px rgba(255, 107, 84, 0.4);
-        }
-
-        #nav-generator.active {
-            background: var(--coral) !important;
-            color: #ffffff !important;
-            border-color: var(--coral) !important;
-            box-shadow: 0 4px 18px rgba(255, 107, 84, 0.5);
-        }
-
-        .nav-region-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(36, 33, 85, 0.8);
-            border: 1px solid var(--line);
-            border-radius: 18px;
-            padding: 5px 11px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: all 0.25s ease;
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
-
-        .nav-region-badge:hover {
-            border-color: var(--highlighter);
-            box-shadow: 0 0 14px rgba(228, 255, 91, 0.3);
-        }
-
-        #nav-region-select {
-            background: transparent;
-            color: #ffffff;
-            border: none;
-            font-size: 0.82rem;
-            font-weight: 700;
-            cursor: pointer;
-            outline: none;
-            padding: 0;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        #nav-region-select option {
-            background: #1C1A42;
-            color: #ffffff;
+            border: 1px solid var(--highlighter);
         }
 
         .nav-cta {
@@ -508,39 +441,47 @@ HTML_TEMPLATE = r"""
         }
 
         .btn-primary-lg {
-            background: var(--coral);
+            background: linear-gradient(135deg, #FF6B54 0%, #FF8573 100%);
             color: white;
-            padding: 16px 34px;
+            padding: 15px 30px;
             border-radius: 14px;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.05rem;
+            font-size: 1.02rem;
             font-weight: 700;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 25px rgba(255, 107, 84, 0.4);
+            box-shadow: 0 8px 24px rgba(255, 107, 84, 0.45);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .btn-primary-lg:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(255, 107, 84, 0.7);
+            box-shadow: 0 12px 32px rgba(255, 107, 84, 0.7);
         }
 
         .btn-secondary-lg {
-            background: rgba(246, 241, 227, 0.08);
+            background: linear-gradient(135deg, #FF6B54 0%, #FF8573 100%);
             color: white;
-            padding: 16px 30px;
+            padding: 15px 30px;
             border-radius: 14px;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.05rem;
+            font-size: 1.02rem;
             font-weight: 700;
-            border: 1px solid var(--line);
+            border: none;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(255, 107, 84, 0.45);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .btn-secondary-lg:hover {
-            background: rgba(246, 241, 227, 0.15);
-            border-color: var(--highlighter);
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(255, 107, 84, 0.7);
         }
 
         /* FANNED 7-CARD HERO DECK */
@@ -745,17 +686,14 @@ HTML_TEMPLATE = r"""
             display: contents;
         }
 
-        @media (max-width: 1140px) {
-            .navbar { padding: 10px 18px; }
-            .nav-links { gap: 4px; }
-            .nav-link { padding: 5px 9px; font-size: 0.81rem; }
-            .brand-logo { font-size: 1.25rem; }
-            .nav-region-badge { padding: 4px 9px; }
-            #nav-region-select { font-size: 0.78rem; }
+        @media (max-width: 1080px) {
+            .navbar { padding: 12px 18px; }
+            .nav-links { gap: 8px; }
+            .nav-link { padding: 6px 10px; font-size: 0.85rem; }
             .studio-main { padding: 24px 18px; }
         }
 
-        @media (max-width: 920px) {
+        @media (max-width: 860px) {
             .navbar {
                 padding: 10px 14px 8px 14px;
                 background: rgba(20, 19, 43, 0.96) !important;
@@ -768,31 +706,23 @@ HTML_TEMPLATE = r"""
             }
             .navbar-inner {
                 display: flex;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                align-items: center;
+                flex-direction: column;
                 gap: 8px;
                 width: 100%;
             }
             .navbar-top-row {
-                order: 1;
                 display: flex;
+                width: 100%;
+                justify-content: flex-start;
                 align-items: center;
             }
-            .nav-region-badge {
-                order: 2;
-                padding: 4px 8px;
-            }
-            #nav-region-select {
-                font-size: 0.78rem;
-            }
-            .brand-logo { font-size: 1.18rem; }
+            .brand-logo { font-size: 1.2rem; }
+            .nav-cta { padding: 7px 14px; font-size: 0.8rem; border-radius: 10px; }
             .nav-links {
-                order: 3;
                 width: 100%;
                 overflow-x: auto;
                 white-space: nowrap;
-                padding: 4px 2px 6px 2px;
+                padding: 2px 2px 6px 2px;
                 justify-content: flex-start;
                 gap: 8px;
                 -webkit-overflow-scrolling: touch;
@@ -805,10 +735,10 @@ HTML_TEMPLATE = r"""
                 height: 0 !important;
             }
             .nav-link {
-                font-size: 0.8rem;
+                font-size: 0.82rem;
                 padding: 6px 12px;
                 flex-shrink: 0;
-                border-radius: 18px;
+                border-radius: 20px;
                 background: rgba(246, 241, 227, 0.06);
                 border: 1px solid rgba(246, 241, 227, 0.08);
             }
@@ -817,25 +747,30 @@ HTML_TEMPLATE = r"""
                 border-color: var(--highlighter);
                 color: var(--highlighter);
             }
-        }
 
-            /* HERO SECTION */
+            /* HERO SECTION (Preserve 2-Column Left-Aligned Layout as in Photo 1) */
             .hero-grid {
-                grid-template-columns: 1fr !important;
-                gap: 24px !important;
-                text-align: center;
+                grid-template-columns: 1.1fr 1fr !important;
+                gap: 30px !important;
+                text-align: left !important;
+                align-items: center !important;
             }
-            .hero-grid .eyebrow-caveat { margin: 0 auto; }
+            .hero-grid .eyebrow-caveat { margin: 0 !important; }
             .hero-btns {
-                justify-content: center !important;
-                flex-direction: column !important;
+                justify-content: flex-start !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 14px !important;
             }
-            .hero-btns button { width: 100% !important; }
+            .hero-btns button {
+                width: auto !important;
+                flex: none !important;
+            }
 
             .hero-deck {
-                transform: scale(0.72);
+                transform: scale(0.75);
                 transform-origin: center center;
-                height: 190px;
+                height: 210px;
                 margin: 0 auto;
                 max-width: 100%;
             }
@@ -952,7 +887,6 @@ HTML_TEMPLATE = r"""
                     StudentFit <span>AI</span>
                 </a>
             </div>
-
             <ul class="nav-links">
                 <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
                 <li><a class="nav-link" id="nav-how" onclick="switchPage('how')">📖 How it Works</a></li>
@@ -962,22 +896,6 @@ HTML_TEMPLATE = r"""
                 <li><a class="nav-link" id="nav-story" onclick="switchPage('story')">💡 Story</a></li>
                 <li><a class="nav-link" id="nav-generator" onclick="switchPage('generator')">⚡ Generator</a></li>
             </ul>
-
-            <!-- NAVBAR REGION & CURRENCY SELECTOR -->
-            <div class="nav-region-badge">
-                <span class="nav-region-icon">🌐</span>
-                <select id="nav-region-select" onchange="changeGlobalRegion(this.value)" aria-label="Select Region and Currency">
-                    <option value="US">🇺🇸 USD ($)</option>
-                    <option value="IN">🇮🇳 INR (₹)</option>
-                    <option value="GB">🇬🇧 GBP (£)</option>
-                    <option value="EU">🇪🇺 EUR (€)</option>
-                    <option value="CA">🇨🇦 CAD ($)</option>
-                    <option value="AU">🇦🇺 AUD ($)</option>
-                    <option value="JP">🇯🇵 JPY (¥)</option>
-                    <option value="SG">🇸🇬 SGD ($)</option>
-                    <option value="AE">🇦🇪 AED (د.إ)</option>
-                </select>
-            </div>
         </div>
     </nav>
 
@@ -1008,9 +926,9 @@ HTML_TEMPLATE = r"""
                     <p style="font-size: 1.1rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 28px;">
                         Most fitness apps assume a full kitchen, a car, and endless free time. <strong>StudentFit AI</strong> plans around what students actually have: dorm-room gear, a real grocery budget, cooking skill, and an exam schedule that can't be ignored.
                     </p>
-                    <div class="hero-btns" style="display: flex; gap: 14px;">
+                    <div class="hero-btns" style="display: flex; gap: 16px; align-items: center;">
                         <button class="btn-primary-lg" onclick="switchPage('generator')">⚡ Generate My Week</button>
-                        <button class="btn-secondary-lg" onclick="switchPage('how')">📖 See how it works</button>
+                        <button class="btn-secondary-lg" onclick="switchPage('how')">📖 How it Works</button>
                     </div>
                 </div>
 
@@ -1275,7 +1193,7 @@ HTML_TEMPLATE = r"""
                 <div class="panel-card" style="border: 2px solid var(--highlighter); background: var(--ink3);">
                     <span class="mono-label" style="color: var(--highlighter);">TIER 2 • MOST POPULAR</span>
                     <h3 style="font-size: 1.5rem; margin: 8px 0; color: var(--highlighter);">Moderate Tier</h3>
-                    <div id="tier-mod-price" style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$3 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span></div>
+                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$3 <span style="font-size: 0.9rem; color: var(--text-soft);">/ semester (concept)</span></div>
                     <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Advanced exam block optimization with multiple cuisine swaps.</p>
                     <ul style="list-style: none; padding-left: 0; color: #fff; font-size: 0.9rem; line-height: 1.8;">
                         <li>✅ Everything in Cheap Tier</li>
@@ -1287,7 +1205,7 @@ HTML_TEMPLATE = r"""
                 <div class="panel-card">
                     <span class="mono-label" style="color: var(--coral);">TIER 3</span>
                     <h3 style="font-size: 1.5rem; margin: 8px 0;">Premium Tier</h3>
-                    <div id="tier-prem-price" style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$8 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span></div>
+                    <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 14px;">$8 <span style="font-size: 0.9rem; color: var(--text-soft);">/ room (concept)</span></div>
                     <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">Designed for dorm flatmates pooling shared groceries and recipes.</p>
                     <ul style="list-style: none; padding-left: 0; color: var(--text-soft); font-size: 0.9rem; line-height: 1.8;">
                         <li>✅ Everything in Moderate Tier</li>
@@ -1602,8 +1520,6 @@ HTML_TEMPLATE = r"""
                                 <option value="GBP (£)">GBP (£) - Pound</option>
                                 <option value="CAD ($)">CAD ($) - Dollar</option>
                                 <option value="AUD ($)">AUD ($) - Dollar</option>
-                                <option value="JPY (¥)">JPY (¥) - Yen</option>
-                                <option value="SGD ($)">SGD ($) - Dollar</option>
                                 <option value="AED (د.إ)">AED (د.إ) - Dirham</option>
                             </select>
                         </div>
@@ -1740,8 +1656,6 @@ HTML_TEMPLATE = r"""
                             <option value="GBP (£)">GBP (£)</option>
                             <option value="CAD ($)">CAD ($)</option>
                             <option value="AUD ($)">AUD ($)</option>
-                            <option value="JPY (¥)">JPY (¥)</option>
-                            <option value="SGD ($)">SGD ($)</option>
                             <option value="AED (د.إ)">AED (د.إ)</option>
                         </select>
                     </div>
@@ -1828,150 +1742,6 @@ HTML_TEMPLATE = r"""
                     if (openBtn) openBtn.style.display = 'inline-flex';
                 }
             }
-        }
-
-        // --- REGION & CURRENCY SYNCHRONIZATION ENGINE ---
-        const REGION_DATA = {
-            'US': {
-                currency: 'USD ($)',
-                symbol: '$',
-                modPrice: '$3',
-                premPrice: '$8',
-                modPeriod: '/ semester (concept)',
-                premPeriod: '/ room (concept)',
-                cuisine: 'American'
-            },
-            'IN': {
-                currency: 'INR (₹)',
-                symbol: '₹',
-                modPrice: '₹249',
-                premPrice: '₹649',
-                modPeriod: '/ semester (concept)',
-                premPeriod: '/ room (concept)',
-                cuisine: 'Indian'
-            },
-            'GB': {
-                currency: 'GBP (£)',
-                symbol: '£',
-                modPrice: '£2.50',
-                premPrice: '£6.50',
-                modPeriod: '/ semester (concept)',
-                premPeriod: '/ room (concept)',
-                cuisine: 'European / Continental'
-            },
-            'EU': {
-                currency: 'EUR (€)',
-                symbol: '€',
-                modPrice: '€2.99',
-                premPrice: '€7.99',
-                modPeriod: '/ semester (concept)',
-                premPeriod: '/ room (concept)',
-                cuisine: 'Mediterranean'
-            },
-            'CA': {
-                currency: 'CAD ($)',
-                symbol: 'CA$',
-                modPrice: 'CA$3.99',
-                premPrice: 'CA$10.99',
-                modPeriod: '/ semester (concept)',
-                premPeriod: '/ room (concept)',
-                cuisine: 'American'
-            },
-            'AU': {
-                currency: 'AUD ($)',
-                symbol: 'AU$',
-                modPrice: 'AU$4.50',
-                premPrice: 'AU$11.99',
-                modPeriod: '/ semester (concept)',
-                premPeriod: '/ room (concept)',
-                cuisine: 'American'
-            },
-            'JP': {
-                currency: 'JPY (¥)',
-                symbol: '¥',
-                modPrice: '¥450',
-                premPrice: '¥1,200',
-                modPeriod: '/ semester (concept)',
-                premPeriod: '/ room (concept)',
-                cuisine: 'Asian'
-            },
-            'SG': {
-                currency: 'SGD ($)',
-                symbol: 'SG$',
-                modPrice: 'SG$4.00',
-                premPrice: 'SG$10.50',
-                modPeriod: '/ semester (concept)',
-                premPeriod: '/ room (concept)',
-                cuisine: 'Asian'
-            },
-            'AE': {
-                currency: 'AED (د.إ)',
-                symbol: 'AED ',
-                modPrice: 'AED 11',
-                premPrice: 'AED 29',
-                modPeriod: '/ semester (concept)',
-                premPeriod: '/ room (concept)',
-                cuisine: 'Middle Eastern'
-            }
-        };
-
-        function changeGlobalRegion(regionCode) {
-            if (!REGION_DATA[regionCode]) return;
-            const r = REGION_DATA[regionCode];
-
-            // Synchronize navbar dropdown
-            const navSelect = document.getElementById('nav-region-select');
-            if (navSelect) navSelect.value = regionCode;
-
-            // Update Currency in Generator Wizard & Sidebar
-            const entryCur = document.getElementById('entry_currency');
-            const sideCur = document.getElementById('currency');
-            if (entryCur) entryCur.value = r.currency;
-            if (sideCur) sideCur.value = r.currency;
-
-            // Update Pricing Tiers on Plans page
-            const modEl = document.getElementById('tier-mod-price');
-            const premEl = document.getElementById('tier-prem-price');
-            if (modEl) modEl.innerHTML = `${r.modPrice} <span style="font-size: 0.9rem; color: var(--text-soft);">${r.modPeriod}</span>`;
-            if (premEl) premEl.innerHTML = `${r.premPrice} <span style="font-size: 0.9rem; color: var(--text-soft);">${r.premPeriod}</span>`;
-
-            // Auto-recommend cuisine if not chosen
-            const entryCuisine = document.getElementById('entry_cuisine');
-            const sideCuisine = document.getElementById('cuisine');
-            if (entryCuisine && !entryCuisine.value && r.cuisine) {
-                entryCuisine.value = r.cuisine;
-                if (sideCuisine) sideCuisine.value = r.cuisine;
-            }
-
-            // Save in localStorage
-            try {
-                localStorage.setItem('studentfit_region', regionCode);
-            } catch(e){}
-        }
-
-        function initGlobalRegion() {
-            let saved = null;
-            try {
-                saved = localStorage.getItem('studentfit_region');
-            } catch(e){}
-
-            if (!saved) {
-                try {
-                    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-                    if (tz.includes('Calcutta') || tz.includes('Kolkata') || tz.includes('India')) saved = 'IN';
-                    else if (tz.includes('London') || tz.includes('Belfast') || tz.includes('Europe/London')) saved = 'GB';
-                    else if (tz.includes('Europe') || tz.includes('Paris') || tz.includes('Berlin') || tz.includes('Rome') || tz.includes('Madrid')) saved = 'EU';
-                    else if (tz.includes('Toronto') || tz.includes('Vancouver') || tz.includes('Canada') || tz.includes('Montreal')) saved = 'CA';
-                    else if (tz.includes('Sydney') || tz.includes('Melbourne') || tz.includes('Brisbane') || tz.includes('Australia')) saved = 'AU';
-                    else if (tz.includes('Tokyo') || tz.includes('Japan')) saved = 'JP';
-                    else if (tz.includes('Singapore')) saved = 'SG';
-                    else if (tz.includes('Dubai') || tz.includes('Asia/Dubai')) saved = 'AE';
-                    else saved = 'US';
-                } catch(e) {
-                    saved = 'US';
-                }
-            }
-            changeGlobalRegion(saved);
         }
 
         function handleGoalChange(source, val) {
@@ -2674,10 +2444,8 @@ HTML_TEMPLATE = r"""
             render3D();
         })();
 
-        // Auto-clear validation errors and initialize region & currency
+        // Auto-clear validation errors when user types or selects
         document.addEventListener('DOMContentLoaded', () => {
-            initGlobalRegion();
-
             document.querySelectorAll('input, select').forEach(el => {
                 el.addEventListener('input', () => {
                     el.classList.remove('input-error');
