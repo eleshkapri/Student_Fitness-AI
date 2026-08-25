@@ -26,6 +26,7 @@ HTML_TEMPLATE = """
     <title>StudentFit AI ⚡ | The #1 Student Fitness & Nutrition Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #09071c 0%, #17133d 50%, #15112e 100%);
@@ -1078,7 +1079,7 @@ HTML_TEMPLATE = """
                             <button class="tab-btn" onclick="filterView('workout', this)">🏋️ Workouts</button>
                             <button class="tab-btn" onclick="filterView('meal', this)">🥗 Meals</button>
                         </div>
-                        <button id="downloadBtn" class="action-btn" style="display: none;" onclick="downloadMarkdown()">📥 Save Plan (.md)</button>
+                        <button id="downloadBtn" class="action-btn" style="display: none;" onclick="downloadPDF()">📥 Save Plan (PDF)</button>
                     </div>
                 </div>
 
@@ -1335,16 +1336,81 @@ HTML_TEMPLATE = """
             }
         }
 
-        function downloadMarkdown() {
+        function downloadPDF() {
             if (!currentRawPlan) return;
-            const blob = new Blob([currentRawPlan], { type: 'text/markdown' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'StudentFit_Weekly_Schedule.md';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            
+            const element = document.createElement('div');
+            element.style.padding = '25px 30px';
+            element.style.background = '#ffffff';
+            element.style.color = '#1e293b';
+            element.style.fontFamily = 'Arial, sans-serif';
+            
+            const daysContainer = document.getElementById('daysContainer').cloneNode(true);
+            const groceryCard = document.getElementById('groceryCard').cloneNode(true);
+            
+            element.innerHTML = `
+                <div style="text-align: center; margin-bottom: 25px; border-bottom: 3px solid #ff416c; padding-bottom: 12px;">
+                    <h1 style="color: #ff416c; margin: 0; font-size: 24px; font-weight: bold;">⚡ StudentFit AI — Weekly Fitness & Nutrition Plan</h1>
+                    <p style="color: #64748b; font-size: 13px; margin-top: 4px;">Personalized for University Students | Workout Routines & Budget Grocery Plan</p>
+                </div>
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; font-size: 17px; margin-bottom: 15px;">🗓️ 7-Day Workout & Synchronized Meal Schedule</h2>
+                    ${daysContainer.innerHTML}
+                </div>
+                <div style="page-break-before: always; margin-top: 25px;">
+                    <h2 style="color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; font-size: 17px; margin-bottom: 15px;">🛒 Weekly Student Grocery List & Budget</h2>
+                    ${groceryCard.innerHTML}
+                </div>
+            `;
+
+            // Adjust styles for clean printing on white background
+            element.querySelectorAll('.day-card').forEach(c => {
+                c.style.background = '#f8fafc';
+                c.style.border = '1px solid #cbd5e1';
+                c.style.color = '#1e293b';
+                c.style.marginBottom = '16px';
+                c.style.padding = '14px';
+                c.style.borderRadius = '8px';
+            });
+            element.querySelectorAll('.day-title').forEach(t => {
+                t.style.color = '#ff416c';
+                t.style.fontSize = '15px';
+                t.style.fontWeight = 'bold';
+            });
+            element.querySelectorAll('.box-header, .col-header').forEach(h => {
+                h.style.color = '#0284c7';
+                h.style.fontWeight = 'bold';
+                h.style.fontSize = '13px';
+            });
+            element.querySelectorAll('.workout-box, .meal-box, .col-box').forEach(b => {
+                b.style.background = '#ffffff';
+                b.style.border = '1px solid #e2e8f0';
+                b.style.padding = '10px 12px';
+                b.style.borderRadius = '6px';
+                b.style.marginBottom = '8px';
+            });
+            element.querySelectorAll('li, p, div').forEach(p => {
+                p.style.color = '#334155';
+            });
+            element.querySelectorAll('strong').forEach(s => {
+                s.style.color = '#0f172a';
+            });
+            element.querySelectorAll('h4').forEach(h => {
+                h.style.color = '#b45309';
+                h.style.borderBottom = '1px solid #e2e8f0';
+                h.style.paddingBottom = '4px';
+                h.style.marginTop = '14px';
+            });
+
+            const opt = {
+                margin: [10, 10, 10, 10],
+                filename: 'StudentFit_Weekly_Schedule.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
         }
 
         async function calculateStudentMacros() {

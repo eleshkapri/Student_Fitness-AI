@@ -5,6 +5,7 @@ from streamlit_lottie import st_lottie
 from core import (
     get_api_key,
     calculate_macros,
+    create_fitness_pdf,
     parse_ai_response,
     generate_plan_mock,
     generate_plan_real,
@@ -327,13 +328,23 @@ with tab_studio:
             """, unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
-            st.download_button(
-                label="📥 Save Schedule (Markdown)",
-                data=st.session_state.raw_response or "",
-                file_name="StudentFit_Weekly_Schedule.md",
-                mime="text/markdown",
-                use_container_width=True
-            )
+            pdf_bytes = create_fitness_pdf(st.session_state.raw_response or "")
+            if pdf_bytes:
+                st.download_button(
+                    label="📥 Save Schedule (PDF)",
+                    data=pdf_bytes,
+                    file_name="StudentFit_Weekly_Schedule.pdf",
+                    mime="application/pdf",
+                    use_container_width=True
+                )
+            else:
+                st.download_button(
+                    label="📥 Save Schedule (Markdown)",
+                    data=st.session_state.raw_response or "",
+                    file_name="StudentFit_Weekly_Schedule.md",
+                    mime="text/markdown",
+                    use_container_width=True
+                )
 
         st.success(f"✅ Generated successfully using {st.session_state.plan_source}")
     else:

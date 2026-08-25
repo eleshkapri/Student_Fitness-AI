@@ -339,3 +339,68 @@ def generate_plan_real(profile, api_key, chosen_model="openai/gpt-oss-20b"):
             continue
             
     return f"Error: {last_error}", None
+
+def create_fitness_pdf(raw_text):
+    """Generates a clean PDF binary for the fitness schedule."""
+    try:
+        from fpdf import FPDF
+        
+        class PDF(FPDF):
+            def header(self):
+                self.set_font('Helvetica', 'B', 14)
+                self.set_text_color(255, 65, 108)
+                self.cell(0, 10, 'StudentFit AI - Weekly Fitness & Nutrition Plan', align='C', new_x='LMARGIN', new_y='NEXT')
+                self.ln(2)
+
+            def footer(self):
+                self.set_y(-15)
+                self.set_font('Helvetica', 'I', 8)
+                self.set_text_color(128, 128, 128)
+                self.cell(0, 10, f'StudentFit AI | Page {self.page_no()}', align='C')
+
+        pdf = PDF()
+        pdf.add_page()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        epw = pdf.epw
+        
+        replacements = {
+            "₹": "Rs. ", "€": "EUR ", "£": "GBP ", "$": "USD ",
+            "’": "'", "“": '"', "”": '"', "–": "-", "—": "-", "**": ""
+        }
+        
+        clean_text = raw_text or ""
+        for key, val in replacements.items():
+            clean_text = clean_text.replace(key, val)
+
+        lines = clean_text.split('\n')
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                pdf.ln(2)
+                continue
+            
+            safe_line = line.encode('latin-1', 'ignore').decode('latin-1')
+
+            if safe_line.startswith('Day:') or safe_line.startswith('#'):
+                pdf.ln(3)
+                pdf.set_font("Helvetica", 'B', 12)
+                pdf.set_text_color(255, 65, 108)
+                pdf.cell(epw, 7, safe_line.replace('#', '').strip(), new_x="LMARGIN", new_y="NEXT")
+            elif safe_line.startswith('Workout:') or safe_line.startswith('Meal:') or safe_line.startswith('GROCERY'):
+                pdf.set_font("Helvetica", 'B', 10)
+                pdf.set_text_color(0, 102, 204)
+                pdf.cell(epw, 6, safe_line, new_x="LMARGIN", new_y="NEXT")
+            elif safe_line.startswith('*') or safe_line.startswith('-'):
+                pdf.set_font("Helvetica", '', 9)
+                pdf.set_text_color(40, 40, 40)
+                pdf.multi_cell(epw, 5, "- " + safe_line[1:].strip(), new_x="LMARGIN", new_y="NEXT")
+            else:
+                pdf.set_font("Helvetica", '', 9)
+                pdf.set_text_color(40, 40, 40)
+                pdf.multi_cell(epw, 5, safe_line, new_x="LMARGIN", new_y="NEXT")
+                
+        return bytes(pdf.output())
+    except Exception:
+        return None
+
