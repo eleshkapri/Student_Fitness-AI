@@ -5,7 +5,7 @@ Interactive BMR, TDEE, and optimal macronutrient split calculator with student b
 
 import streamlit as st
 from theme import apply_theme
-from core import StudentProfile, MacroCalculator
+from planner import StudentProfile, MacroCalculator
 
 
 def render():

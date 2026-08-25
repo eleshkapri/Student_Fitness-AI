@@ -93,32 +93,32 @@ The backend is built upon a secure, modular **Object-Oriented Programming (OOP)*
 
 ```
 Student_Fitness-AI/
-├── app.py                   # Central Streamlit entry point with st.navigation() router
-├── theme.py                 # Shared design tokens, Google Fonts, 3D tilt JS & ambient blobs
-├── pages/
-│   ├── __init__.py          # Pages package initialization
-│   ├── home.py              # Hero with 3D fanned 7-card deck, stat ticker, testimonials
-│   ├── how_it_works.py      # Detailed breakdown of all parameters & sync state
-│   ├── features.py          # 6 3D interactive flip cards & complete literal marquee strip
-│   ├── plans.py             # Cheap ($0), Moderate ($3), and Premium ($8) concept tiers
-│   ├── story.py             # Positioning narrative for student housing & exam weeks
-│   └── generator.py         # AI Planner Studio with sidebar wizard, dark cards & PDF export
-├── planner/
-│   ├── __init__.py          # Planner package exports (Models, Services, Facades)
-│   ├── models.py            # StudentProfile, MacroResult, DailyPlan, WeeklyFitnessPlan
-│   ├── calculator.py        # MacroCalculator (Mifflin-St Jeor metabolic engine)
-│   ├── prompt_builder.py    # StudentPromptBuilder (LLM prompt engineering)
-│   ├── parser.py            # BasePlanParser & MarkdownPlanParser (Pre-compiled regexes)
-│   ├── pdf_service.py       # PDFReportGenerator (A4 PDF compilation engine)
-│   ├── generators.py        # MockPlanGenerator, GroqPlanGenerator, FitnessPlannerService
-│   └── llm_client.py        # Unified client exports & backward-compatible facades
-├── api/
-│   └── index.py             # Serverless Flask web app for Vercel deployment (with security headers)
-├── core.py                  # Lightweight compatibility facade (zero code duplication)
-├── requirements.txt         # Optimized Python dependencies
-├── vercel.json              # Vercel v2 serverless deployment configuration
-├── .gitignore               # Clean standard exclusions
-└── README.md                # Project documentation
+├── api/                      # Vercel Serverless REST & Web Engine
+│   └── index.py              # Single-page app + API routes (CSP & Security headers)
+├── pages/                    # Streamlit Multi-Page Studio Views
+│   ├── __init__.py           # Package marker
+│   ├── home.py               # Hero with 3D fanned 7-card deck & live metrics
+│   ├── how_it_works.py       # Parameter breakdowns & syllabus synchronization
+│   ├── features.py           # 3D interactive flip cards & animated marquee
+│   ├── macro_hub.py          # Student BMR, TDEE & Macro Calculator Studio
+│   ├── plans.py              # Transparent student tier concepts ($0 / $3 / $8)
+│   ├── story.py              # Campus dorm & exam-week survival philosophy
+│   └── generator.py          # 7-day synchronized AI planner studio
+├── planner/                  # Core OOP Domain Models & AI Orchestration
+│   ├── __init__.py           # Unified package exports & facades
+│   ├── models.py             # StudentProfile (Validation, Sanitization, Bounds)
+│   ├── calculator.py         # MacroCalculator (Mifflin-St Jeor metabolic math)
+│   ├── prompt_builder.py     # StudentPromptBuilder (LLM prompt engineering)
+│   ├── parser.py             # MarkdownPlanParser (Pre-compiled regex engine)
+│   ├── pdf_service.py        # PDFReportGenerator (A4 PDF compilation engine)
+│   ├── generators.py         # BasePlanGenerator, Mock, Groq & FitnessPlannerService
+│   └── llm_client.py         # LLM client & backward-compatibility facade
+├── .gitignore                # Production ignore rules
+├── app.py                    # Streamlit application router
+├── requirements.txt          # Python dependencies
+├── theme.py                  # Shared design tokens & 3D ambient layers
+├── vercel.json               # Vercel deployment configuration
+└── README.md                 # Complete documentation
 ```
 
 ---

@@ -5,7 +5,7 @@ from flask import Flask, render_template_string, request, jsonify
 # Ensure local directory is in Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core import (
+from planner import (
     StudentProfile,
     MacroCalculator,
     FitnessPlannerService,
