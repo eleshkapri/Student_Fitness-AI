@@ -7,27 +7,27 @@ import streamlit as st
 from theme import apply_theme
 
 def render():
-    apply_theme("Home & Features")
+    apply_theme("Home")
 
     # --- HERO SECTION ---
     col_hero, col_deck = st.columns([1.2, 1], gap="large")
 
     with col_hero:
-        st.markdown('<div class="tag-pill" style="margin-bottom: 16px;">🎓 Built Exclusively for College & University Students</div>', unsafe_allow_html=True)
-        st.markdown('<h1 style="font-size: 3.2rem; line-height: 1.15; margin-bottom: 14px;">Smart Fitness & Nutrition.<br><span style="background: linear-gradient(90deg, #00e5ff, #E4FF5B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Zero Compromise on Budget or Studies.</span></h1>', unsafe_allow_html=True)
+        st.markdown('<div class="eyebrow-caveat">built between lectures & leftovers ~</div>', unsafe_allow_html=True)
+        st.markdown('<h1 style="font-size: 3.2rem; line-height: 1.15; margin-bottom: 18px;">Fitness that syncs to your <span style="color: var(--highlighter);">syllabus.</span></h1>', unsafe_allow_html=True)
         st.markdown("""
         <p style="font-size: 1.1rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 28px;">
-            Unlike generic fitness apps, StudentFit AI understands the reality of campus life: tight budgets, limited dorm space, and intense study schedules. Powered by high-speed Groq AI.
+            Most fitness apps assume a full kitchen, a car, and endless free time. <strong>StudentFit AI</strong> plans around what students actually have: dorm-room gear, a real grocery budget, cooking skill, and an exam schedule that can't be ignored.
         </p>
         """, unsafe_allow_html=True)
 
         c_cta1, c_cta2 = st.columns([1.2, 1])
         with c_cta1:
-            if st.button("⚡ Generate 7-Day Plan", key="btn_hero_gen", use_container_width=True):
+            if st.button("⚡ Generate My Week", key="btn_hero_gen", use_container_width=True):
                 st.switch_page("pages/generator.py")
         with c_cta2:
-            if st.button("📊 Calculate Macros", key="btn_hero_macros", use_container_width=True):
-                st.switch_page("pages/macros.py")
+            if st.button("📖 How it Works", key="btn_hero_how", use_container_width=True):
+                st.switch_page("pages/how_it_works.py")
 
     with col_deck:
         st.markdown("""
