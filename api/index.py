@@ -565,19 +565,21 @@ HTML_TEMPLATE = r"""
         .deck-card-6 { transform: translateX(140px) rotate(12deg); z-index: 6; }
         .deck-card-7 { transform: translateX(210px) rotate(18deg); z-index: 7; }
 
-        .deck-card:hover {
-            z-index: 50 !important;
-            box-shadow: 0 22px 48px rgba(228, 255, 91, 0.5);
-            border-color: var(--coral) !important;
-        }
+        @media (hover: hover) and (pointer: fine) {
+            .deck-card:hover {
+                z-index: 50 !important;
+                box-shadow: 0 22px 48px rgba(228, 255, 91, 0.5);
+                border-color: var(--coral) !important;
+            }
 
-        .deck-card-1:hover { transform: translateX(-210px) translateY(-26px) rotate(-18deg) scale(1.08) !important; }
-        .deck-card-2:hover { transform: translateX(-140px) translateY(-26px) rotate(-12deg) scale(1.08) !important; }
-        .deck-card-3:hover { transform: translateX(-70px) translateY(-26px) rotate(-6deg) scale(1.08) !important; }
-        .deck-card-4:hover { transform: translateX(0px) translateY(-26px) rotate(0deg) scale(1.08) !important; }
-        .deck-card-5:hover { transform: translateX(70px) translateY(-26px) rotate(6deg) scale(1.08) !important; }
-        .deck-card-6:hover { transform: translateX(140px) translateY(-26px) rotate(12deg) scale(1.08) !important; }
-        .deck-card-7:hover { transform: translateX(210px) translateY(-26px) rotate(18deg) scale(1.08) !important; }
+            .deck-card-1:hover { transform: translateX(-210px) translateY(-26px) rotate(-18deg) scale(1.08) !important; }
+            .deck-card-2:hover { transform: translateX(-140px) translateY(-26px) rotate(-12deg) scale(1.08) !important; }
+            .deck-card-3:hover { transform: translateX(-70px) translateY(-26px) rotate(-6deg) scale(1.08) !important; }
+            .deck-card-4:hover { transform: translateX(0px) translateY(-26px) rotate(0deg) scale(1.08) !important; }
+            .deck-card-5:hover { transform: translateX(70px) translateY(-26px) rotate(6deg) scale(1.08) !important; }
+            .deck-card-6:hover { transform: translateX(140px) translateY(-26px) rotate(12deg) scale(1.08) !important; }
+            .deck-card-7:hover { transform: translateX(210px) translateY(-26px) rotate(18deg) scale(1.08) !important; }
+        }
 
         /* MARQUEE */
         .marquee-container {
@@ -1899,7 +1901,11 @@ HTML_TEMPLATE = r"""
         };
 
         function onGlobalRegionChange(regionCode) {
-            const config = REGION_CONFIGS[regionCode] || REGION_CONFIGS.USD;
+            const config = REGION_CONFIGS[regionCode] || REGION_CONFIGS.INR;
+
+            try {
+                localStorage.setItem('studentfit_saved_region', regionCode);
+            } catch (e) {}
 
             // Sync both desktop and mobile navbar dropdowns
             const dSelect = document.getElementById('nav_region_select_desktop');
@@ -2406,6 +2412,13 @@ HTML_TEMPLATE = r"""
                 targetNav.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
 
+            try {
+                localStorage.setItem('studentfit_active_page', pageId);
+                if (window.location.hash !== '#' + pageId) {
+                    window.history.replaceState(null, '', '#' + pageId);
+                }
+            } catch (e) {}
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -2584,6 +2597,7 @@ HTML_TEMPLATE = r"""
         }
 
         // --- 3D PARTICLE & STARFIELD PARALLAX ENGINE ---
+        // --- 3D PARTICLE & STARFIELD PARALLAX ENGINE (OPTIMIZED FOR 60FPS) ---
         (function init3DBackground() {
             const canvas = document.getElementById('bg-3d-canvas');
             if (!canvas) return;
@@ -2591,6 +2605,7 @@ HTML_TEMPLATE = r"""
             let width = canvas.width = window.innerWidth;
             let height = canvas.height = window.innerHeight;
 
+            const isMobile = width <= 768 || 'ontouchstart' in window;
             let mouseX = width / 2;
             let mouseY = height / 2;
             let targetMouseX = mouseX;
@@ -2598,7 +2613,7 @@ HTML_TEMPLATE = r"""
             let time = 0;
 
             const particles = [];
-            const numParticles = Math.min(70, Math.floor(width / 20));
+            const numParticles = isMobile ? 22 : Math.min(65, Math.floor(width / 22));
             const colors = ['#E4FF5B', '#FF6B54', '#9C8CFF', '#00E5FF'];
 
             for (let i = 0; i < numParticles; i++) {
@@ -2606,35 +2621,30 @@ HTML_TEMPLATE = r"""
                     x: Math.random() * width,
                     y: Math.random() * height,
                     z: Math.random() * 800 + 150,
-                    size: Math.random() * 2 + 1.2,
+                    size: Math.random() * (isMobile ? 1.4 : 2) + 1.0,
                     color: colors[Math.floor(Math.random() * colors.length)],
-                    vx: (Math.random() - 0.5) * 0.35,
-                    vy: (Math.random() - 0.5) * 0.35,
-                    vz: Math.random() * 0.4 + 0.15
+                    vx: (Math.random() - 0.5) * (isMobile ? 0.18 : 0.35),
+                    vy: (Math.random() - 0.5) * (isMobile ? 0.18 : 0.35),
+                    vz: Math.random() * 0.35 + 0.12
                 });
             }
 
             window.addEventListener('resize', () => {
                 width = canvas.width = window.innerWidth;
                 height = canvas.height = window.innerHeight;
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                targetMouseX = e.clientX;
-                targetMouseY = e.clientY;
-            });
-
-            window.addEventListener('touchmove', (e) => {
-                if (e.touches && e.touches.length > 0) {
-                    targetMouseX = e.touches[0].clientX;
-                    targetMouseY = e.touches[0].clientY;
-                }
             }, { passive: true });
+
+            if (!isMobile) {
+                window.addEventListener('mousemove', (e) => {
+                    targetMouseX = e.clientX;
+                    targetMouseY = e.clientY;
+                }, { passive: true });
+            }
 
             function render3D() {
                 time += 0.012;
-                const autoDriftX = Math.sin(time * 0.7) * 45;
-                const autoDriftY = Math.cos(time * 0.5) * 30;
+                const autoDriftX = Math.sin(time * 0.7) * (isMobile ? 16 : 45);
+                const autoDriftY = Math.cos(time * 0.5) * (isMobile ? 10 : 30);
 
                 mouseX += (targetMouseX - mouseX) * 0.05;
                 mouseY += (targetMouseY - mouseY) * 0.05;
@@ -2660,33 +2670,38 @@ HTML_TEMPLATE = r"""
                     const projX = (p.x - width / 2 + offsetX * (1000 - p.z) * 0.0008) * scale + width / 2;
                     const projY = (p.y - height / 2 + offsetY * (1000 - p.z) * 0.0008) * scale + height / 2;
                     const radius = Math.max(0.6, p.size * scale);
-                    const alpha = Math.min(1, (1000 - p.z) / 750) * 0.75;
+                    const alpha = Math.min(1, (1000 - p.z) / 750) * (isMobile ? 0.55 : 0.75);
 
                     ctx.beginPath();
                     ctx.arc(projX, projY, radius, 0, Math.PI * 2);
                     ctx.fillStyle = p.color;
                     ctx.globalAlpha = alpha;
-                    ctx.shadowBlur = 12;
-                    ctx.shadowColor = p.color;
+                    if (!isMobile) {
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = p.color;
+                    }
                     ctx.fill();
 
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const p2 = particles[j];
-                        const dx = p.x - p2.x;
-                        const dy = p.y - p2.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 130) {
-                            const scale2 = fov / p2.z;
-                            const projX2 = (p2.x - width / 2 + offsetX * (1000 - p2.z) * 0.0008) * scale2 + width / 2;
-                            const projY2 = (p2.y - height / 2 + offsetY * (1000 - p2.z) * 0.0008) * scale2 + height / 2;
+                    if (!isMobile) {
+                        ctx.shadowBlur = 0;
+                        for (let j = i + 1; j < particles.length; j++) {
+                            const p2 = particles[j];
+                            const dx = p.x - p2.x;
+                            const dy = p.y - p2.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < 120) {
+                                const scale2 = fov / p2.z;
+                                const projX2 = (p2.x - width / 2 + offsetX * (1000 - p2.z) * 0.0008) * scale2 + width / 2;
+                                const projY2 = (p2.y - height / 2 + offsetY * (1000 - p2.z) * 0.0008) * scale2 + height / 2;
 
-                            ctx.beginPath();
-                            ctx.moveTo(projX, projY);
-                            ctx.lineTo(projX2, projY2);
-                            ctx.strokeStyle = p.color;
-                            ctx.globalAlpha = (1 - dist / 130) * alpha * 0.25;
-                            ctx.lineWidth = 0.9;
-                            ctx.stroke();
+                                ctx.beginPath();
+                                ctx.moveTo(projX, projY);
+                                ctx.lineTo(projX2, projY2);
+                                ctx.strokeStyle = p.color;
+                                ctx.globalAlpha = (1 - dist / 120) * alpha * 0.25;
+                                ctx.lineWidth = 0.8;
+                                ctx.stroke();
+                            }
                         }
                     }
                 }
@@ -2696,8 +2711,69 @@ HTML_TEMPLATE = r"""
             render3D();
         })();
 
+        // Persistence & auto-initialization
+        function initAppPersistence() {
+            // 1. Restore or Auto-Detect Region (Stops resetting to USA!)
+            let savedRegion = null;
+            try {
+                savedRegion = localStorage.getItem('studentfit_saved_region');
+            } catch (e) {}
+
+            if (!savedRegion) {
+                try {
+                    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+                    const lang = (navigator.language || '').toLowerCase();
+                    if (tz.includes('Calcutta') || tz.includes('Kolkata') || lang.includes('en-in') || lang.includes('hi')) {
+                        savedRegion = 'INR';
+                    } else if (tz.includes('London') || lang.includes('en-gb')) {
+                        savedRegion = 'GBP';
+                    } else if (tz.includes('Paris') || tz.includes('Berlin') || tz.includes('Rome') || tz.includes('Madrid') || lang.includes('de') || lang.includes('fr') || lang.includes('es')) {
+                        savedRegion = 'EUR';
+                    } else if (tz.includes('Toronto') || tz.includes('Vancouver') || lang.includes('en-ca')) {
+                        savedRegion = 'CAD';
+                    } else if (tz.includes('Sydney') || tz.includes('Melbourne') || lang.includes('en-au')) {
+                        savedRegion = 'AUD';
+                    } else if (tz.includes('Tokyo') || lang.includes('ja')) {
+                        savedRegion = 'JPY';
+                    } else {
+                        savedRegion = 'INR';
+                    }
+                } catch (e) {
+                    savedRegion = 'INR';
+                }
+            }
+
+            if (savedRegion) {
+                onGlobalRegionChange(savedRegion);
+            }
+
+            // 2. Restore active page from URL hash or localStorage
+            let startPage = 'home';
+            const hash = (window.location.hash || '').replace('#', '').trim();
+            if (hash && document.getElementById('page-' + hash)) {
+                startPage = hash;
+            } else {
+                try {
+                    const localPage = localStorage.getItem('studentfit_active_page');
+                    if (localPage && document.getElementById('page-' + localPage)) {
+                        startPage = localPage;
+                    }
+                } catch (e) {}
+            }
+            switchPage(startPage);
+
+            window.addEventListener('hashchange', () => {
+                const newHash = (window.location.hash || '').replace('#', '').trim();
+                if (newHash && document.getElementById('page-' + newHash)) {
+                    switchPage(newHash);
+                }
+            });
+        }
+
         // Auto-clear validation errors when user types or selects
         document.addEventListener('DOMContentLoaded', () => {
+            initAppPersistence();
+
             document.querySelectorAll('input, select').forEach(el => {
                 el.addEventListener('input', () => {
                     el.classList.remove('input-error');
