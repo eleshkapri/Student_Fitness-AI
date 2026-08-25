@@ -35,35 +35,71 @@ def apply_theme():
             font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
 
-        /* AMBIENT GLOW BLOBS */
-        .ambient-blob-1 {
+        /* 3D AMBIENT DEPTH LAYERS */
+        .bg-grid-3d {
             position: fixed;
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(156, 140, 255, 0.16) 0%, rgba(20, 19, 43, 0) 70%);
-            top: -80px;
-            left: -80px;
+            width: 200vw;
+            height: 100vh;
+            bottom: -30vh;
+            left: -50vw;
+            background: 
+                linear-gradient(to top, rgba(20, 19, 43, 0) 0%, var(--ink) 85%),
+                linear-gradient(rgba(156, 140, 255, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(156, 140, 255, 0.12) 1px, transparent 1px);
+            background-size: 100% 100%, 60px 60px, 60px 60px;
+            transform: perspective(450px) rotateX(65deg);
+            transform-origin: center bottom;
             z-index: 0;
             pointer-events: none;
-            filter: blur(50px);
-            animation: drift 18s ease-in-out infinite alternate;
+            opacity: 0.7;
+            animation: gridMove 20s linear infinite;
         }
-        .ambient-blob-2 {
+        @keyframes gridMove {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 0, 0 60px, 0 0; }
+        }
+
+        .ambient-blob-1 {
             position: fixed;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 107, 84, 0.12) 0%, rgba(20, 19, 43, 0) 70%);
-            bottom: -100px;
-            right: -80px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(156, 140, 255, 0.2) 0%, rgba(20, 19, 43, 0) 70%);
+            top: -100px;
+            left: -100px;
             z-index: 0;
             pointer-events: none;
             filter: blur(60px);
-            animation: drift 22s ease-in-out infinite alternate-reverse;
+            animation: drift3D 18s ease-in-out infinite alternate;
+        }
+        .ambient-blob-2 {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 107, 84, 0.16) 0%, rgba(20, 19, 43, 0) 70%);
+            bottom: -120px;
+            right: -100px;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(70px);
+            animation: drift3D 22s ease-in-out infinite alternate-reverse;
+        }
+        .ambient-blob-3 {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(228, 255, 91, 0.1) 0%, rgba(20, 19, 43, 0) 70%);
+            top: 40%;
+            left: 45%;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(80px);
+            animation: drift3D 25s ease-in-out infinite alternate;
         }
 
-        @keyframes drift {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 40px) scale(1.08); }
+        @keyframes drift3D {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(50px, -40px, 30px) scale(1.1); }
+            100% { transform: translate3d(-30px, 50px, -20px) scale(0.95); }
         }
 
         /* HEADINGS & TYPOGRAPHY */
@@ -307,9 +343,11 @@ def apply_theme():
         }
     </style>
 
-    <!-- AMBIENT BLOBS -->
+    <!-- 3D AMBIENT BACKGROUND ELEMENTS -->
+    <div class="bg-grid-3d"></div>
     <div class="ambient-blob-1"></div>
     <div class="ambient-blob-2"></div>
+    <div class="ambient-blob-3"></div>
     """
     st.markdown(css, unsafe_allow_html=True)
     

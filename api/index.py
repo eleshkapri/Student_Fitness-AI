@@ -69,28 +69,82 @@ HTML_TEMPLATE = """
         ::-webkit-scrollbar-thumb { background: rgba(246, 241, 227, 0.18); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--highlighter); }
 
-        /* AMBIENT GLOW BLOBS */
-        .ambient-blob-1 {
+        /* 3D AMBIENT DEPTH LAYERS */
+        #bg-3d-canvas {
             position: fixed;
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(156, 140, 255, 0.16) 0%, rgba(20, 19, 43, 0) 70%);
-            top: -80px;
-            left: -80px;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: 0;
             pointer-events: none;
-            filter: blur(50px);
+            opacity: 0.65;
         }
-        .ambient-blob-2 {
+
+        .bg-grid-3d {
             position: fixed;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 107, 84, 0.12) 0%, rgba(20, 19, 43, 0) 70%);
-            bottom: -100px;
-            right: -80px;
+            width: 200vw;
+            height: 100vh;
+            bottom: -30vh;
+            left: -50vw;
+            background: 
+                linear-gradient(to top, rgba(20, 19, 43, 0) 0%, var(--ink) 85%),
+                linear-gradient(rgba(156, 140, 255, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(156, 140, 255, 0.12) 1px, transparent 1px);
+            background-size: 100% 100%, 60px 60px, 60px 60px;
+            transform: perspective(450px) rotateX(65deg);
+            transform-origin: center bottom;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.7;
+            animation: gridMove 20s linear infinite;
+        }
+        @keyframes gridMove {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 0, 0 60px, 0 0; }
+        }
+
+        .ambient-blob-1 {
+            position: fixed;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(156, 140, 255, 0.2) 0%, rgba(20, 19, 43, 0) 70%);
+            top: -100px;
+            left: -100px;
             z-index: 0;
             pointer-events: none;
             filter: blur(60px);
+            animation: drift3D 18s ease-in-out infinite alternate;
+        }
+        .ambient-blob-2 {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 107, 84, 0.16) 0%, rgba(20, 19, 43, 0) 70%);
+            bottom: -120px;
+            right: -100px;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(70px);
+            animation: drift3D 22s ease-in-out infinite alternate-reverse;
+        }
+        .ambient-blob-3 {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(228, 255, 91, 0.1) 0%, rgba(20, 19, 43, 0) 70%);
+            top: 40%;
+            left: 45%;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(80px);
+            animation: drift3D 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift3D {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(50px, -40px, 30px) scale(1.1); }
+            100% { transform: translate3d(-30px, 50px, -20px) scale(0.95); }
         }
 
         /* TYPOGRAPHY */
@@ -509,8 +563,11 @@ HTML_TEMPLATE = """
     </style>
 </head>
 <body>
+    <canvas id="bg-3d-canvas"></canvas>
+    <div class="bg-grid-3d"></div>
     <div class="ambient-blob-1"></div>
     <div class="ambient-blob-2"></div>
+    <div class="ambient-blob-3"></div>
 
     <!-- TOP NAVIGATION BAR -->
     <nav class="navbar">
@@ -1307,6 +1364,107 @@ HTML_TEMPLATE = """
 
             html2pdf().set(opt).from(element).save();
         }
+
+        // --- 3D PARTICLE & STARFIELD PARALLAX ENGINE ---
+        (function init3DBackground() {
+            const canvas = document.getElementById('bg-3d-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            let mouseX = width / 2;
+            let mouseY = height / 2;
+            let targetMouseX = mouseX;
+            let targetMouseY = mouseY;
+
+            const particles = [];
+            const numParticles = Math.min(70, Math.floor(width / 20));
+            const colors = ['#E4FF5B', '#FF6B54', '#9C8CFF', '#00E5FF'];
+
+            for (let i = 0; i < numParticles; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    z: Math.random() * 800 + 150,
+                    size: Math.random() * 2 + 1.2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    vx: (Math.random() - 0.5) * 0.35,
+                    vy: (Math.random() - 0.5) * 0.35,
+                    vz: Math.random() * 0.4 + 0.15
+                });
+            }
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                targetMouseX = e.clientX;
+                targetMouseY = e.clientY;
+            });
+
+            function render3D() {
+                mouseX += (targetMouseX - mouseX) * 0.05;
+                mouseY += (targetMouseY - mouseY) * 0.05;
+                const offsetX = (mouseX - width / 2) * 0.06;
+                const offsetY = (mouseY - height / 2) * 0.06;
+
+                ctx.clearRect(0, 0, width, height);
+
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.z -= p.vz;
+
+                    if (p.z <= 50) p.z = 1000;
+                    if (p.x < 0) p.x = width;
+                    if (p.x > width) p.x = 0;
+                    if (p.y < 0) p.y = height;
+                    if (p.y > height) p.y = 0;
+
+                    const fov = 420;
+                    const scale = fov / p.z;
+                    const projX = (p.x - width / 2 + offsetX * (1000 - p.z) * 0.0008) * scale + width / 2;
+                    const projY = (p.y - height / 2 + offsetY * (1000 - p.z) * 0.0008) * scale + height / 2;
+                    const radius = Math.max(0.6, p.size * scale);
+                    const alpha = Math.min(1, (1000 - p.z) / 750) * 0.75;
+
+                    ctx.beginPath();
+                    ctx.arc(projX, projY, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = alpha;
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = p.color;
+                    ctx.fill();
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 130) {
+                            const scale2 = fov / p2.z;
+                            const projX2 = (p2.x - width / 2 + offsetX * (1000 - p2.z) * 0.0008) * scale2 + width / 2;
+                            const projY2 = (p2.y - height / 2 + offsetY * (1000 - p2.z) * 0.0008) * scale2 + height / 2;
+
+                            ctx.beginPath();
+                            ctx.moveTo(projX, projY);
+                            ctx.lineTo(projX2, projY2);
+                            ctx.strokeStyle = p.color;
+                            ctx.globalAlpha = (1 - dist / 130) * alpha * 0.25;
+                            ctx.lineWidth = 0.9;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(render3D);
+            }
+            render3D();
+        })();
     </script>
 </body>
 </html>
