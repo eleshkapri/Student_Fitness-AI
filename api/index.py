@@ -653,52 +653,98 @@ HTML_TEMPLATE = """
         .workout-box, .meal-box {
             background: rgba(0, 0, 0, 0.25);
             border-radius: 12px;
-            padding: 16px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 18px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .box-header {
             color: var(--neon-cyan);
-            font-weight: 700;
+            font-weight: 800;
             font-size: 0.95rem;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             display: block;
-            letter-spacing: 0.5px;
-            border-bottom: 1px dashed rgba(0, 229, 255, 0.2);
-            padding-bottom: 6px;
+            letter-spacing: 0.8px;
+            border-bottom: 1px dashed rgba(0, 229, 255, 0.25);
+            padding-bottom: 8px;
         }
 
-        .markdown-content ul { list-style: none; padding-left: 0; }
-        .markdown-content li { margin-bottom: 10px; font-size: 0.92rem; color: #e2e8f0; line-height: 1.6; }
-        .markdown-content strong { color: #fff; }
+        .plan-item {
+            margin-bottom: 13px;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: #cbd5e1;
+        }
+
+        .plan-item strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
 
         /* GROCERY CARD */
         .grocery-card {
             background: rgba(0, 0, 0, 0.38);
-            border: 1px solid var(--neon-gold);
+            border: 1.5px solid var(--neon-gold);
             border-radius: 18px;
             padding: 24px 22px;
             height: fit-content;
             position: sticky;
             top: 92px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
         }
 
-        .grocery-card h4 {
+        .grocery-header-main {
             color: var(--neon-gold);
-            border-bottom: 1px solid rgba(255, 215, 0, 0.35);
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
             padding-bottom: 8px;
-            margin-top: 22px;
-            margin-bottom: 14px;
-            font-size: 1.1rem;
-            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .grocery-card h4:first-child { margin-top: 0; }
-        .grocery-card ul { list-style: none; padding-left: 0; margin-bottom: 14px; }
-        .grocery-card li { margin-bottom: 12px; font-size: 0.93rem; color: #e2e8f0; line-height: 1.65; display: flex; align-items: flex-start; gap: 8px; }
-        .grocery-card li::before { content: "•"; color: var(--neon-cyan); font-weight: bold; font-size: 1.2rem; line-height: 1.2; }
-        .grocery-card p { margin-bottom: 12px; line-height: 1.6; color: #cbd5e1; font-size: 0.93rem; }
+        .grocery-category-title {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.98rem;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grocery-category-title::before {
+            content: "•";
+            color: var(--neon-cyan);
+            font-weight: 900;
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .grocery-sub-list {
+            list-style: none;
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        .grocery-sub-item {
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .grocery-sub-item::before {
+            content: "•";
+            color: var(--neon-cyan);
+            font-size: 1.1rem;
+            line-height: 1.1;
+        }
 
         /* ==========================================================================
            PAGE 3: STUDENT MACRO & NUTRITION HUB STYLES
@@ -1461,18 +1507,18 @@ HTML_TEMPLATE = """
                             <div class="day-columns">
                                 <div class="workout-box">
                                     <span class="box-header">🏋️ WORKOUT ROUTINE</span>
-                                    <div class="markdown-content">${marked.parse(day.workout)}</div>
+                                    <div>${formatLines(day.workout)}</div>
                                 </div>
                                 <div class="meal-box">
                                     <span class="box-header">🥗 SYNCHRONIZED MEALS</span>
-                                    <div class="markdown-content">${marked.parse(day.meal)}</div>
+                                    <div>${formatLines(day.meal)}</div>
                                 </div>
                             </div>
                         `;
                         daysContainer.appendChild(card);
                     });
 
-                    groceryCard.innerHTML = marked.parse(data.grocery);
+                    groceryCard.innerHTML = formatGroceryList(data.grocery);
                     resultsArea.style.display = 'grid';
                     downloadBtn.style.display = 'inline-flex';
                 }
@@ -1483,6 +1529,56 @@ HTML_TEMPLATE = """
                 spinner.style.display = 'none';
                 btn.disabled = false;
             }
+        }
+
+        function formatLines(text) {
+            if (!text) return "";
+            const lines = text.split('\\n');
+            let html = '';
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+                line = line.replace(/^[\\*\\-]\\s*/, '');
+                line = line.replace(/\\*\\*(.*?)\\*\\*/g, '<strong style="color: #ffffff;">$1</strong>');
+                html += `<div class="plan-item">${line}</div>`;
+            });
+            return html;
+        }
+
+        function formatGroceryList(text) {
+            if (!text) return "";
+            let html = '<div class="grocery-header-main">🛒 Weekly Student Shopping List</div>';
+            const lines = text.split('\\n');
+            let listOpen = false;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+
+                if (line.startsWith('####') || line.startsWith('###') || (line.startsWith('**') && line.endsWith('**') && !line.includes('₹') && !line.includes('$'))) {
+                    if (listOpen) {
+                        html += '</ul>';
+                        listOpen = false;
+                    }
+                    let title = line.replace(/^[#\\*]+\\s*/, '').replace(/\\*+/g, '').trim();
+                    html += `<div class="grocery-category-title">${title}</div><ul class="grocery-sub-list">`;
+                    listOpen = true;
+                } else if (line.startsWith('*') || line.startsWith('-')) {
+                    if (!listOpen) {
+                        html += '<ul class="grocery-sub-list">';
+                        listOpen = true;
+                    }
+                    let item = line.replace(/^[\\*\\-]\\s*/, '').trim();
+                    item = item.replace(/\\*\\*(.*?)\\*\\*/g, '<strong style="color: #ffffff;">$1</strong>');
+                    html += `<li class="grocery-sub-item">${item}</li>`;
+                } else {
+                    let item = line.replace(/\\*\\*(.*?)\\*\\*/g, '<strong style="color: #ffffff;">$1</strong>');
+                    html += `<div class="plan-item">${item}</div>`;
+                }
+            });
+
+            if (listOpen) html += '</ul>';
+            return html;
         }
 
         function filterView(type, btn) {
