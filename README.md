@@ -94,7 +94,8 @@ The backend is built upon a secure, modular **Object-Oriented Programming (OOP)*
 ```
 Student_Fitness-AI/
 ├── api/                      # Vercel Serverless REST & Web Engine
-│   └── index.py              # Single-page app + API routes (CSP & Security headers)
+│   ├── index.py              # Single-page app + API routes (CSP & Security headers)
+│   └── requirements.txt      # Lightweight serverless dependencies (<15MB bundle)
 ├── pages/                    # Streamlit Multi-Page Studio Views
 │   ├── __init__.py           # Package marker
 │   ├── home.py               # Hero with 3D fanned 7-card deck & live metrics
@@ -114,10 +115,11 @@ Student_Fitness-AI/
 │   ├── generators.py         # BasePlanGenerator, Mock, Groq & FitnessPlannerService
 │   └── llm_client.py         # LLM client & backward-compatibility facade
 ├── .gitignore                # Production ignore rules
+├── .python-version           # Explicit Python runtime version for Vercel (3.11)
 ├── app.py                    # Streamlit application router
-├── requirements.txt          # Python dependencies
+├── requirements.txt          # Python dependencies (Streamlit & Full Suite)
 ├── theme.py                  # Shared design tokens & 3D ambient layers
-├── vercel.json               # Vercel deployment configuration
+├── vercel.json               # Modern zero-warning Vercel rewrites configuration
 └── README.md                 # Complete documentation
 ```
 
