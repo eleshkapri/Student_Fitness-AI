@@ -40,11 +40,11 @@ st.markdown("""
         color: #ffffff;
     }
 
-    /* CUSTOM SLEEK SCROLLBAR */
-    ::-webkit-scrollbar { width: 7px; height: 7px; }
-    ::-webkit-scrollbar-track { background: rgba(15, 12, 41, 0.6); border-radius: 8px; }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #ff416c 0%, #00e5ff 100%); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); }
-    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #ff4b2b 0%, #00e5ff 100%); box-shadow: 0 0 10px rgba(0, 229, 255, 0.8); }
+    /* ULTRA-THIN & TRANSPARENT SCROLLBAR */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0, 229, 255, 0.5); }
     
     [data-testid="stSidebar"] {
         background-color: #121212 !important;
