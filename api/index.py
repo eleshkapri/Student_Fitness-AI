@@ -178,14 +178,22 @@ HTML_TEMPLATE = """
         .navbar {
             background: rgba(20, 19, 43, 0.92);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--line);
-            padding: 16px 36px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 12px 24px;
             position: sticky;
             top: 0;
             z-index: 1000;
+            width: 100%;
+        }
+
+        .navbar-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
         }
 
         .brand-logo {
@@ -204,7 +212,7 @@ HTML_TEMPLATE = """
 
         .nav-links {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             align-items: center;
             list-style: none;
         }
@@ -582,10 +590,7 @@ HTML_TEMPLATE = """
 
         @media (max-width: 860px) {
             .navbar {
-                display: flex;
-                flex-direction: column;
                 padding: 10px 14px 8px 14px;
-                gap: 8px;
                 background: rgba(20, 19, 43, 0.96) !important;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
@@ -594,10 +599,16 @@ HTML_TEMPLATE = """
                 top: 0;
                 z-index: 10000;
             }
+            .navbar-inner {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
             .navbar-top-row {
                 display: flex;
                 width: 100%;
-                justify-content: space-between;
+                justify-content: flex-start;
                 align-items: center;
             }
             .brand-logo { font-size: 1.2rem; }
@@ -705,24 +716,26 @@ HTML_TEMPLATE = """
 
     <!-- TOP NAVIGATION BAR -->
     <nav class="navbar">
-        <div class="navbar-top-row">
-            <a class="brand-logo" onclick="switchPage('home')">
-                <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </span>
-                StudentFit <span>AI</span>
-            </a>
+        <div class="navbar-inner">
+            <div class="navbar-top-row">
+                <a class="brand-logo" onclick="switchPage('home')">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    StudentFit <span>AI</span>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
+                <li><a class="nav-link" id="nav-how" onclick="switchPage('how')">📖 How it Works</a></li>
+                <li><a class="nav-link" id="nav-features" onclick="switchPage('features')">✨ Features</a></li>
+                <li><a class="nav-link" id="nav-plans" onclick="switchPage('plans')">🏷️ Plans</a></li>
+                <li><a class="nav-link" id="nav-story" onclick="switchPage('story')">💡 Story</a></li>
+                <li><a class="nav-link" id="nav-generator" onclick="switchPage('generator')">⚡ Generator</a></li>
+            </ul>
         </div>
-        <ul class="nav-links">
-            <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
-            <li><a class="nav-link" id="nav-how" onclick="switchPage('how')">📖 How it Works</a></li>
-            <li><a class="nav-link" id="nav-features" onclick="switchPage('features')">✨ Features</a></li>
-            <li><a class="nav-link" id="nav-plans" onclick="switchPage('plans')">🏷️ Plans</a></li>
-            <li><a class="nav-link" id="nav-story" onclick="switchPage('story')">💡 Story</a></li>
-            <li><a class="nav-link" id="nav-generator" onclick="switchPage('generator')">⚡ Generator</a></li>
-        </ul>
     </nav>
 
     <!-- =========================================================================
