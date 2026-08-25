@@ -179,11 +179,11 @@ HTML_TEMPLATE = r"""
 
         /* TOP NAVIGATION BAR */
         .navbar {
-            background: rgba(20, 19, 43, 0.92);
+            background: rgba(20, 19, 43, 0.94);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--line);
-            padding: 12px 24px;
+            padding: 8px 24px;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -191,7 +191,7 @@ HTML_TEMPLATE = r"""
         }
 
         .navbar-inner {
-            max-width: 1180px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -201,7 +201,7 @@ HTML_TEMPLATE = r"""
 
         .brand-logo {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.45rem;
+            font-size: 1.18rem;
             font-weight: 800;
             display: flex;
             align-items: center;
@@ -209,26 +209,30 @@ HTML_TEMPLATE = r"""
             text-decoration: none;
             color: #fff;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .brand-logo span { color: var(--highlighter); }
 
         .nav-links {
             display: flex;
-            gap: 12px;
+            gap: 6px;
             align-items: center;
             list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-link {
             color: var(--text-soft);
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.92rem;
+            font-size: 0.84rem;
             transition: all 0.2s ease;
             cursor: pointer;
-            padding: 8px 14px;
-            border-radius: 12px;
+            padding: 6px 11px;
+            border-radius: 10px;
+            white-space: nowrap;
         }
 
         .nav-link:hover {
@@ -687,15 +691,15 @@ HTML_TEMPLATE = r"""
         }
 
         @media (max-width: 1080px) {
-            .navbar { padding: 12px 18px; }
-            .nav-links { gap: 8px; }
-            .nav-link { padding: 6px 10px; font-size: 0.85rem; }
+            .navbar { padding: 8px 16px; }
+            .nav-links { gap: 4px; }
+            .nav-link { padding: 5px 9px; font-size: 0.81rem; }
             .studio-main { padding: 24px 18px; }
         }
 
         @media (max-width: 860px) {
             .navbar {
-                padding: 10px 14px 8px 14px;
+                padding: 6px 14px 5px 14px;
                 background: rgba(20, 19, 43, 0.96) !important;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
@@ -707,7 +711,7 @@ HTML_TEMPLATE = r"""
             .navbar-inner {
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
+                gap: 4px;
                 width: 100%;
             }
             .navbar-top-row {
@@ -716,15 +720,15 @@ HTML_TEMPLATE = r"""
                 justify-content: flex-start;
                 align-items: center;
             }
-            .brand-logo { font-size: 1.2rem; }
-            .nav-cta { padding: 7px 14px; font-size: 0.8rem; border-radius: 10px; }
+            .brand-logo { font-size: 1.10rem; }
+            .nav-cta { padding: 6px 12px; font-size: 0.78rem; border-radius: 9px; }
             .nav-links {
                 width: 100%;
                 overflow-x: auto;
                 white-space: nowrap;
-                padding: 2px 2px 6px 2px;
+                padding: 2px 0 3px 0;
                 justify-content: flex-start;
-                gap: 8px;
+                gap: 5px;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none !important;
                 -ms-overflow-style: none !important;
@@ -735,10 +739,10 @@ HTML_TEMPLATE = r"""
                 height: 0 !important;
             }
             .nav-link {
-                font-size: 0.82rem;
-                padding: 6px 12px;
+                font-size: 0.78rem;
+                padding: 4px 9px;
                 flex-shrink: 0;
-                border-radius: 20px;
+                border-radius: 14px;
                 background: rgba(246, 241, 227, 0.06);
                 border: 1px solid rgba(246, 241, 227, 0.08);
             }
@@ -803,9 +807,9 @@ HTML_TEMPLATE = r"""
             p { font-size: 0.94rem !important; line-height: 1.55 !important; }
             section { padding: 30px 12px !important; }
             
-            .navbar { padding: 8px 10px 6px 10px !important; }
-            .brand-logo { font-size: 1.12rem !important; }
-            .nav-link { font-size: 0.78rem !important; padding: 5px 10px !important; }
+            .navbar { padding: 5px 8px 4px 8px !important; }
+            .brand-logo { font-size: 1.02rem !important; }
+            .nav-link { font-size: 0.73rem !important; padding: 3px 7px !important; border-radius: 12px !important; }
 
             .hero-deck {
                 transform: scale(0.52);
@@ -860,9 +864,9 @@ HTML_TEMPLATE = r"""
                 transform: scale(0.40);
                 height: 115px;
             }
-            .navbar { padding: 6px 6px 4px 6px !important; }
-            .brand-logo { font-size: 1.02rem !important; }
-            .nav-link { font-size: 0.72rem !important; padding: 4px 7px !important; }
+            .navbar { padding: 4px 6px 3px 6px !important; }
+            .brand-logo { font-size: 0.94rem !important; }
+            .nav-link { font-size: 0.68rem !important; padding: 3px 6px !important; }
             .panel-card, .paper-card { padding: 14px 10px !important; }
         }
     </style>
@@ -879,8 +883,8 @@ HTML_TEMPLATE = r"""
         <div class="navbar-inner">
             <div class="navbar-top-row">
                 <a class="brand-logo" onclick="switchPage('home')">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 8px; box-shadow: 0 3px 10px rgba(255, 107, 84, 0.4); margin-right: 3px;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </span>
