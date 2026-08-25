@@ -8,7 +8,7 @@ import time
 from theme import apply_theme
 
 def render():
-    apply_theme("How it Works")
+    apply_theme()
 
     st.markdown('<div class="eyebrow-caveat">step by step logic ~</div>', unsafe_allow_html=True)
     st.markdown('<h1 style="font-size: 2.8rem; margin-bottom: 12px;">How StudentFit AI Works</h1>', unsafe_allow_html=True)

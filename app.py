@@ -1,6 +1,6 @@
 """
 StudentFit AI — Main Entry Point
-Configures st.navigation() across all 6 pages with position='hidden' to use the custom top navbar.
+Configures st.navigation() across all 6 cohesive pages using Streamlit's modern multi-page API.
 """
 
 import streamlit as st
@@ -10,7 +10,7 @@ st.set_page_config(
     page_title="StudentFit AI — Fitness that Syncs to Your Syllabus",
     page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # --- DEFINE MULTI-PAGE NAVIGATION ---
@@ -23,6 +23,6 @@ pages = [
     st.Page("pages/generator.py", title="AI Generator", icon="⚡"),
 ]
 
-# Run router with hidden sidebar navigation so the custom top navbar is used
-pg = st.navigation(pages, position="hidden")
+# Run router
+pg = st.navigation(pages)
 pg.run()
