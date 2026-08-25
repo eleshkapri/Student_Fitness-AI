@@ -242,6 +242,42 @@ HTML_TEMPLATE = r"""
             border: 1px solid var(--highlighter);
         }
 
+        .nav-region-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(36, 33, 85, 0.85);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 5px 12px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        .nav-region-badge:hover {
+            border-color: var(--highlighter);
+            box-shadow: 0 0 14px rgba(228, 255, 91, 0.3);
+        }
+
+        #nav-region-select {
+            background: transparent;
+            color: #ffffff;
+            border: none;
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+            outline: none;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        #nav-region-select option {
+            background: #1C1A42;
+            color: #ffffff;
+        }
+
         .nav-cta {
             background: var(--coral);
             color: #fff;
@@ -698,19 +734,27 @@ HTML_TEMPLATE = r"""
             }
             .navbar-inner {
                 display: flex;
-                flex-direction: column;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
                 gap: 8px;
                 width: 100%;
             }
             .navbar-top-row {
+                order: 1;
                 display: flex;
-                width: 100%;
-                justify-content: flex-start;
                 align-items: center;
             }
-            .brand-logo { font-size: 1.2rem; }
-            .nav-cta { padding: 7px 14px; font-size: 0.8rem; border-radius: 10px; }
+            .nav-region-badge {
+                order: 2;
+                padding: 4px 8px;
+            }
+            #nav-region-select {
+                font-size: 0.78rem;
+            }
+            .brand-logo { font-size: 1.18rem; }
             .nav-links {
+                order: 3;
                 width: 100%;
                 overflow-x: auto;
                 white-space: nowrap;
@@ -863,7 +907,7 @@ HTML_TEMPLATE = r"""
     <!-- TOP NAVIGATION BAR -->
     <nav class="navbar">
         <div class="navbar-inner">
-            <div class="navbar-top-row" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div class="navbar-top-row">
                 <a class="brand-logo" onclick="switchPage('home')">
                     <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -872,23 +916,8 @@ HTML_TEMPLATE = r"""
                     </span>
                     StudentFit <span>AI</span>
                 </a>
-
-                <!-- NAVBAR REGION & CURRENCY SELECTOR -->
-                <div class="nav-region-badge" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(36, 33, 85, 0.75); border: 1px solid var(--line); border-radius: 20px; padding: 4px 10px; backdrop-filter: blur(8px);">
-                    <span style="font-size: 0.95rem; line-height: 1;">🌐</span>
-                    <select id="nav-region-select" onchange="changeGlobalRegion(this.value)" style="background: transparent; color: #fff; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; outline: none; padding: 0; font-family: 'Space Grotesk', sans-serif;">
-                        <option value="US">🇺🇸 USD ($)</option>
-                        <option value="IN">🇮🇳 INR (₹)</option>
-                        <option value="GB">🇬🇧 GBP (£)</option>
-                        <option value="EU">🇪🇺 EUR (€)</option>
-                        <option value="CA">🇨🇦 CAD ($)</option>
-                        <option value="AU">🇦🇺 AUD ($)</option>
-                        <option value="JP">🇯🇵 JPY (¥)</option>
-                        <option value="SG">🇸🇬 SGD ($)</option>
-                        <option value="AE">🇦🇪 AED (د.إ)</option>
-                    </select>
-                </div>
             </div>
+
             <ul class="nav-links">
                 <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
                 <li><a class="nav-link" id="nav-how" onclick="switchPage('how')">📖 How it Works</a></li>
@@ -898,6 +927,22 @@ HTML_TEMPLATE = r"""
                 <li><a class="nav-link" id="nav-story" onclick="switchPage('story')">💡 Story</a></li>
                 <li><a class="nav-link" id="nav-generator" onclick="switchPage('generator')">⚡ Generator</a></li>
             </ul>
+
+            <!-- NAVBAR REGION & CURRENCY SELECTOR -->
+            <div class="nav-region-badge">
+                <span class="nav-region-icon">🌐</span>
+                <select id="nav-region-select" onchange="changeGlobalRegion(this.value)" aria-label="Select Region and Currency">
+                    <option value="US">🇺🇸 USD ($)</option>
+                    <option value="IN">🇮🇳 INR (₹)</option>
+                    <option value="GB">🇬🇧 GBP (£)</option>
+                    <option value="EU">🇪🇺 EUR (€)</option>
+                    <option value="CA">🇨🇦 CAD ($)</option>
+                    <option value="AU">🇦🇺 AUD ($)</option>
+                    <option value="JP">🇯🇵 JPY (¥)</option>
+                    <option value="SG">🇸🇬 SGD ($)</option>
+                    <option value="AE">🇦🇪 AED (د.إ)</option>
+                </select>
+            </div>
         </div>
     </nav>
 
@@ -923,25 +968,7 @@ HTML_TEMPLATE = r"""
         <section style="padding: 60px 40px 40px 40px; max-width: 1200px; margin: 0 auto;">
             <div class="hero-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
                 <div>
-                    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px;">
-                        <div class="eyebrow-caveat" style="margin-bottom: 0;">built between lectures & leftovers ~</div>
-                        <!-- HERO REGION PICKER BADGE -->
-                        <div class="hero-region-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(36, 33, 85, 0.85); border: 1px solid rgba(228, 255, 91, 0.35); border-radius: 20px; padding: 4px 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);">
-                            <span style="font-size: 1rem; line-height: 1;">📍</span>
-                            <span style="font-size: 0.82rem; color: var(--text-soft); font-weight: 500;">Region & Currency:</span>
-                            <select id="global-region-select" onchange="changeGlobalRegion(this.value)" style="background: transparent; color: var(--highlighter); border: none; font-size: 0.85rem; font-weight: 700; cursor: pointer; outline: none; padding: 0; font-family: 'Space Grotesk', sans-serif;">
-                                <option value="US">🇺🇸 United States (USD $)</option>
-                                <option value="IN">🇮🇳 India (INR ₹)</option>
-                                <option value="GB">🇬🇧 United Kingdom (GBP £)</option>
-                                <option value="EU">🇪🇺 Europe (EUR €)</option>
-                                <option value="CA">🇨🇦 Canada (CAD $)</option>
-                                <option value="AU">🇦🇺 Australia (AUD $)</option>
-                                <option value="JP">🇯🇵 Japan (JPY ¥)</option>
-                                <option value="SG">🇸🇬 Singapore (SGD $)</option>
-                                <option value="AE">🇦🇪 UAE / Middle East (AED د.إ)</option>
-                            </select>
-                        </div>
-                    </div>
+                    <div class="eyebrow-caveat">built between lectures & leftovers ~</div>
                     <h1 style="font-size: 3.2rem; line-height: 1.15; margin-bottom: 18px;">Fitness that syncs to your <span style="color: var(--highlighter);">syllabus.</span></h1>
                     <p style="font-size: 1.1rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 28px;">
                         Most fitness apps assume a full kitchen, a car, and endless free time. <strong>StudentFit AI</strong> plans around what students actually have: dorm-room gear, a real grocery budget, cooking skill, and an exam schedule that can't be ignored.
@@ -1857,11 +1884,9 @@ HTML_TEMPLATE = r"""
             if (!REGION_DATA[regionCode]) return;
             const r = REGION_DATA[regionCode];
 
-            // Synchronize dropdown controls
+            // Synchronize navbar dropdown
             const navSelect = document.getElementById('nav-region-select');
-            const heroSelect = document.getElementById('global-region-select');
             if (navSelect) navSelect.value = regionCode;
-            if (heroSelect) heroSelect.value = regionCode;
 
             // Update Currency in Generator Wizard & Sidebar
             const entryCur = document.getElementById('entry_currency');
