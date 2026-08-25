@@ -670,7 +670,8 @@ HTML_TEMPLATE = """
                 max-width: 100%;
             }
 
-            /* STUDIO */
+            /* STUDIO & MACRO HUB */
+            .macro-grid-container { grid-template-columns: 1fr !important; }
             .studio-container { flex-direction: column; }
             .studio-sidebar {
                 width: 100%;
@@ -781,6 +782,7 @@ HTML_TEMPLATE = """
                 <li><a class="nav-link active" id="nav-home" onclick="switchPage('home')">🏠 Home</a></li>
                 <li><a class="nav-link" id="nav-how" onclick="switchPage('how')">📖 How it Works</a></li>
                 <li><a class="nav-link" id="nav-features" onclick="switchPage('features')">✨ Features</a></li>
+                <li><a class="nav-link" id="nav-macro" onclick="switchPage('macro')">🧮 Macro Hub</a></li>
                 <li><a class="nav-link" id="nav-plans" onclick="switchPage('plans')">🏷️ Plans</a></li>
                 <li><a class="nav-link" id="nav-story" onclick="switchPage('story')">💡 Story</a></li>
                 <li><a class="nav-link" id="nav-generator" onclick="switchPage('generator')">⚡ Generator</a></li>
@@ -1130,7 +1132,148 @@ HTML_TEMPLATE = """
     </div>
 
     <!-- =========================================================================
-         PAGE 6: GENERATOR STUDIO (ENTRY WIZARD -> SIDEBAR DASHBOARD)
+         PAGE 5: STUDENT MACRO HUB (BMR & MACRO CALCULATOR)
+         ========================================================================= -->
+    <div class="page-view" id="page-macro">
+        <section style="padding: 60px 40px; max-width: 1140px; margin: 0 auto;">
+            <div class="eyebrow-caveat">daily metabolic math ~</div>
+            <h1 style="font-size: 2.8rem; margin-bottom: 8px;">Student BMR & Macro Calculator</h1>
+            <p style="color: var(--text-soft); font-size: 1.1rem; line-height: 1.6; margin-bottom: 35px;">
+                Calculate your daily maintenance calories and optimal macronutrient split for study energy and muscle growth.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1.25fr; gap: 28px;" class="macro-grid-container">
+                <!-- LEFT PANEL: PERSONAL METRICS -->
+                <div class="panel-card" style="padding: 28px;">
+                    <h3 style="color: var(--highlighter); font-size: 1.3rem; margin-bottom: 20px;">Personal Metrics</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Gender</label>
+                            <select id="hub_gender" autocomplete="off" onchange="calculateMacroHub()">
+                                <option value="Male" selected>Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Age</label>
+                            <input type="number" id="hub_age" value="20" min="14" max="90" autocomplete="off" oninput="calculateMacroHub()">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Weight</label>
+                            <input type="number" id="hub_weight" value="70" min="30" max="300" autocomplete="off" oninput="calculateMacroHub()">
+                        </div>
+                        <div class="form-group" style="flex: 1.2;">
+                            <label>Unit</label>
+                            <select id="hub_weightUnit" autocomplete="off" onchange="calculateMacroHub()">
+                                <option value="kg" selected>kg</option>
+                                <option value="lbs">lbs</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Height</label>
+                            <input type="number" id="hub_height" value="170" min="100" max="250" autocomplete="off" oninput="calculateMacroHub()">
+                        </div>
+                        <div class="form-group" style="flex: 1.2;">
+                            <label>Unit</label>
+                            <select id="hub_heightUnit" autocomplete="off" onchange="calculateMacroHub()">
+                                <option value="cm" selected>cm</option>
+                                <option value="ft/in">ft/in</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label>Target Goal</label>
+                        <select id="hub_goal" autocomplete="off" onchange="calculateMacroHub()">
+                            <option value="Build Muscle" selected>💪 Build Muscle (Surplus +350 kcal)</option>
+                            <option value="Lose Weight">🔥 Lose Weight / Cut (Deficit -400 kcal)</option>
+                            <option value="Maintenance">⚡ Maintenance / Study Focus (TDEE)</option>
+                            <option value="Athletic">🏃 Athletic Conditioning (Surplus +150 kcal)</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-primary-lg" style="width: 100%;" onclick="calculateMacroHub()">⚡ Calculate Macros</button>
+                </div>
+
+                <!-- RIGHT PANEL: DYNAMIC MACRO DASHBOARD -->
+                <div class="panel-card" style="padding: 30px; border: 1px solid var(--coral); background: var(--ink2); box-shadow: 0 16px 40px rgba(0,0,0,0.5);">
+                    <div style="font-size: 0.85rem; font-family: 'Space Mono', monospace; color: var(--text-soft); text-transform: uppercase;">Daily Target</div>
+                    <div style="font-size: 3.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: #00E5FF; margin: 4px 0 6px 0; line-height: 1;">
+                        <span id="hub_cals">2,400</span> <span style="font-size: 1.25rem; color: var(--highlighter); font-weight: 600;">kcal/day</span>
+                    </div>
+                    <div style="color: var(--text-soft); font-size: 0.95rem; margin-bottom: 24px; font-family: 'Space Mono', monospace;">
+                        BMR: <strong id="hub_bmr" style="color: #fff;">1,650 kcal</strong> | TDEE: <strong id="hub_tdee" style="color: #fff;">2,050 kcal</strong>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px;">
+                        <div style="background: rgba(255, 107, 84, 0.12); border: 1px solid var(--coral); border-radius: 14px; padding: 16px 12px; text-align: center;">
+                            <div id="hub_protein" style="font-size: 1.8rem; font-weight: 800; color: var(--coral); font-family: 'Space Grotesk', sans-serif;">140g</div>
+                            <div style="font-size: 0.78rem; font-weight: 700; font-family: 'Space Mono', monospace; color: #fff; letter-spacing: 0.5px;">PROTEIN</div>
+                        </div>
+                        <div style="background: rgba(228, 255, 91, 0.12); border: 1px solid var(--highlighter); border-radius: 14px; padding: 16px 12px; text-align: center;">
+                            <div id="hub_carbs" style="font-size: 1.8rem; font-weight: 800; color: var(--highlighter); font-family: 'Space Grotesk', sans-serif;">290g</div>
+                            <div style="font-size: 0.78rem; font-weight: 700; font-family: 'Space Mono', monospace; color: #fff; letter-spacing: 0.5px;">CARBS</div>
+                        </div>
+                        <div style="background: rgba(0, 229, 255, 0.12); border: 1px solid #00E5FF; border-radius: 14px; padding: 16px 12px; text-align: center;">
+                            <div id="hub_fats" style="font-size: 1.8rem; font-weight: 800; color: #00E5FF; font-family: 'Space Grotesk', sans-serif;">65g</div>
+                            <div style="font-size: 0.78rem; font-weight: 700; font-family: 'Space Mono', monospace; color: #fff; letter-spacing: 0.5px;">FATS</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 18px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-family: 'Space Mono', monospace; margin-bottom: 8px; color: var(--text-soft);">
+                            <span>Macro Ratio</span>
+                            <span id="hub_ratio_text">23% P / 49% C / 28% F</span>
+                        </div>
+                        <div style="height: 12px; border-radius: 10px; overflow: hidden; display: flex; background: rgba(246, 241, 227, 0.1);">
+                            <div id="hub_bar_p" style="width: 23%; background: var(--coral);" title="Protein"></div>
+                            <div id="hub_bar_c" style="width: 49%; background: var(--highlighter);" title="Carbs"></div>
+                            <div id="hub_bar_f" style="width: 28%; background: #00E5FF;" title="Fats"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 229, 255, 0.08); padding: 10px 16px; border-radius: 10px; margin-bottom: 20px;">
+                        <span style="font-size: 0.92rem; color: #00E5FF; font-weight: 600;">💧 Water Target: <strong id="hub_water">2.8</strong> Liters/day</span>
+                    </div>
+
+                    <button class="btn-secondary-lg" style="width: 100%; border-color: var(--highlighter); color: var(--highlighter);" onclick="applyMacrosToStudio()">⚡ Transfer Metrics to AI Planner Studio ▸</button>
+                </div>
+            </div>
+
+            <!-- 3 EDUCATIONAL STUDENT CARDS -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 35px;">
+                <div class="panel-card" style="padding: 22px;">
+                    <h4 style="color: var(--coral); font-size: 1.15rem; margin-bottom: 8px;">🥚 #1 Cheap Protein: Eggs & Soya</h4>
+                    <p style="color: var(--text-soft); font-size: 0.92rem; line-height: 1.6;">
+                        Eggs, Paneer, Tofu, and Soya chunks provide over 20g of high-bioavailability protein for less than ₹30 / $0.50 per serving.
+                    </p>
+                </div>
+                <div class="panel-card" style="padding: 22px;">
+                    <h4 style="color: var(--highlighter); font-size: 1.15rem; margin-bottom: 8px;">🍚 Batch Cook Starches on Sunday</h4>
+                    <p style="color: var(--text-soft); font-size: 0.92rem; line-height: 1.6;">
+                        Cook 3 days of brown rice or boil 500g chickpeas in one pot. Store in containers to save 45 minutes of daily study time.
+                    </p>
+                </div>
+                <div class="panel-card" style="padding: 22px;">
+                    <h4 style="color: #00E5FF; font-size: 1.15rem; margin-bottom: 8px;">💧 Study Focus & Hydration</h4>
+                    <p style="color: var(--text-soft); font-size: 0.92rem; line-height: 1.6;">
+                        Dehydration drops cognitive performance by 15%. Keep a 1L water bottle at your desk and aim for 3 refills during exam weeks.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- =========================================================================
+         PAGE 7: GENERATOR STUDIO (ENTRY WIZARD -> SIDEBAR DASHBOARD)
          ========================================================================= -->
     <div class="page-view" id="page-generator">
         <!-- 1. ENTRY SETUP WIZARD (FIRST TIME VIEW) -->
@@ -1479,6 +1622,136 @@ HTML_TEMPLATE = """
                 }
             }
         }
+
+        function calculateMacroHub() {
+            const genderElem = document.getElementById('hub_gender');
+            if (!genderElem) return;
+
+            const gender = genderElem.value || 'Male';
+            const age = parseFloat(document.getElementById('hub_age').value) || 20;
+            const weight = parseFloat(document.getElementById('hub_weight').value) || 70;
+            const weightUnit = document.getElementById('hub_weightUnit').value || 'kg';
+            const height = parseFloat(document.getElementById('hub_height').value) || 170;
+            const heightUnit = document.getElementById('hub_heightUnit').value || 'cm';
+            const goal = document.getElementById('hub_goal').value || 'Build Muscle';
+
+            const kg = weightUnit === 'lbs' ? weight * 0.453592 : weight;
+            const cm = heightUnit === 'ft/in' ? height * 2.54 : height;
+
+            // Mifflin-St Jeor Formula
+            let bmr = 0;
+            if (gender.toLowerCase() === 'female') {
+                bmr = (10 * kg) + (6.25 * cm) - (5 * age) - 161;
+            } else {
+                bmr = (10 * kg) + (6.25 * cm) - (5 * age) + 5;
+            }
+
+            const tdee = bmr * 1.40;
+            let targetCals = tdee;
+            let proteinG = kg * 1.6;
+
+            const goalLower = goal.toLowerCase();
+            if (goalLower.includes('muscle') || goalLower.includes('surplus')) {
+                targetCals = tdee + 350;
+                proteinG = kg * 2.0;
+            } else if (goalLower.includes('lose') || goalLower.includes('cut') || goalLower.includes('deficit')) {
+                targetCals = tdee - 400;
+                proteinG = kg * 2.2;
+            } else if (goalLower.includes('athletic')) {
+                targetCals = tdee + 150;
+                proteinG = kg * 1.8;
+            }
+
+            targetCals = Math.max(1200, Math.round(targetCals));
+            proteinG = Math.round(proteinG);
+            const fatsG = Math.max(30, Math.round((targetCals * 0.25) / 9));
+            const carbsG = Math.max(50, Math.round((targetCals - (proteinG * 4 + fatsG * 9)) / 4));
+            const waterL = (kg * 0.035).toFixed(1);
+
+            // Calculate percentage ratios
+            const pCals = proteinG * 4;
+            const cCals = carbsG * 4;
+            const fCals = fatsG * 9;
+            const totalMacroCals = Math.max(pCals + cCals + fCals, 1);
+            const pPct = Math.round((pCals / totalMacroCals) * 100);
+            const cPct = Math.round((cCals / totalMacroCals) * 100);
+            const fPct = Math.max(0, 100 - (pPct + cPct));
+
+            // Update DOM elements
+            const calsElem = document.getElementById('hub_cals');
+            if (calsElem) calsElem.innerText = targetCals.toLocaleString();
+
+            const bmrElem = document.getElementById('hub_bmr');
+            if (bmrElem) bmrElem.innerText = Math.round(bmr).toLocaleString() + ' kcal';
+
+            const tdeeElem = document.getElementById('hub_tdee');
+            if (tdeeElem) tdeeElem.innerText = Math.round(tdee).toLocaleString() + ' kcal';
+
+            const protElem = document.getElementById('hub_protein');
+            if (protElem) protElem.innerText = proteinG + 'g';
+
+            const carbElem = document.getElementById('hub_carbs');
+            if (carbElem) carbElem.innerText = carbsG + 'g';
+
+            const fatElem = document.getElementById('hub_fats');
+            if (fatElem) fatElem.innerText = fatsG + 'g';
+
+            const waterElem = document.getElementById('hub_water');
+            if (waterElem) waterElem.innerText = waterL;
+
+            const ratioText = document.getElementById('hub_ratio_text');
+            if (ratioText) ratioText.innerText = `${pPct}% P / ${cPct}% C / ${fPct}% F`;
+
+            const barP = document.getElementById('hub_bar_p');
+            if (barP) barP.style.width = pPct + '%';
+
+            const barC = document.getElementById('hub_bar_c');
+            if (barC) barC.style.width = cPct + '%';
+
+            const barF = document.getElementById('hub_bar_f');
+            if (barF) barF.style.width = fPct + '%';
+        }
+
+        function applyMacrosToStudio() {
+            const gender = document.getElementById('hub_gender').value;
+            const age = document.getElementById('hub_age').value;
+            const weight = document.getElementById('hub_weight').value;
+            const weightUnit = document.getElementById('hub_weightUnit').value;
+            const height = document.getElementById('hub_height').value;
+            const heightUnit = document.getElementById('hub_heightUnit').value;
+            const goal = document.getElementById('hub_goal').value;
+
+            // Sync to Profile Wizard
+            const eGen = document.getElementById('entry_gender');
+            if (eGen) eGen.value = gender;
+            const eAge = document.getElementById('entry_age');
+            if (eAge) eAge.value = age;
+            const eWeight = document.getElementById('entry_weight');
+            if (eWeight) eWeight.value = weight;
+            const eWUnit = document.getElementById('entry_weightUnit');
+            if (eWUnit) eWUnit.value = weightUnit;
+            const eHeight = document.getElementById('entry_height');
+            if (eHeight) eHeight.value = height;
+            const eHUnit = document.getElementById('entry_heightUnit');
+            if (eHUnit) eHUnit.value = heightUnit;
+            const eGoal = document.getElementById('entry_goal');
+            if (eGoal) eGoal.value = goal;
+
+            // Sync to sidebar
+            syncToSidebar('gender', gender);
+            syncToSidebar('age', age);
+            syncToSidebar('weight', weight);
+            syncToSidebar('weightUnit', weightUnit);
+            syncToSidebar('height', height);
+            syncToSidebar('heightUnit', heightUnit);
+            syncToSidebar('goal', goal);
+
+            switchPage('generator');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateMacroHub();
+        });
 
         function syncToSidebar(id, val) {
             const sidebarElem = document.getElementById(id);

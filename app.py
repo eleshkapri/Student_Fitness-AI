@@ -1,6 +1,6 @@
 """
 StudentFit AI — Main Entry Point
-Configures st.navigation() across all 6 cohesive pages using Streamlit's modern multi-page API.
+Configures st.navigation() across all cohesive pages using Streamlit's modern multi-page API.
 """
 
 import streamlit as st
@@ -18,6 +18,7 @@ pages = [
     st.Page("pages/home.py", title="Home", icon="🏠", default=True),
     st.Page("pages/how_it_works.py", title="How it Works", icon="📖"),
     st.Page("pages/features.py", title="Features", icon="✨"),
+    st.Page("pages/macro_hub.py", title="Macro Hub", icon="🧮"),
     st.Page("pages/plans.py", title="Plans & Tiers", icon="🏷️"),
     st.Page("pages/story.py", title="Our Story", icon="💡"),
     st.Page("pages/generator.py", title="AI Generator", icon="⚡"),
