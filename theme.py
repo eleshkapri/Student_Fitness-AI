@@ -416,3 +416,24 @@ def apply_theme():
     </script>
     """
     components.html(js_code, height=0, width=0)
+
+def render_footer():
+    """Renders a styled global footer across Streamlit pages."""
+    footer_html = """
+    <div style="margin-top: 70px; padding: 35px 0 20px 0; border-top: 1px solid rgba(246, 241, 227, 0.12); color: #B7B3DA; font-size: 0.86rem; text-align: center;">
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 8px;">
+            ⚡ StudentFit <span style="color: #E4FF5B;">AI</span>
+        </div>
+        <p style="max-width: 600px; margin: 0 auto 14px auto; line-height: 1.6; font-size: 0.88rem;">
+            Hyper-personalized weekly fitness, nutrition & budget grocery planning engineered for students worldwide.
+        </p>
+        <div style="margin-bottom: 12px; font-size: 0.82rem;">
+            Built with ❤️ by <a href="https://github.com/eleshkapri" target="_blank" style="color: #FF6B54; font-weight: 700; text-decoration: none;">Elesh Kapri</a> • <a href="https://github.com/eleshkapri/Student_Fitness-AI" target="_blank" style="color: #E4FF5B; text-decoration: none;">GitHub Repository</a>
+        </div>
+        <div style="font-size: 0.76rem; color: #8582AC;">
+            © 2026 StudentFit AI. Built for dorm rooms, not gym floors.
+        </div>
+    </div>
+    """
+    st.markdown(footer_html, unsafe_allow_html=True)
+
