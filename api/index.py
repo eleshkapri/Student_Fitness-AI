@@ -636,175 +636,102 @@ HTML_TEMPLATE = r"""
         }
 
         /* =========================================================================
-           GLOBAL SITE FOOTER
+           SIMPLE SITE FOOTER
            ========================================================================= */
-        .site-footer {
-            background: linear-gradient(180deg, rgba(20, 19, 43, 0.7) 0%, rgba(12, 11, 28, 0.98) 100%);
+        .simple-footer {
             border-top: 1px solid var(--line);
+            padding: 36px 20px;
+            margin-top: 60px;
+            background: rgba(20, 19, 43, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            text-align: center;
             position: relative;
             z-index: 10;
-            margin-top: 80px;
-            padding: 55px 24px 30px 24px;
-            width: 100%;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
         }
 
-        .footer-inner {
-            max-width: 1240px;
+        .simple-footer-inner {
+            max-width: 900px;
             margin: 0 auto;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1.8fr 1fr 1.1fr 1.3fr;
-            gap: 36px;
-            margin-bottom: 40px;
-        }
-
-        .footer-brand {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-        }
-
-        .footer-brand .brand-logo {
-            font-size: 1.35rem;
-        }
-
-        .footer-brand-p {
-            font-size: 0.90rem;
-            color: var(--text-soft);
-            line-height: 1.65;
-            max-width: 360px;
-            margin: 0;
-        }
-
-        .footer-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 4px;
-        }
-
-        .footer-badge {
-            display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(246, 241, 227, 0.06);
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 4px 10px;
-            font-size: 0.76rem;
-            color: #fff;
-            font-family: 'Space Mono', monospace;
-        }
-
-        .footer-col-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.02rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .footer-link {
-            color: var(--text-soft);
-            text-decoration: none;
-            font-size: 0.88rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .footer-link:hover {
-            color: var(--highlighter);
-            transform: translateX(4px);
-        }
-
-        .footer-card {
-            background: rgba(28, 26, 66, 0.7);
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 16px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-        }
-
-        .footer-status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(0, 229, 255, 0.12);
-            border: 1px solid rgba(0, 229, 255, 0.35);
-            color: #00E5FF;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-family: 'Space Mono', monospace;
-            font-weight: 700;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid var(--line);
-            padding-top: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
             gap: 16px;
-            font-size: 0.84rem;
+        }
+
+        .simple-footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1.05rem;
+            color: #fff;
+        }
+
+        .simple-logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--coral), var(--highlighter));
+            border-radius: 6px;
+        }
+
+        .simple-footer-brand strong span {
+            color: var(--highlighter);
+        }
+
+        .simple-footer-dot {
+            color: var(--line);
+        }
+
+        .simple-footer-tagline {
+            font-size: 0.86rem;
             color: var(--text-soft);
         }
 
-        .footer-bottom a {
-            color: var(--highlighter);
+        .simple-footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .simple-footer-links a {
+            color: var(--text-soft);
             text-decoration: none;
-            font-weight: 600;
+            font-size: 0.86rem;
+            font-weight: 500;
+            cursor: pointer;
             transition: color 0.2s ease;
         }
 
-        .footer-bottom a:hover {
-            color: #fff;
-            text-decoration: underline;
+        .simple-footer-links a:hover {
+            color: var(--highlighter);
         }
 
-        @media (max-width: 992px) {
-            .footer-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
-            }
+        .simple-footer-copy {
+            font-size: 0.80rem;
+            color: var(--text-soft);
+            opacity: 0.85;
+            margin-top: 4px;
         }
 
         @media (max-width: 600px) {
-            .site-footer {
+            .simple-footer {
+                padding: 28px 14px;
                 margin-top: 40px;
-                padding: 35px 16px 20px 16px;
             }
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 26px;
+            .simple-footer-brand {
+                flex-wrap: wrap;
             }
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
-                gap: 12px;
+            .simple-footer-links {
+                gap: 12px 16px;
+            }
+            .simple-footer-links a {
+                font-size: 0.82rem;
             }
         }
 
@@ -2059,86 +1986,32 @@ HTML_TEMPLATE = r"""
         </div>
     </div>
 
-    <!-- GLOBAL SITE FOOTER -->
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-grid">
-                <!-- COL 1: BRAND & MISSION -->
-                <div class="footer-brand">
-                    <a class="brand-logo" onclick="switchPage('home')">
-                        <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--coral), var(--highlighter)); border-radius: 9px; box-shadow: 0 4px 12px rgba(255, 107, 84, 0.4); margin-right: 2px;">
-                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </span>
-                        StudentFit <span>AI</span>
-                    </a>
-                    <p class="footer-brand-p">
-                        Hyper-personalized weekly fitness, nutrition & budget grocery planning engineered around student life, dorm constraints, and exam schedules.
-                    </p>
-                    <div class="footer-badges">
-                        <span class="footer-badge">🎓 100% Student Free</span>
-                        <span class="footer-badge">⚡ Groq Cloud Llama 3.3</span>
-                        <span class="footer-badge">🔒 Privacy & CSP Protected</span>
-                    </div>
-                </div>
-
-                <!-- COL 2: QUICK NAVIGATION -->
-                <div>
-                    <div class="footer-col-title">Navigation</div>
-                    <ul class="footer-links">
-                        <li><a class="footer-link" onclick="switchPage('home')">🏠 Home</a></li>
-                        <li><a class="footer-link" onclick="switchPage('how')">📖 How it Works</a></li>
-                        <li><a class="footer-link" onclick="switchPage('features')">✨ Core Features</a></li>
-                        <li><a class="footer-link" onclick="switchPage('macro')">🧮 Macro Hub</a></li>
-                        <li><a class="footer-link" onclick="switchPage('plans')">🏷️ Student Plans</a></li>
-                        <li><a class="footer-link" onclick="switchPage('story')">💡 Our Story</a></li>
-                        <li><a class="footer-link" onclick="switchPage('generator')">⚡ AI Generator</a></li>
-                    </ul>
-                </div>
-
-                <!-- COL 3: CAMPUS CAPABILITIES -->
-                <div>
-                    <div class="footer-col-title">Capabilities</div>
-                    <ul class="footer-links">
-                        <li><span class="footer-link">🎯 4 Target Goals</span></li>
-                        <li><span class="footer-link">🏋️ 3 Gear Tiers</span></li>
-                        <li><span class="footer-link">🥗 5 Cultural Cuisines</span></li>
-                        <li><span class="footer-link">🛒 1-Person Grocery Lists</span></li>
-                        <li><span class="footer-link">🍳 3 Cooking Skill Levels</span></li>
-                        <li><span class="footer-link">📄 One-Click PDF Export</span></li>
-                    </ul>
-                </div>
-
-                <!-- COL 4: DEV & STATUS -->
-                <div>
-                    <div class="footer-col-title">System & Developer</div>
-                    <div class="footer-card">
-                        <div style="display: flex; align-items: center; justify-content: space-between;">
-                            <span style="font-size: 0.82rem; color: var(--text-soft);">AI Neural Engine:</span>
-                            <span class="footer-status-pill">🟢 Active</span>
-                        </div>
-                        <div style="font-size: 0.84rem; color: #fff;">
-                            🌍 Region: <strong id="footer-region-label" style="color: var(--highlighter);">India (₹)</strong>
-                        </div>
-                        <div style="font-size: 0.82rem; color: var(--text-soft); border-top: 1px solid var(--line); padding-top: 8px; margin-top: 2px;">
-                            Built by <a href="https://github.com/eleshkapri" target="_blank" rel="noopener noreferrer" style="color: var(--coral); font-weight: 700; text-decoration: none;">Elesh Kapri</a>
-                        </div>
-                        <a href="https://github.com/eleshkapri/Student_Fitness-AI" target="_blank" rel="noopener noreferrer" class="footer-link" style="font-size: 0.82rem; color: var(--highlighter); font-weight: 600;">
-                            ⭐ Star on GitHub ▸
-                        </a>
-                    </div>
-                </div>
+    <!-- SIMPLE SITE FOOTER -->
+    <footer class="simple-footer">
+        <div class="simple-footer-inner">
+            <div class="simple-footer-brand">
+                <span class="simple-logo-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#14132B" stroke="#14132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+                <strong>StudentFit <span>AI</span></strong>
+                <span class="simple-footer-dot">•</span>
+                <span class="simple-footer-tagline">Fitness synced to your syllabus</span>
             </div>
 
-            <!-- BOTTOM BAR -->
-            <div class="footer-bottom">
-                <div>
-                    © 2026 <strong>StudentFit AI</strong>. Built with ❤️ for students worldwide.
-                </div>
-                <div style="font-size: 0.78rem; color: var(--text-soft); max-width: 600px; line-height: 1.4;">
-                    Disclaimer: StudentFit AI is an AI-driven educational wellness planner. Consult campus medical professionals for medical advice.
-                </div>
+            <div class="simple-footer-links">
+                <a onclick="switchPage('home')">Home</a>
+                <a onclick="switchPage('how')">How it Works</a>
+                <a onclick="switchPage('features')">Features</a>
+                <a onclick="switchPage('macro')">Macro Hub</a>
+                <a onclick="switchPage('plans')">Plans</a>
+                <a onclick="switchPage('story')">Our Story</a>
+                <a onclick="switchPage('generator')">Generator</a>
+            </div>
+
+            <div class="simple-footer-copy">
+                <span>© 2026 StudentFit AI • Built with ❤️ by <a href="https://github.com/eleshkapri" target="_blank" rel="noopener noreferrer" style="color: var(--coral); text-decoration: none; font-weight: 600;">Elesh Kapri</a> for students worldwide</span>
             </div>
         </div>
     </footer>
