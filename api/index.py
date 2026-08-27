@@ -787,165 +787,83 @@ HTML_TEMPLATE = r"""
         .spinner { width: 50px; height: 50px; border: 4px solid rgba(246, 241, 227, 0.15); border-top-color: var(--coral); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* =========================================================================
-           UNIFIED IN-APP TOAST & STATUS NOTIFICATION ENGINE
-           ========================================================================= */
-        .app-toast {
+        /* IN-APP VALIDATION TOAST CARD */
+        .validation-toast {
             position: fixed;
-            top: 24px;
-            right: 24px;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-25px);
             z-index: 100000;
             width: 92%;
-            max-width: 440px;
-            background: rgba(22, 20, 48, 0.97);
-            border-radius: 16px;
-            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(156, 140, 255, 0.2);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            padding: 16px 18px;
+            max-width: 520px;
+            background: rgba(28, 26, 66, 0.98);
+            border: 2px solid var(--coral);
+            border-radius: 18px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 25px rgba(255, 107, 84, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 18px 20px;
             opacity: 0;
             pointer-events: none;
-            transform: translateY(-20px) scale(0.96);
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            border-left: 5px solid var(--coral);
-            border-top: 1px solid var(--line);
-            border-right: 1px solid var(--line);
-            border-bottom: 1px solid var(--line);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
-        .app-toast.show {
+        .validation-toast.show {
             opacity: 1;
             pointer-events: auto;
-            transform: translateY(0) scale(1);
+            transform: translateX(-50%) translateY(0);
         }
-
-        .app-toast.toast-success {
-            border-left-color: #2ED573;
-            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(46, 213, 115, 0.25);
-        }
-        .app-toast.toast-error {
-            border-left-color: var(--coral);
-            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(255, 107, 84, 0.35);
-        }
-        .app-toast.toast-warning {
-            border-left-color: var(--highlighter);
-            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(228, 255, 91, 0.25);
-        }
-        .app-toast.toast-info {
-            border-left-color: #00E5FF;
-            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(0, 229, 255, 0.25);
-        }
-
-        .toast-header {
+        .validation-toast-header {
             display: flex;
             align-items: flex-start;
             gap: 12px;
         }
-
-        .toast-icon {
-            font-size: 1.45rem;
-            line-height: 1.1;
+        .validation-toast-icon {
+            font-size: 1.5rem;
             flex-shrink: 0;
+            line-height: 1;
         }
-
-        .toast-body {
-            flex: 1;
-        }
-
-        .toast-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.98rem;
-            font-weight: 700;
-            color: #FFFFFF;
-            margin-bottom: 3px;
-        }
-        .toast-success .toast-title { color: #2ED573; }
-        .toast-error .toast-title { color: var(--coral); }
-        .toast-warning .toast-title { color: var(--highlighter); }
-        .toast-info .toast-title { color: #00E5FF; }
-
-        .toast-message {
-            font-size: 0.85rem;
-            color: var(--text-soft);
-            line-height: 1.45;
-        }
-
-        .toast-close {
+        .validation-toast-close {
+            margin-left: auto;
             background: rgba(246, 241, 227, 0.08);
             border: 1px solid var(--line);
             color: var(--text-soft);
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.80rem;
+            font-size: 0.85rem;
             transition: all 0.2s ease;
-            flex-shrink: 0;
-            margin-left: 8px;
         }
-        .toast-close:hover {
-            background: rgba(246, 241, 227, 0.22);
-            color: #FFFFFF;
+        .validation-toast-close:hover {
+            background: var(--coral);
+            color: #fff;
+            border-color: var(--coral);
         }
-
-        .toast-details-list {
+        .validation-missing-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
+            gap: 8px;
+            margin-top: 12px;
+            padding-left: 36px;
         }
-
-        .toast-pill {
-            background: rgba(255, 107, 84, 0.18);
+        .missing-pill {
+            background: rgba(255, 107, 84, 0.16);
             border: 1px solid var(--coral);
             color: #FFFFFF;
             padding: 4px 10px;
             border-radius: 8px;
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             font-weight: 600;
             font-family: 'Space Mono', monospace;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        .toast-pill:hover {
+        .missing-pill:hover {
             background: var(--coral);
-            color: #14132B;
-        }
-
-        .toast-progress {
-            height: 3px;
-            width: 100%;
-            background: rgba(246, 241, 227, 0.1);
-            border-radius: 2px;
-            margin-top: 12px;
-            overflow: hidden;
-        }
-        .toast-progress-bar {
-            height: 100%;
-            background: var(--coral);
-            width: 100%;
-            transition: width linear;
-        }
-        .toast-success .toast-progress-bar { background: #2ED573; }
-        .toast-error .toast-progress-bar { background: var(--coral); }
-        .toast-warning .toast-progress-bar { background: var(--highlighter); }
-        .toast-info .toast-progress-bar { background: #00E5FF; }
-
-        @media (max-width: 600px) {
-            .app-toast {
-                top: 16px;
-                right: 50%;
-                transform: translateX(50%) translateY(-20px) scale(0.96);
-                width: 94%;
-                max-width: 390px;
-                padding: 14px 16px;
-            }
-            .app-toast.show {
-                transform: translateX(50%) translateY(0) scale(1);
-            }
+            color: #fff;
         }
 
         /* INPUT ERROR HIGHLIGHT */
@@ -1253,19 +1171,18 @@ HTML_TEMPLATE = r"""
         </div>
     </nav>
 
-    <!-- IN-APP TOAST & STATUS NOTIFICATION CARD -->
-    <div id="app-toast" class="app-toast" role="alert" aria-live="assertive" style="display: none;">
-        <div class="toast-header">
-            <span id="toast-icon" class="toast-icon">ℹ️</span>
-            <div class="toast-body">
-                <div id="toast-title" class="toast-title">Notification</div>
-                <div id="toast-message" class="toast-message">Message content</div>
-                <div id="toast-details-list" class="toast-details-list" style="display: none;"></div>
-                <div class="toast-progress">
-                    <div id="toast-progress-bar" class="toast-progress-bar"></div>
+    <!-- IN-APP VALIDATION NOTIFICATION CARD -->
+    <div id="validation-toast" class="validation-toast" style="display: none;">
+        <div class="validation-toast-content">
+            <div class="validation-toast-header">
+                <span class="validation-toast-icon">⚠️</span>
+                <div>
+                    <strong style="color: var(--coral); font-size: 1.05rem; display: block; margin-bottom: 2px;">Required Information Missing</strong>
+                    <span style="font-size: 0.86rem; color: var(--text-soft); line-height: 1.4; display: block;">Please complete the highlighted field(s) below to personalize your weekly fitness plan:</span>
                 </div>
+                <button class="validation-toast-close" onclick="hideValidationToast()" title="Close Notification">✕</button>
             </div>
-            <button class="toast-close" onclick="hideAppToast()" title="Close Notification" aria-label="Close Notification">✕</button>
+            <div id="validation-missing-list" class="validation-missing-list"></div>
         </div>
     </div>
 
@@ -2323,112 +2240,48 @@ HTML_TEMPLATE = r"""
 
         let toastTimeout = null;
 
-        function showAppToast(type, title, message, detailsList = null, duration = 4500) {
-            const toast = document.getElementById('app-toast');
-            const icon = document.getElementById('toast-icon');
-            const titleElem = document.getElementById('toast-title');
-            const msgElem = document.getElementById('toast-message');
-            const listElem = document.getElementById('toast-details-list');
-            const bar = document.getElementById('toast-progress-bar');
-            if (!toast || !titleElem || !msgElem) return;
+        function showValidationCard(missingFields) {
+            const toast = document.getElementById('validation-toast');
+            const list = document.getElementById('validation-missing-list');
+            if (!toast || !list) return;
 
-            if (toastTimeout) {
-                clearTimeout(toastTimeout);
-                toastTimeout = null;
-            }
-
-            // Reset classes
-            toast.className = 'app-toast';
-            const iconMap = {
-                success: '✅',
-                error: '❌',
-                warning: '⚠️',
-                info: 'ℹ️'
-            };
-            const safeType = ['success', 'error', 'warning', 'info'].includes(type) ? type : 'info';
-            toast.classList.add('toast-' + safeType);
-
-            if (icon) icon.textContent = iconMap[safeType] || 'ℹ️';
-            titleElem.textContent = title || 'Notification';
-            msgElem.textContent = message || '';
-
-            // Handle interactive detail pills (e.g. for missing fields)
-            if (listElem) {
-                if (detailsList && detailsList.length > 0) {
-                    listElem.innerHTML = '';
-                    detailsList.forEach(item => {
-                        const pill = document.createElement('span');
-                        pill.className = 'toast-pill';
-                        pill.innerText = '⚠️ ' + item.label;
-                        pill.title = 'Click to jump to ' + item.label;
-                        pill.onclick = () => {
-                            if (item.elem) {
-                                item.elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                item.elem.focus();
-                            }
-                            hideAppToast();
-                        };
-                        listElem.appendChild(pill);
-                    });
-                    listElem.style.display = 'flex';
-                } else {
-                    listElem.innerHTML = '';
-                    listElem.style.display = 'none';
-                }
-            }
-
-            // Reset and start progress bar animation
-            if (bar) {
-                bar.style.transition = 'none';
-                bar.style.width = '100%';
-                setTimeout(() => {
-                    if (duration > 0) {
-                        bar.style.transition = `width ${duration}ms linear`;
-                        bar.style.width = '0%';
+            list.innerHTML = '';
+            missingFields.forEach(item => {
+                const pill = document.createElement('span');
+                pill.className = 'missing-pill';
+                pill.innerText = '⚠️ ' + item.label;
+                pill.title = 'Click to jump to ' + item.label;
+                pill.onclick = () => {
+                    if (item.elem) {
+                        item.elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        item.elem.focus();
                     }
-                }, 50);
-            }
+                    hideValidationToast();
+                };
+                list.appendChild(pill);
+            });
 
             toast.style.display = 'block';
-            setTimeout(() => toast.classList.add('show'), 15);
-
-            if (duration && duration > 0) {
-                toastTimeout = setTimeout(() => {
-                    hideAppToast();
-                }, duration);
-            }
-        }
-
-        function hideAppToast() {
-            const toast = document.getElementById('app-toast');
-            if (toast) {
-                toast.classList.remove('show');
-                if (toastTimeout) {
-                    clearTimeout(toastTimeout);
-                    toastTimeout = null;
-                }
-                setTimeout(() => {
-                    if (!toast.classList.contains('show')) toast.style.display = 'none';
-                }, 350);
-            }
-        }
-
-        function hideValidationToast() {
-            hideAppToast();
-        }
-
-        function showValidationCard(missingFields) {
-            showAppToast(
-                'warning',
-                'Required Information Missing',
-                'Please complete the highlighted field(s) below to personalize your weekly fitness plan:',
-                missingFields,
-                7500
-            );
+            setTimeout(() => toast.classList.add('show'), 10);
 
             if (missingFields.length > 0 && missingFields[0].elem) {
                 missingFields[0].elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 missingFields[0].elem.focus();
+            }
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                hideValidationToast();
+            }, 7000);
+        }
+
+        function hideValidationToast() {
+            const toast = document.getElementById('validation-toast');
+            if (toast) {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (!toast.classList.contains('show')) toast.style.display = 'none';
+                }, 350);
             }
         }
 
@@ -2582,16 +2435,6 @@ HTML_TEMPLATE = r"""
 
             const barF = document.getElementById('hub_bar_f');
             if (barF) barF.style.width = fPct + '%';
-
-            if (isManualClick) {
-                showAppToast(
-                    'success',
-                    'Metabolism Calculated',
-                    `Daily target: ${targetCals.toLocaleString()} kcal (${proteinG}g Protein, ${carbsG}g Carbs, ${fatsG}g Fats).`,
-                    null,
-                    4500
-                );
-            }
         }
 
         function applyMacrosToStudio() {
@@ -2667,13 +2510,6 @@ HTML_TEMPLATE = r"""
             }
 
             switchPage('generator');
-            showAppToast(
-                'success',
-                'Bio-Data Synced to Generator',
-                'Your metabolic stats and fitness targets have been loaded into the Generator Studio.',
-                null,
-                4000
-            );
         }
 
         function syncToSidebar(id, val) {
@@ -2895,13 +2731,7 @@ HTML_TEMPLATE = r"""
                 const data = await response.json();
 
                 if (!response.ok || data.error) {
-                    showAppToast(
-                        'error',
-                        'Plan Generation Failed',
-                        data.error || 'The AI neural engine could not generate your plan. Please check your inputs and try again.',
-                        null,
-                        6500
-                    );
+                    alert(data.error || 'Failed to generate schedule.');
                 } else {
                     currentRawPlan = data.raw || "";
                     daysContainer.innerHTML = '';
@@ -2930,26 +2760,9 @@ HTML_TEMPLATE = r"""
                     groceryCard.innerHTML = renderMarkdownSafe(data.grocery);
                     resultsArea.style.display = 'grid';
                     downloadBtn.style.display = 'inline-block';
-
-                    showAppToast(
-                        'success',
-                        '7-Day Plan Generated!',
-                        'Your synchronized student workouts, dorm meal prep, and budget grocery list are ready below.',
-                        null,
-                        5000
-                    );
-
-                    // Smoothly scroll results into view
-                    resultsArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             } catch (err) {
-                showAppToast(
-                    'error',
-                    'Connection Error',
-                    'Could not connect to the AI engine (' + (err.message || 'Network unreachable') + '). Please verify your internet and retry.',
-                    null,
-                    6500
-                );
+                alert('Connection error: ' + err.message);
             } finally {
                 spinner.style.display = 'none';
                 btn.disabled = false;
@@ -2959,14 +2772,6 @@ HTML_TEMPLATE = r"""
         function downloadPDF() {
             if (!currentRawPlan) return;
             
-            showAppToast(
-                'info',
-                'Compiling PDF...',
-                'Generating your print-ready A4 7-Day Fitness Schedule & Grocery Checklist.',
-                null,
-                3000
-            );
-
             const element = document.createElement('div');
             element.style.padding = '25px 30px';
             element.style.background = '#ffffff';
@@ -2999,33 +2804,7 @@ HTML_TEMPLATE = r"""
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            try {
-                html2pdf().set(opt).from(element).save().then(() => {
-                    showAppToast(
-                        'success',
-                        'PDF Download Complete',
-                        'Your weekly fitness and grocery plan has been saved to your device.',
-                        null,
-                        4000
-                    );
-                }).catch(err => {
-                    showAppToast(
-                        'error',
-                        'PDF Export Issue',
-                        'Could not export PDF automatically. Please print directly using your browser (Ctrl+P / Cmd+P).',
-                        null,
-                        5500
-                    );
-                });
-            } catch (e) {
-                showAppToast(
-                    'error',
-                    'PDF Export Issue',
-                    'PDF generator could not compile the document. Please use Ctrl+P to print.',
-                    null,
-                    5500
-                );
-            }
+            html2pdf().set(opt).from(element).save();
         }
 
         // --- 3D PARTICLE & STARFIELD PARALLAX ENGINE ---
