@@ -311,14 +311,18 @@ HTML_TEMPLATE = r"""
             width: 100%;
             position: relative;
             z-index: 1;
-            animation: fadeIn 0.3s ease forwards;
         }
 
         .page-view.active-page { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Subtle smooth transition only when switching pages interactively */
+        body.app-ready .page-view.active-page {
+            animation: pageFadeIn 0.16s ease forwards;
+        }
+
+        @keyframes pageFadeIn {
+            from { opacity: 0.92; }
+            to { opacity: 1; }
         }
 
         /* PANELS & CARDS */
@@ -1112,7 +1116,19 @@ HTML_TEMPLATE = r"""
                 const reg = localStorage.getItem('studentfit_saved_region');
                 if (reg) window.__savedRegion = reg;
                 const hash = (window.location.hash || '').replace('#', '').trim();
-                window.__savedPage = (hash && hash !== 'home') ? hash : 'home';
+                const validPages = ['home', 'how', 'features', 'macro', 'plans', 'story', 'generator'];
+                const page = (hash && validPages.includes(hash)) ? hash : 'home';
+                window.__savedPage = page;
+
+                // Zero-flicker pre-render rule: paints the exact active page on frame 0
+                const style = document.createElement('style');
+                style.id = 'fouc-prevention-style';
+                style.innerHTML = `
+                    .page-view { display: none !important; }
+                    #page-${page} { display: block !important; }
+                    #nav-${page} { color: var(--highlighter) !important; background: rgba(228, 255, 91, 0.14) !important; border: 1px solid var(--highlighter) !important; }
+                `;
+                document.head.appendChild(style);
             } catch(e) {}
         })();
     </script>
@@ -1189,7 +1205,7 @@ HTML_TEMPLATE = r"""
     <!-- =========================================================================
          PAGE 1: HOME
          ========================================================================= -->
-    <div class="page-view active-page" id="page-home">
+    <div class="page-view" id="page-home">
         <section style="padding: 60px 40px 40px 40px; max-width: 1200px; margin: 0 auto;">
             <div class="hero-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
                 <div>
@@ -2606,6 +2622,11 @@ HTML_TEMPLATE = r"""
 
         function switchPage(pageId) {
             hideValidationToast();
+
+            // Clear initial pre-render FOUC style once interactive routing takes over
+            const fouc = document.getElementById('fouc-prevention-style');
+            if (fouc) fouc.remove();
+
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active-page'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 
@@ -2978,6 +2999,7 @@ HTML_TEMPLATE = r"""
         // Auto-clear validation errors when user types or selects
         document.addEventListener('DOMContentLoaded', () => {
             initAppPersistence();
+            document.body.classList.add('app-ready');
 
             document.querySelectorAll('input, select').forEach(el => {
                 el.addEventListener('input', () => {
