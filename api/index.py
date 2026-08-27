@@ -1193,8 +1193,8 @@ HTML_TEMPLATE = r"""
             try {
                 const reg = localStorage.getItem('studentfit_saved_region');
                 if (reg) window.__savedRegion = reg;
-                const page = (window.location.hash ? window.location.hash.replace('#', '') : null) || localStorage.getItem('studentfit_active_page');
-                if (page) window.__savedPage = page;
+                const hash = (window.location.hash || '').replace('#', '').trim();
+                window.__savedPage = (hash && hash !== 'home') ? hash : 'home';
             } catch(e) {}
         })();
     </script>
@@ -2783,9 +2783,14 @@ HTML_TEMPLATE = r"""
             }
 
             try {
-                localStorage.setItem('studentfit_active_page', pageId);
-                if (window.location.hash !== '#' + pageId) {
-                    window.history.replaceState(null, '', '#' + pageId);
+                if (pageId === 'home') {
+                    if (window.location.hash) {
+                        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                    }
+                } else {
+                    if (window.location.hash !== '#' + pageId) {
+                        window.history.replaceState(null, '', '#' + pageId);
+                    }
                 }
             } catch (e) {}
 
@@ -3174,25 +3179,19 @@ HTML_TEMPLATE = r"""
                 onGlobalRegionChange(savedRegion);
             }
 
-            // 2. Restore active page from URL hash or localStorage
+            // 2. Open active page (Default directly to Home on fresh tab visits; respect deep-link hash if explicitly provided)
             let startPage = 'home';
             const hash = (window.location.hash || '').replace('#', '').trim();
-            if (hash && document.getElementById('page-' + hash)) {
+            if (hash && hash !== 'home' && document.getElementById('page-' + hash)) {
                 startPage = hash;
-            } else {
-                try {
-                    const localPage = localStorage.getItem('studentfit_active_page');
-                    if (localPage && document.getElementById('page-' + localPage)) {
-                        startPage = localPage;
-                    }
-                } catch (e) {}
             }
             switchPage(startPage);
 
             window.addEventListener('hashchange', () => {
                 const newHash = (window.location.hash || '').replace('#', '').trim();
-                if (newHash && document.getElementById('page-' + newHash)) {
-                    switchPage(newHash);
+                const target = (newHash && newHash !== 'home') ? newHash : 'home';
+                if (document.getElementById('page-' + target)) {
+                    switchPage(target);
                 }
             });
         }
